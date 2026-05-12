@@ -3,16 +3,17 @@ package br.maua;
 import java.util.List;
 
 public class Tarefa {
-  
-  private String prazo;
-  private List <Questao> questoes;
+    private String prazo;
+    private Casa casa;
+    private List <Questao> questoes;
 
-  public Tarefa(String prazo, List <Questao> questoes) {
+    public Tarefa(String prazo, List <Questao> questoes, Casa casa) {
 
-    this.prazo = prazo;
-    this.questoes = questoes;
+      this.prazo = prazo;
+      this.questoes = questoes;
+      this.casa = casa;
 
-  }
+    }
 
   public Questao adicionarQuestao() {
 

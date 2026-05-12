@@ -1,28 +1,20 @@
 package br.maua;
 
 public class Professor {
-  
-  private String nome;
-  private String sobrenome;
-  private String username;
 
-  public Tarefa criarTarefa() {
+    private String nome;
+    private String sobrenome;
+    private String username;
 
-    Tarefa tarefa = new Tarefa("", null);
+    public void atribuirNota(double nota, Tentativa tentativa) {
 
-    return tarefa;
+        tentativa.setNota(nota);
 
-  }
+    }
 
-  public void atribuirNota(double nota, Tentativa tentativa) {
+    public void corrigirTarefa(Tentativa tentativa) {
 
-   tentativa.setNota(nota);
-    
-  }
+        atribuirNota(0.0, tentativa);
 
-  public void corrigirTarefa(Tentativa tentativa) {
-
-    atribuirNota(0.0, tentativa);
-
-  }
+    }
 }

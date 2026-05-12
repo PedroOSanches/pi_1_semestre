@@ -2,18 +2,26 @@ package br.maua;
 
 public class Tentativa {
 
-  private Double nota;
-  private Aluno aluno;
+    private Double nota;
+    private Aluno aluno;
+    private Tarefa tarefa;
 
-  public void getNota(double nota) {
+    public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
+        this.setNota(nota);
+        this.aluno = aluno;
+        this.tarefa = tarefa;
+    }
 
-    this.nota = nota;
+    public Tentativa(Aluno aluno, Tarefa tarefa){
+        this.aluno = aluno;
+        this.tarefa = tarefa;
+    }
 
-  }
+    public Double getNota() {
+        return nota;
+    }
 
-  public void setNota(double nota) {
-
-    this.nota = nota;
-
-  }
+    public void setNota(double nota) {
+        this.nota = nota;
+    }
 }

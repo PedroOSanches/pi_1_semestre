@@ -1,24 +1,27 @@
 package br.maua;
 
 public class Casa {
-  
-  private int numeroCasa;
-  private int nivelCasa;
-  private Tarefa tarefa;
 
-  public void exibirTarefa() {
+    private int numeroCasa;
+    private int nivelCasa;
 
-    tarefa.exibirQuestao();
 
-  }
 
-  public void exibirCasa() {
+    public Casa(int numeroCasa, int nivelCasa){
+        this.numeroCasa = numeroCasa;
+        this.nivelCasa = nivelCasa;
+    }
 
-    System.out.printf("Casa %d | Nível %d\n", numeroCasa, nivelCasa);
+    public int getNumeroCasa() {
+        return numeroCasa;
+    }
+    public void exibirCasa(Tarefa tarefa) {
 
-  }
+        System.out.printf("Casa %d | Nível %d\n", numeroCasa, nivelCasa);
 
-  public void avancarCasa() {
+    }
 
-  }
+    public void avancarCasa() {
+
+    }
 }
