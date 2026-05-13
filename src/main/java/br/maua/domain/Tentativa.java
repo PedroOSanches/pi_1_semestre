@@ -1,4 +1,6 @@
-package br.maua;
+package br.maua.domain;
+
+import br.maua.infrastructure.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

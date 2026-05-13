@@ -1,4 +1,4 @@
-package br.maua;
+package br.maua.domain;
 
 import java.util.List;
 

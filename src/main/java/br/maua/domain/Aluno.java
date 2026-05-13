@@ -1,4 +1,4 @@
-package br.maua;
+package br.maua.domain;
 
 public class Aluno {
     private int idAluno;

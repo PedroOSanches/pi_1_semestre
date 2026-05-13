@@ -1,4 +1,4 @@
-package br.maua;
+package br.maua.infrastructure;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
