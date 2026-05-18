@@ -5,8 +5,6 @@ public class Casa {
     private int numeroCasa;
     private int nivelCasa;
 
-
-
     public Casa(int numeroCasa, int nivelCasa){
         this.numeroCasa = numeroCasa;
         this.nivelCasa = nivelCasa;
