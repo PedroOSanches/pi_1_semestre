@@ -5,13 +5,17 @@ public class Aluno {
     private String nome;
     private String sobrenome;
     private String username;
+    private String curso;
 
-    public Aluno(int idAluno, String nome, String sobrenome, String username){
+    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso){
         this.idAluno = idAluno;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.username = username;
+        this.curso = curso;
+
     }
+    
 
     public int getIdAluno() {
         return idAluno;
@@ -31,12 +35,24 @@ public class Aluno {
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
     }
+    public String getNomeCompleto(){
+        return nome + " " + sobrenome;
+    }
     public String getUsername() {
         return username;
     }
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getCurso() {
+        return curso;
+    }
+
+    public void setCurso(String curso) {
+        this.curso = curso;
+    }
+    
 
     public void realizarTentativa(Tarefa tarefa) {
         entregarTentativa(tarefa);

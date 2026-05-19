@@ -5,16 +5,20 @@
 
 package br.maua.presentation;
 
+import br.maua.domain.Aluno;
+
 /**
  *
  * @author Luiza
  */
-public class TelaPerfilAluno extends javax.swing.JFrame {
+public class ModalPerfilAluno extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPerfilAluno.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ModalPerfilAluno.class.getName());
+    private Aluno aluno;
 
     /** Creates new form TelaPerfilAluno */
-    public TelaPerfilAluno() {
+    public ModalPerfilAluno(Aluno aluno) {
+        this.aluno = aluno;
         initComponents();
     }
 
@@ -27,14 +31,16 @@ public class TelaPerfilAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         painelAzul = new javax.swing.JPanel();
         painelCinza = new javax.swing.JPanel();
         nomeAluno = new java.awt.Label();
         cursoAluno = new javax.swing.JLabel();
         raAluno = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        progresso = new javax.swing.JProgressBar();
+        btnNotas = new javax.swing.JButton();
+        AtividadesConcluidas = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -42,16 +48,17 @@ public class TelaPerfilAluno extends javax.swing.JFrame {
 
         painelCinza.setBackground(new java.awt.Color(217, 217, 217));
 
+        nomeAluno.setAlignment(java.awt.Label.CENTER);
         nomeAluno.setBackground(new java.awt.Color(240, 147, 32));
-        nomeAluno.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 60)); // NOI18N
+        nomeAluno.setFont(new java.awt.Font("STXihei", 0, 48)); // NOI18N
         nomeAluno.setForeground(new java.awt.Color(255, 255, 255));
         nomeAluno.setText("nomeAluno");
 
-        cursoAluno.setFont(new java.awt.Font("STXihei", 1, 24)); // NOI18N
+        cursoAluno.setFont(new java.awt.Font("STXihei", 1, 18)); // NOI18N
         cursoAluno.setForeground(new java.awt.Color(255, 255, 255));
         cursoAluno.setText("Curso do Aluno");
 
-        raAluno.setFont(new java.awt.Font("STXihei", 1, 24)); // NOI18N
+        raAluno.setFont(new java.awt.Font("STXihei", 1, 18)); // NOI18N
         raAluno.setForeground(new java.awt.Color(255, 255, 255));
         raAluno.setText("12-34567.8");
 
@@ -60,12 +67,12 @@ public class TelaPerfilAluno extends javax.swing.JFrame {
         painelCinzaLayout.setHorizontalGroup(
             painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cursoAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nomeAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(raAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(394, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nomeAluno, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                    .addComponent(raAluno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cursoAluno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(216, 216, 216))
         );
         painelCinzaLayout.setVerticalGroup(
             painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -76,48 +83,63 @@ public class TelaPerfilAluno extends javax.swing.JFrame {
                 .addComponent(cursoAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(raAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jProgressBar1.setForeground(new java.awt.Color(240, 147, 32));
-        jProgressBar1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        progresso.setForeground(new java.awt.Color(240, 147, 32));
+        progresso.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
-        jButton1.setBackground(new java.awt.Color(19, 112, 178));
-        jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Notas");
-        jButton1.setBorder(null);
+        btnNotas.setBackground(new java.awt.Color(240, 147, 32));
+        btnNotas.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        btnNotas.setForeground(new java.awt.Color(255, 255, 255));
+        btnNotas.setText("Notas");
+        btnNotas.setBorder(null);
+        btnNotas.setBorderPainted(false);
+        btnNotas.setFocusPainted(false);
+        btnNotas.setRequestFocusEnabled(false);
+        btnNotas.setRolloverEnabled(false);
+        btnNotas.addActionListener(this::btnNotasActionPerformed);
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Atividades Concluídas: ");
+        AtividadesConcluidas.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        AtividadesConcluidas.setForeground(new java.awt.Color(255, 255, 255));
+        AtividadesConcluidas.setText("Atividades Concluídas: xx/xx");
+
+        btnLogout.setBackground(new java.awt.Color(208, 204, 193));
+        btnLogout.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnLogout.setBorderPainted(false);
+        btnLogout.addActionListener(this::btnLogoutActionPerformed);
 
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
         painelAzulLayout.setHorizontalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
-                .addContainerGap(47, Short.MAX_VALUE)
+            .addGroup(painelAzulLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AtividadesConcluidas, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(painelCinza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47))
+                        .addComponent(progresso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNotas, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         painelAzulLayout.setVerticalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(21, 21, 21)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AtividadesConcluidas)
                 .addGap(18, 18, 18)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addComponent(btnNotas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(17, 17, 17))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -128,11 +150,21 @@ public class TelaPerfilAluno extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(painelAzul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotasActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        TelaNotaAluno mna = new TelaNotaAluno(aluno, this);
+    }//GEN-LAST:event_btnNotasActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -154,19 +186,21 @@ public class TelaPerfilAluno extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        Aluno aluno = new Aluno(1, "Luiza", "Lima", "26.01172-6@maua.br", "CIC" );
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaPerfilAluno().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ModalPerfilAluno(aluno).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel AtividadesConcluidas;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnNotas;
     private javax.swing.JLabel cursoAluno;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private java.awt.Label nomeAluno;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JPanel painelCinza;
+    private javax.swing.JProgressBar progresso;
     private javax.swing.JLabel raAluno;
     // End of variables declaration//GEN-END:variables
 

@@ -20,6 +20,12 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         jTextArea2.setText("Digite sua resposta...");
         painelAzul1.setLayout(new java.awt.GridBagLayout());
         painelAzul1.add(painelCinza1);
+        jTextPane1.setEditable(false);
+        jTextPane1.setFocusable(false);
+        jTextPane2.setEditable(false);
+        jTextPane2.setFocusable(false);
+        jTextPane3.setEditable(false);
+        jTextPane3.setFocusable(false);
     }
 
     /**

@@ -23,6 +23,8 @@ public class TelaUploadAluno extends javax.swing.JFrame {
         initComponents();
         painelAzul.setLayout(new java.awt.GridBagLayout());
         painelAzul.add(painelCinza);
+        DescricaoTarefa.setEditable(false);
+        DescricaoTarefa.setFocusable(false);
     }
 
     /**
