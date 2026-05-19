@@ -6,25 +6,18 @@ public class Tarefa {
     private int idTarefa;
     private String prazo;
     private Casa casa;
-    private List <Questao> questoes;
+    private List<QuestaoAlternativa> questoesAlternativa;
+    private List<QuestaoDissertativa> questoesDissertativas;
+    private List<QuestaoUpload> questoesUploads;
 
-    public Tarefa(String prazo, List <Questao> questoes, Casa casa) {
+    public Tarefa(String prazo, Casa casa) {
 
       this.prazo = prazo;
-      this.questoes = questoes;
       this.casa = casa;
 
     }
 
-  public Questao adicionarQuestao() {
-
-    Questao questao = new Questao();
-    questoes.add(questao);
-    return questao;
-
-  }
-
-  public int getIdTarefa() {
+    public int getIdTarefa() {
         return idTarefa;
   }
   public void setIdTarefa(int idTarefa) {
