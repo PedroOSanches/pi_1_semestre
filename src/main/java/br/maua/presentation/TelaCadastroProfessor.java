@@ -223,9 +223,9 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this,
             "Cadastro realizado com sucesso!");
         
-        new TelaHomeProfessor().setVisible(true);
+        new TelaPainelDeControle().setVisible(true);
         this.dispose();
- 
+
     }//GEN-LAST:event_entrarBotaoActionPerformed
 
     /**

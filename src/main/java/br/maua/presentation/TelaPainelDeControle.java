@@ -9,12 +9,12 @@ package br.maua.presentation;
  *
  * @author Luiza
  */
-public class TelaHomeProfessor extends javax.swing.JFrame {
+public class TelaPainelDeControle extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaHomeProfessor.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPainelDeControle.class.getName());
 
     /** Creates new form TelaPerfilAluno */
-    public TelaHomeProfessor() {
+    public TelaPainelDeControle() {
         initComponents();
     }
 
@@ -168,7 +168,7 @@ public class TelaHomeProfessor extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaHomeProfessor().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaPainelDeControle().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
