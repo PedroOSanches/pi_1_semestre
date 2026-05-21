@@ -186,7 +186,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        Aluno aluno = new Aluno(1, "Luiza", "Lima", "26.01172-6@maua.br", "CIC" );
+        Aluno aluno = new Aluno(1, "Luiza", "Lima", "26.01172-6@maua.br", "CIC", "Maua2024" );
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new ModalPerfilAluno(aluno).setVisible(true));
     }
