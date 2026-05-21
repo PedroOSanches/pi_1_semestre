@@ -32,10 +32,10 @@ public class AlunoDAO {
     }
 
     public void salvarNoBanco(Aluno aluno) throws SQLException {
-        String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario, tipo_usuario) VALUES (?, ?, ?, ?, 'aluno')";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, aluno.getNome());
             comando.setString(2, aluno.getSobrenome());

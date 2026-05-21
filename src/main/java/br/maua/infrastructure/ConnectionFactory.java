@@ -18,7 +18,6 @@ public class ConnectionFactory {
     private static final String host = dotenv.get("DB_HOST");
     private static final String port = dotenv.get("DB_PORT");
     private static final String database = dotenv.get("DB_NAME") != null ? dotenv.get("DB_NAME") : "jornadamauadb";
-    // Optional extra JDBC params, e.g. "useSSL=true&requireSSL=true&verifyServerCertificate=false"
     private static final String params = dotenv.get("DB_PARAMS");
 
     public static Connection obterConexao() throws java.sql.SQLException{
