@@ -15,7 +15,10 @@ public class Tarefa {
       this.prazo = prazo;
       this.casa = casa;
 
+
     }
+
+    public Tarefa(){}
 
     public int getIdTarefa() {
         return idTarefa;

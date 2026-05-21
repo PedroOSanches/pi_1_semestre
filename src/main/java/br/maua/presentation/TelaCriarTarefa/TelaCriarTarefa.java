@@ -11,12 +11,15 @@ package br.maua.presentation.TelaCriarTarefa;
 public class TelaCriarTarefa extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCriarTarefa.class.getName());
+    
 
     /**
      * Creates new form TelaCriarTarefa
      */
     public TelaCriarTarefa() {
         initComponents();
+        this.setVisible(true);
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
