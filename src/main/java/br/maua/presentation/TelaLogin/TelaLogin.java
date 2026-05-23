@@ -60,7 +60,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
         CadastroTitulo5.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 60)); // NOI18N
         CadastroTitulo5.setForeground(new java.awt.Color(255, 255, 255));
-        CadastroTitulo5.setText("Cadastro");
+        CadastroTitulo5.setText("Login");
         CadastroTitulo5.setName("CadastroTitulo"); // NOI18N
 
         campoUsername.setBackground(new java.awt.Color(204, 204, 204));
@@ -111,14 +111,14 @@ public class TelaLogin extends javax.swing.JFrame {
                             .addComponent(nomeTitulo10)
                             .addComponent(campoUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(CadastroTitulo5))
-                    .addGroup(painelAzulLayout.createSequentialGroup()
                         .addGap(196, 196, 196)
                         .addComponent(entrarBotao10, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelAzulLayout.createSequentialGroup()
                         .addGap(89, 89, 89)
-                        .addComponent(entrarBotao11, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(entrarBotao11, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelAzulLayout.createSequentialGroup()
+                        .addGap(172, 172, 172)
+                        .addComponent(CadastroTitulo5)))
                 .addContainerGap(102, Short.MAX_VALUE))
         );
         painelAzulLayout.setVerticalGroup(
@@ -204,9 +204,9 @@ public class TelaLogin extends javax.swing.JFrame {
             if (usuarioValido) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
                 
-                String role = alunoDAO.determinarRole(usuarioDigitado);
-                if ("aluno".equals(role)) {
-                    new br.maua.presentation.TelaTabuleiroCompleto.TelaTabuleiroCompleta().setVisible(true);
+                String tipo_usuario = alunoDAO.determinarTipoUsuario(usuarioDigitado);
+                if ("aluno".equals(tipo_usuario)) {
+                    new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
                 } else {
                     new br.maua.presentation.TelaPainelDeControle().setVisible(true);
                 }

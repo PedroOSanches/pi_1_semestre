@@ -319,7 +319,6 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
             String tipo = (String) comboTipo.getSelectedItem();
 
             if ("Múltipla Escolha".equals(tipo)) {
-                // Cria as 4 alternativas com RadioButtons idênticos ao seu print
                 javax.swing.ButtonGroup grupoRadio = new javax.swing.ButtonGroup();
                 for (int i = 1; i <= 4; i++) {
                     javax.swing.JRadioButton radio = new javax.swing.JRadioButton("Escreva Alternativa");

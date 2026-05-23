@@ -27,7 +27,7 @@ public class AlunoDAO {
         return username != null && !username.isBlank() && username.matches("\\d+");
     }
 
-    public String determinarRole(String username) {
+    public String determinarTipoUsuario(String username) {
         return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
     }
 
