@@ -20,6 +20,12 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
     public ModalPerfilAluno(Aluno aluno) {
         this.aluno = aluno;
         initComponents();
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        if (this.aluno != null) {
+            nomeAluno.setText(this.aluno.getNome());
+            raAluno.setText(this.aluno.getUsername());       
+        }
     }
 
     /** This method is called from within the constructor to

@@ -17,29 +17,24 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
      */
     public TelaCriarTarefa2() {
         initComponents();
-        
-        // 1. Remove os componentes do painel para reinserir com os gaps na ordem certa
+
         painelConteudo.removeAll();
+
+        painelConteudo.add(jPanel1); 
         
-        // 2. Readiciona os blocos estruturais intercalando com os gaps
-        painelConteudo.add(jPanel1); // Espaço do topo (Margem)
+        painelConteudo.add(jPanel2);
+        painelConteudo.add(javax.swing.Box.createVerticalStrut(20));
         
-        painelConteudo.add(jPanel2); // Bloco Azul do Título
-        painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); // Gap de 20px
+        painelConteudo.add(jPanel3); 
+        painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); 
         
-        painelConteudo.add(jPanel3); // Bloco de Configurações (Prazo/Explorador)
-        painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); // Gap de 20px
         
-        //painelConteudo.add(jPanel7); // Questão 1 (Múltipla Escolha)
-        //painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); // Gap de 20px
-        
-        //painelConteudo.add(jPanel9); // Questão 2 (Dissertativa)
-        //painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); // Gap de 20px
-        
-        //painelConteudo.add(jPanel11); // Questão 3 (Múltipla Escolha)
-        //painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); // Gap de 20px
         
         painelConteudo.add(jPanel15); // Botão "+ Adicionar Questão"
+        painelConteudo.add(javax.swing.Box.createVerticalStrut(40));
+
+        jButton1.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        painelConteudo.add(jButton1); // Botão "Salvar Tarefa" dentro da área rolável
         painelConteudo.add(javax.swing.Box.createVerticalStrut(40));
 
         
@@ -69,6 +64,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,7 +92,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(19, 112, 178));
         jPanel2.setMaximumSize(new java.awt.Dimension(592, 100));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); 
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Novo Questionário");
 
@@ -192,15 +188,15 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         painelConteudo.add(jPanel3);
 
         jPanel15.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel15.setMaximumSize(new java.awt.Dimension(400, 68));
-        jPanel15.setPreferredSize(new java.awt.Dimension(600, 222));
+        jPanel15.setMaximumSize(new java.awt.Dimension(600, 68));
+        jPanel15.setPreferredSize(new java.awt.Dimension(600, 68));
         jPanel15.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel15MouseClicked(evt);
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24));
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("+ Adicionar Questão");
 
@@ -222,6 +218,12 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         );
 
         painelConteudo.add(jPanel15);
+
+        jButton1.setBackground(new java.awt.Color(240, 147, 32));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Salvar Tarefa");
+        jButton1.setPreferredSize(new java.awt.Dimension(180, 35));
+        jButton1.setMaximumSize(new java.awt.Dimension(180, 35));
 
         jScrollPane1.setViewportView(painelConteudo);
 
@@ -250,19 +252,19 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
     // 2. Cria o painel da nova questão completo usando o nosso método auxiliar
     javax.swing.JPanel novaQuestaoCompleta = criarPainelNovaQuestao(numeroQuestao);
     jPanel15.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
-    // 3. Remove o botão de adicionar temporariamente para ele ir para o fim da fila
     painelConteudo.remove(jPanel15);
-    
-    // 4. Adiciona o espaçador e a nova questão montada
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); 
+    painelConteudo.remove(jButton1);
+
+    painelConteudo.add(javax.swing.Box.createVerticalStrut(10)); 
     painelConteudo.add(novaQuestaoCompleta);
+
     
-    // 5. Devolve o botão e os espaçadores de segurança para o final do painel
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); 
+    painelConteudo.add(javax.swing.Box.createVerticalStrut(10)); 
     painelConteudo.add(jPanel15);
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(40)); 
-    
-    // 6. Atualiza a tela e força o scroll a descer
+    painelConteudo.add(javax.swing.Box.createVerticalStrut(10)); 
+    painelConteudo.add(jButton1);
+    painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); 
+
     painelConteudo.revalidate();
     painelConteudo.repaint();
     
@@ -275,11 +277,11 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         javax.swing.JPanel painelQuestao = new javax.swing.JPanel();
         painelQuestao.setBackground(new java.awt.Color(240, 147, 32));
         painelQuestao.setLayout(new javax.swing.BoxLayout(painelQuestao, javax.swing.BoxLayout.Y_AXIS));
-        painelQuestao.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 25, 20, 25));
+        painelQuestao.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 20, 14, 20));
         
         painelQuestao.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
-        painelQuestao.setMaximumSize(new java.awt.Dimension(632, 380));
-        painelQuestao.setPreferredSize(new java.awt.Dimension(632, 380));
+        painelQuestao.setMaximumSize(new java.awt.Dimension(632, 340));
+        painelQuestao.setPreferredSize(new java.awt.Dimension(632, 340));
 
         javax.swing.JLabel lblTitulo = new javax.swing.JLabel("Questão - " + numero);
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18));
@@ -293,7 +295,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         comboTipo.setPreferredSize(new java.awt.Dimension(580, 35));
         comboTipo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         painelQuestao.add(comboTipo);
-        painelQuestao.add(javax.swing.Box.createVerticalStrut(15));
+        painelQuestao.add(javax.swing.Box.createVerticalStrut(8));
 
         javax.swing.JTextArea txtEnunciado = new javax.swing.JTextArea(4, 20);
         txtEnunciado.setText("Digite o enunciado da questão aqui...");
@@ -306,7 +308,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         scrollEnunciado.setPreferredSize(new java.awt.Dimension(580, 80));
         scrollEnunciado.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         painelQuestao.add(scrollEnunciado);
-        painelQuestao.add(javax.swing.Box.createVerticalStrut(15));
+        painelQuestao.add(javax.swing.Box.createVerticalStrut(8));
 
         javax.swing.JPanel painelDinamico = new javax.swing.JPanel();
         painelDinamico.setBackground(new java.awt.Color(240, 147, 32));
@@ -320,19 +322,52 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
 
             if ("Múltipla Escolha".equals(tipo)) {
                 javax.swing.ButtonGroup grupoRadio = new javax.swing.ButtonGroup();
-                for (int i = 1; i <= 4; i++) {
-                    javax.swing.JRadioButton radio = new javax.swing.JRadioButton("Escreva Alternativa");
-                    radio.setFont(new java.awt.Font("Segoe UI", 0, 14));
-                    radio.setForeground(new java.awt.Color(255, 255, 255));
-                    radio.setBackground(new java.awt.Color(240, 147, 32));
-                    radio.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                javax.swing.JPanel painelAlternativas = new javax.swing.JPanel();
+                painelAlternativas.setBackground(new java.awt.Color(240, 147, 32));
+                painelAlternativas.setLayout(new javax.swing.BoxLayout(painelAlternativas, javax.swing.BoxLayout.Y_AXIS));
+                painelAlternativas.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 
-                    grupoRadio.add(radio);
-                    painelDinamico.add(radio);
-                    painelDinamico.add(javax.swing.Box.createVerticalStrut(5));
+                java.util.function.BiConsumer<javax.swing.JPanel, javax.swing.ButtonGroup> adicionarAlternativa = (painel, grupo) -> {
+                    javax.swing.JPanel linhaAlternativa = new javax.swing.JPanel();
+                    linhaAlternativa.setBackground(new java.awt.Color(240, 147, 32));
+                    linhaAlternativa.setLayout(new javax.swing.BoxLayout(linhaAlternativa, javax.swing.BoxLayout.X_AXIS));
+                    linhaAlternativa.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
+                    javax.swing.JRadioButton radio = new javax.swing.JRadioButton();
+                    radio.setBackground(new java.awt.Color(240, 147, 32));
+                    grupo.add(radio);
+
+                    javax.swing.JTextField campoAlternativa = new javax.swing.JTextField("Digite a alternativa");
+                    campoAlternativa.setMaximumSize(new java.awt.Dimension(500, 32));
+                    campoAlternativa.setPreferredSize(new java.awt.Dimension(500, 32));
+
+                    linhaAlternativa.add(radio);
+                    linhaAlternativa.add(javax.swing.Box.createHorizontalStrut(8));
+                    linhaAlternativa.add(campoAlternativa);
+
+                    painel.add(linhaAlternativa);
+                    painel.add(javax.swing.Box.createVerticalStrut(8));
+                };
+
+                for (int i = 0; i < 4; i++) {
+                    adicionarAlternativa.accept(painelAlternativas, grupoRadio);
                 }
-                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 380));
-                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 380));
+
+                javax.swing.JButton btnAdicionarAlternativa = new javax.swing.JButton("Adicionar alternativa");
+                btnAdicionarAlternativa.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                btnAdicionarAlternativa.addActionListener(evt -> {
+                    adicionarAlternativa.accept(painelAlternativas, grupoRadio);
+                    painelAlternativas.revalidate();
+                    painelAlternativas.repaint();
+                    painelQuestao.revalidate();
+                    painelQuestao.repaint();
+                });
+
+                painelDinamico.add(painelAlternativas);
+                painelDinamico.add(javax.swing.Box.createVerticalStrut(6));
+                painelDinamico.add(btnAdicionarAlternativa);
+                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 460));
+                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 460));
             } else {
                 javax.swing.JLabel lblResposta = new javax.swing.JLabel("Resposta:");
                 lblResposta.setFont(new java.awt.Font("Segoe UI", 0, 14));
@@ -349,8 +384,8 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
                 scrollResposta.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 
                 painelDinamico.add(scrollResposta);
-                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 340));
-                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 340));
+                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 300));
+                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 300));
             }
 
             painelQuestao.revalidate();
@@ -393,6 +428,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;

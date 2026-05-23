@@ -204,9 +204,10 @@ public class TelaLogin extends javax.swing.JFrame {
             if (usuarioValido) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
                 
-                String tipo_usuario = alunoDAO.determinarTipoUsuario(usuarioDigitado);
+                String tipo_usuario = alunoDAO.obterTipoUsuario(usuarioDigitado, senhaDigitada);
                 if ("aluno".equals(tipo_usuario)) {
-                    new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
+                    br.maua.domain.Aluno aluno = alunoDAO.obterAlunoCompleto(usuarioDigitado, senhaDigitada);
+                    new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(aluno).setVisible(true);
                 } else {
                     new br.maua.presentation.TelaPainelDeControle().setVisible(true);
                 }
