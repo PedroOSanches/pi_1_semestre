@@ -10,14 +10,14 @@ import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
  *
  * @author Luiza
  */
-public class AcoesTarefa extends javax.swing.JFrame {
+public class TelaAcoesTarefa extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AcoesTarefa.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAcoesTarefa.class.getName());
 
     /**
      * Creates new form AcoesTarefa
      */
-    public AcoesTarefa() {
+    public TelaAcoesTarefa() {
         initComponents();
     }
 
@@ -134,7 +134,7 @@ public class AcoesTarefa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new AcoesTarefa().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaAcoesTarefa().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
