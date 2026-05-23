@@ -4,6 +4,11 @@
  */
 package br.maua.presentation.TelaPainelAdministrativo;
 
+import br.maua.presentation.AcoesTarefa;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 /**
  *
  * @author Lenovo
@@ -17,6 +22,24 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
      */
     public TelaPainelAdministrativo1() {
         initComponents();
+        configurarAtalhoTarefas();
+    }
+
+    private void configurarAtalhoTarefas() {
+        Cursor cursorMao = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        jPanel3.setCursor(cursorMao);
+        jLabel3.setCursor(cursorMao);
+
+        MouseAdapter abrirTarefas = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                new AcoesTarefa().setVisible(true);
+                dispose();
+            }
+        };
+
+        jPanel3.addMouseListener(abrirTarefas);
+        jLabel3.addMouseListener(abrirTarefas);
     }
 
     /**
@@ -48,7 +71,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 60)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Notas");
+        jLabel2.setText("Turmas");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -57,7 +80,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addComponent(jLabel2)
-                .addContainerGap(529, Short.MAX_VALUE))
+                .addContainerGap(490, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -96,13 +119,14 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(208, 208, 208)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(145, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(140, 140, 140))
+                .addContainerGap(184, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(140, 140, 140))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(213, 213, 213))))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                     .addContainerGap(146, Short.MAX_VALUE)
@@ -116,7 +140,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(250, 250, 250)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addContainerGap(224, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(240, 240, 240)

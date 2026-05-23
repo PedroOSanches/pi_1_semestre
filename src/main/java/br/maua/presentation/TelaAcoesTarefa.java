@@ -4,7 +4,7 @@
  */
 package br.maua.presentation;
 
-import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa2;
 
 /**
  *
@@ -104,7 +104,10 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        TelaCriarTarefa cf = new TelaCriarTarefa();
+        TelaCriarTarefa2 cf = new TelaCriarTarefa2();
+        cf.pack();
+        cf.setLocationRelativeTo(null);
+        cf.setVisible(true);
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 

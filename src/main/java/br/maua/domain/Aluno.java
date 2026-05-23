@@ -8,6 +8,9 @@ public class Aluno {
     private String curso;
     private String senha;
 
+    public Aluno() {
+    }
+
     public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
         this.idAluno = idAluno;
         this.nome = nome;

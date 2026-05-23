@@ -73,16 +73,16 @@
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="136" pref="136" max="-2" attributes="0"/>
-                              <Component id="CadastroTitulo5" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="196" max="-2" attributes="0"/>
                               <Component id="entrarBotao10" min="-2" pref="94" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
                               <Component id="entrarBotao11" min="-2" pref="309" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
+                              <Component id="CadastroTitulo5" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="102" max="32767" attributes="0"/>
@@ -132,7 +132,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Cadastro"/>
+                <Property name="text" type="java.lang.String" value="Login"/>
                 <Property name="name" type="java.lang.String" value="CadastroTitulo" noResource="true"/>
               </Properties>
             </Component>

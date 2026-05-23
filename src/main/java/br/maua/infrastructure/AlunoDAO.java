@@ -23,11 +23,29 @@ public class AlunoDAO {
         }
     }
 
+    public String obterTipoUsuario(String username, String senha) throws SQLException {
+        String sql = "SELECT tipo_usuario FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+            comando.setString(1, username);
+            comando.setString(2, senha);
+
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    return resultado.getString("tipo_usuario");
+                }
+                return null;
+            }
+        }
+    }
+
     public boolean usernameEhSomenteNumeros(String username) {
         return username != null && !username.isBlank() && username.matches("\\d+");
     }
 
-    public String determinarRole(String username) {
+    public String determinarTipoUsuario(String username) {
         return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
     }
 
@@ -43,6 +61,29 @@ public class AlunoDAO {
             comando.setString(4, aluno.getSenha());
 
             comando.executeUpdate();
+        }
+    }
+
+    public Aluno obterAlunoCompleto(String username, String senha) throws SQLException {
+        String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+            comando.setString(1, username);
+            comando.setString(2, senha);
+
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    Aluno aluno = new Aluno();
+                    aluno.setNome(resultado.getString("nome_usuario"));
+                    aluno.setSobrenome(resultado.getString("sobrenome_usuario"));
+                    aluno.setUsername(resultado.getString("username_usuario"));
+                    aluno.setSenha(resultado.getString("senha_usuario"));
+                    return aluno;
+                }
+                return null;
+            }
         }
     }
 }
