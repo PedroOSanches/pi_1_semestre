@@ -26,7 +26,6 @@ public class TelaHomeProfessor extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         painelAzul = new javax.swing.JPanel();
         painelCinza = new javax.swing.JPanel();
@@ -61,7 +60,7 @@ public class TelaHomeProfessor extends javax.swing.JFrame {
         botaoAdmin.setName("botaoAdmin"); // NOI18N
         botaoAdmin.addActionListener(this::botaoAdminActionPerformed);
         painelCinza.add(botaoAdmin);
-        botaoAdmin.setBounds(590, 260, 139, 32);
+        botaoAdmin.setBounds(590, 260, 143, 32);
         botaoAdmin.getAccessibleContext().setAccessibleName("botaoAdmin");
 
         painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
@@ -112,7 +111,7 @@ public class TelaHomeProfessor extends javax.swing.JFrame {
         painelAzulLayout.setHorizontalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
+                .addContainerGap(78, Short.MAX_VALUE)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68))
         );
