@@ -4,10 +4,12 @@
  */
 package br.maua.presentation.TelaPainelAdministrativo;
 
-import br.maua.presentation.TelaAcoesTarefa;
+
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa;
 
 /**
  *

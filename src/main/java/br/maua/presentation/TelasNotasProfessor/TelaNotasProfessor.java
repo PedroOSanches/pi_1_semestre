@@ -2,32 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package br.maua.presentation;
-
-import br.maua.domain.Aluno;
+package br.maua.presentation.TelasNotasProfessor;
 
 /**
  *
  * @author Luiza
  */
-public class TelaNotaAluno extends javax.swing.JFrame {
+public class TelaNotasProfessor extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaNotaAluno.class.getName());
-    private final Aluno aluno;
-    private final ModalPerfilAluno modalOrigem;
-    /**
-     * Creates new form TelaNotaAluno
-     */
-     public TelaNotaAluno(Aluno aluno, ModalPerfilAluno modalOrigem) {
-        this.aluno = aluno;
-        this.modalOrigem = modalOrigem;
-        initComponents();
-        this.setVisible(true);
-    }
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaNotasProfessor.class.getName());
 
-    private int fecharJanela(){
-        modalOrigem.setVisible(true);
-        return javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+    /**
+     * Creates new form TelaNotasProfessor
+     */
+    public TelaNotasProfessor() {
+        initComponents();
     }
 
     /**
@@ -39,12 +28,12 @@ public class TelaNotaAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
         jScrollPane1 = new javax.swing.JScrollPane();
         painelAzul = new javax.swing.JPanel();
         painelCinza = new javax.swing.JPanel();
         Atividade = new javax.swing.JLabel();
-        Nota = new javax.swing.JLabel();
+        btnCorrigirTarefa = new javax.swing.JButton();
+        nota = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,8 +44,15 @@ public class TelaNotaAluno extends javax.swing.JFrame {
         Atividade.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
         Atividade.setText("Atividade:");
 
-        Nota.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
-        Nota.setText("Nota: ");
+        btnCorrigirTarefa.setBackground(new java.awt.Color(240, 147, 32));
+        btnCorrigirTarefa.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        btnCorrigirTarefa.setText("Nota:");
+        btnCorrigirTarefa.setBorder(null);
+        btnCorrigirTarefa.setBorderPainted(false);
+        btnCorrigirTarefa.addActionListener(this::btnCorrigirTarefaActionPerformed);
+
+        nota.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        nota.setText("xx/10");
 
         javax.swing.GroupLayout painelCinzaLayout = new javax.swing.GroupLayout(painelCinza);
         painelCinza.setLayout(painelCinzaLayout);
@@ -65,17 +61,17 @@ public class TelaNotaAluno extends javax.swing.JFrame {
             .addGroup(painelCinzaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(Atividade, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 655, Short.MAX_VALUE)
-                .addComponent(Nota, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 583, Short.MAX_VALUE)
+                .addComponent(btnCorrigirTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(nota, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         painelCinzaLayout.setVerticalGroup(
             painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Atividade)
-                    .addComponent(Nota)))
+            .addComponent(btnCorrigirTarefa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Atividade, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+            .addComponent(nota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
@@ -92,7 +88,7 @@ public class TelaNotaAluno extends javax.swing.JFrame {
             .addGroup(painelAzulLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(716, Short.MAX_VALUE))
+                .addContainerGap(730, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(painelAzul);
@@ -101,22 +97,50 @@ public class TelaNotaAluno extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCorrigirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrigirTarefaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCorrigirTarefaActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new TelaNotasProfessor().setVisible(true));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Atividade;
-    private javax.swing.JLabel Nota;
-    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JButton btnCorrigirTarefa;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nota;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JPanel painelCinza;
     // End of variables declaration//GEN-END:variables
