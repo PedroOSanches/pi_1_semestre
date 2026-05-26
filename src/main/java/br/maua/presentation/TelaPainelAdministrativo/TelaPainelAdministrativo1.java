@@ -4,7 +4,7 @@
  */
 package br.maua.presentation.TelaPainelAdministrativo;
 
-import br.maua.presentation.AcoesTarefa;
+import br.maua.presentation.TelaAcoesTarefa;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,7 +33,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         MouseAdapter abrirTarefas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                new AcoesTarefa().setVisible(true);
+                new TelaAcoesTarefa().setVisible(true);
                 dispose();
             }
         };

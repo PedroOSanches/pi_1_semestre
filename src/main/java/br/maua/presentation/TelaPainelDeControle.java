@@ -26,7 +26,6 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         painelAzul = new javax.swing.JPanel();
         painelCinza = new javax.swing.JPanel();
@@ -61,7 +60,7 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         botaoAdmin.setName("botaoAdmin"); // NOI18N
         botaoAdmin.addActionListener(this::botaoAdminActionPerformed);
         painelCinza.add(botaoAdmin);
-        botaoAdmin.setBounds(590, 260, 139, 32);
+        botaoAdmin.setBounds(569, 260, 160, 32);
         botaoAdmin.getAccessibleContext().setAccessibleName("botaoAdmin");
 
         painelAzul1.setBackground(new java.awt.Color(19, 112, 178));

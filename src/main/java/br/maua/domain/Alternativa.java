@@ -2,5 +2,5 @@ package br.maua.domain;
 
 public class Alternativa {
     private String enunciado;
-    private boolean alternativaCorreta;
+    private boolean alternativaAssinalada;
 }
