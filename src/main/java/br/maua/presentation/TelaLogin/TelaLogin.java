@@ -6,7 +6,7 @@ package br.maua.presentation.TelaLogin;
 
 import javax.swing.JOptionPane;
 import br.maua.infrastructure.AlunoDAO;
-import br.maua.presentation.TelaCadastroProfessor;
+import br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor;
 
 /**
  *
@@ -209,7 +209,7 @@ public class TelaLogin extends javax.swing.JFrame {
                     br.maua.domain.Aluno aluno = alunoDAO.obterAlunoCompleto(usuarioDigitado, senhaDigitada);
                     new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(aluno).setVisible(true);
                 } else {
-                    new br.maua.presentation.TelaPainelDeControle().setVisible(true);
+                    new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
                 }
                 this.dispose(); 
             } else {
@@ -230,7 +230,7 @@ public class TelaLogin extends javax.swing.JFrame {
     private void entrarBotao11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entrarBotao11ActionPerformed
         // TODO add your handling code here:
         try {
-            br.maua.presentation.TelaCadastroProfessor cadastro = new br.maua.presentation.TelaCadastroProfessor();
+            br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor cadastro = new br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor();
             cadastro.setVisible(true);
             this.dispose();
         } catch (Exception e) {

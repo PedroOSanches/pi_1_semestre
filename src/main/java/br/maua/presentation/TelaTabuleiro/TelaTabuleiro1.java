@@ -4,7 +4,7 @@
  */
 package br.maua.presentation.TelaTabuleiro;
 
-import br.maua.presentation.ModalPerfilAluno;
+import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
 
 /**
  *

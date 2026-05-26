@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package br.maua.presentation;
+package br.maua.presentation.TelaNotaAluno;
 
 import br.maua.domain.Aluno;
+import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
 
 /**
  *

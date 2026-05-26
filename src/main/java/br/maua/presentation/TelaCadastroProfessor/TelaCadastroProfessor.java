@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-package br.maua.presentation;
+package br.maua.presentation.TelaCadastroProfessor;
 import javax.swing.JOptionPane;
 
 /**
