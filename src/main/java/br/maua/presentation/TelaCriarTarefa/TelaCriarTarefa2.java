@@ -290,7 +290,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         painelQuestao.add(lblTitulo);
         painelQuestao.add(javax.swing.Box.createVerticalStrut(10));
 
-        javax.swing.JComboBox<String> comboTipo = new javax.swing.JComboBox<>(new String[] { "Múltipla Escolha", "Dissertativa" });
+        javax.swing.JComboBox<String> comboTipo = new javax.swing.JComboBox<>(new String[] { "Múltipla Escolha", "Dissertativa", "Upload" });
         comboTipo.setMaximumSize(new java.awt.Dimension(580, 35));
         comboTipo.setPreferredSize(new java.awt.Dimension(580, 35));
         comboTipo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
@@ -368,6 +368,41 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
                 painelDinamico.add(btnAdicionarAlternativa);
                 painelQuestao.setMaximumSize(new java.awt.Dimension(632, 460));
                 painelQuestao.setPreferredSize(new java.awt.Dimension(632, 460));
+            } else if ("Upload".equals(tipo)) {
+                javax.swing.JLabel lblArquivo = new javax.swing.JLabel("Arquivo:");
+                lblArquivo.setFont(new java.awt.Font("Segoe UI", 0, 14));
+                lblArquivo.setForeground(new java.awt.Color(255, 255, 255));
+                lblArquivo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                painelDinamico.add(lblArquivo);
+                painelDinamico.add(javax.swing.Box.createVerticalStrut(5));
+
+                javax.swing.JPanel linhaArquivo = new javax.swing.JPanel();
+                linhaArquivo.setBackground(new java.awt.Color(240, 147, 32));
+                linhaArquivo.setLayout(new javax.swing.BoxLayout(linhaArquivo, javax.swing.BoxLayout.X_AXIS));
+                linhaArquivo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
+                javax.swing.JTextField campoArquivo = new javax.swing.JTextField("Selecione o arquivo da tarefa");
+                campoArquivo.setEditable(false);
+                campoArquivo.setMaximumSize(new java.awt.Dimension(430, 32));
+                campoArquivo.setPreferredSize(new java.awt.Dimension(430, 32));
+
+                javax.swing.JButton btnSelecionarArquivo = new javax.swing.JButton("Escolher arquivo");
+                btnSelecionarArquivo.addActionListener(evt -> {
+                    javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+                    int resultado = chooser.showOpenDialog(painelQuestao);
+                    if (resultado == javax.swing.JFileChooser.APPROVE_OPTION) {
+                        java.io.File arquivo = chooser.getSelectedFile();
+                        campoArquivo.setText(arquivo.getAbsolutePath());
+                    }
+                });
+
+                linhaArquivo.add(campoArquivo);
+                linhaArquivo.add(javax.swing.Box.createHorizontalStrut(8));
+                linhaArquivo.add(btnSelecionarArquivo);
+
+                painelDinamico.add(linhaArquivo);
+                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 360));
+                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 360));
             } else {
                 javax.swing.JLabel lblResposta = new javax.swing.JLabel("Resposta:");
                 lblResposta.setFont(new java.awt.Font("Segoe UI", 0, 14));

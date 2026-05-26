@@ -33,7 +33,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         MouseAdapter abrirTarefas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                new AcoesTarefa().setVisible(true);
+                new TelaAcoesTarefa().setVisible(true);
                 dispose();
             }
         };
