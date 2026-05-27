@@ -164,9 +164,13 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotasActionPerformed
-        // TODO add your handling code here:
+        if (aluno == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Aluno não carregado.");
+            return;
+        }
+
         this.setVisible(false);
-        TelaNotaAluno mna = new TelaNotaAluno(aluno, this);
+        new TelaNotaAluno(aluno, this).setVisible(true);
     }//GEN-LAST:event_btnNotasActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed

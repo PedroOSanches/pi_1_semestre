@@ -4,6 +4,8 @@
  */
 package br.maua.presentation.TelaModalPerfilProfessor;
 
+import br.maua.domain.Professor;
+
 /**
  *
  * @author Luiza
@@ -11,12 +13,21 @@ package br.maua.presentation.TelaModalPerfilProfessor;
 public class ModalPerfilProfessor extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ModalPerfilProfessor.class.getName());
+    private final Professor professor;
 
     /**
      * Creates new form ModalPerfilProfessor
      */
     public ModalPerfilProfessor() {
+        this(null);
+    }
+
+    public ModalPerfilProfessor(Professor professor) {
+        this.professor = professor;
         initComponents();
+        if (this.professor != null) {
+            nomeProfessor.setText(this.professor.getNomeCompleto());
+        }
     }
 
     /**
@@ -106,7 +117,8 @@ public class ModalPerfilProfessor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
+        new br.maua.presentation.TelaLogin.TelaLogin().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
