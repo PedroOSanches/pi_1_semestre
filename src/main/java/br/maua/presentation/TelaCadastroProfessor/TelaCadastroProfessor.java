@@ -275,11 +275,10 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         
         try {
             
-            br.maua.domain.Aluno novoAluno = new br.maua.domain.Aluno(0, nome, sobrenome, username, "", senha);
-            
-            
-            br.maua.infrastructure.AlunoDAO dao = new br.maua.infrastructure.AlunoDAO();
-            dao.salvarNoBanco(novoAluno);
+            br.maua.domain.Professor novoProfessor = new br.maua.domain.Professor(nome, sobrenome, username, senha);
+
+            br.maua.infrastructure.ProfessorDAO dao = new br.maua.infrastructure.ProfessorDAO();
+            dao.salvarNoBanco(novoProfessor);
             
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
             

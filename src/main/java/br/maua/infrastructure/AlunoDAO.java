@@ -68,7 +68,7 @@ public class AlunoDAO {
         String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, username);
             comando.setString(2, senha);

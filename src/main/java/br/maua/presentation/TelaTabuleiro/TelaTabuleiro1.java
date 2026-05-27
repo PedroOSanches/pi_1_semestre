@@ -14,14 +14,42 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTabuleiro1.class.getName());
     private br.maua.domain.Aluno alunoLogado;
+    private boolean mostrarVoltarParaAdmin = false;
 
     /**
      * Creates new form TelaTabuleiro1
      */
     public TelaTabuleiro1(br.maua.domain.Aluno aluno) {
         this.alunoLogado = aluno;
+        this.mostrarVoltarParaAdmin = false;
         initComponents();
         configurarScroll();
+        // por padrão, se construído com um Aluno, não mostra o Voltar para Admin
+        jButton2.setVisible(this.mostrarVoltarParaAdmin);
+        if (this.mostrarVoltarParaAdmin) {
+            jButton2.addActionListener(evt -> {
+                new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
+                this.dispose();
+            });
+        }
+    }
+
+    /**
+     * Construtor usado quando devemos mostrar o botão "Voltar" que retorna ao
+     * Painel Administrativo (por exemplo, quando um professor abre o tabuleiro).
+     */
+    public TelaTabuleiro1(boolean mostrarVoltarParaAdmin) {
+        this.alunoLogado = null;
+        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
+        initComponents();
+        configurarScroll();
+        jButton2.setVisible(this.mostrarVoltarParaAdmin);
+        if (this.mostrarVoltarParaAdmin) {
+            jButton2.addActionListener(evt -> {
+                new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
+                this.dispose();
+            });
+        }
     }
     
     private void abrirModalPerfilAluno() {
@@ -34,7 +62,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
     }
 
     public TelaTabuleiro1() {
-        this(null);
+        this((br.maua.domain.Aluno) null);
     }
 
     
@@ -288,6 +316,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         jLabel113 = new javax.swing.JLabel();
         jLabel114 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         Casa15.setBackground(new java.awt.Color(19, 112, 178));
         Casa15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
@@ -397,20 +426,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         Secao1.setMaximumSize(new java.awt.Dimension(316, 230));
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        // Tentar carregar ícone; se falhar, exibir placeholder
-        java.io.File iconFile = new java.io.File("C:\\Users\\Lenovo\\Downloads\\b7a03d0f-ffaf-4634-9812-dda5823ec8ee_resized.png");
-        if (iconFile.exists()) {
-            jLabel2.setIcon(new javax.swing.ImageIcon(iconFile.getAbsolutePath()));
-        } else {
-            jLabel2.setText("👤");
-            jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 32));
-        }
-        jLabel2.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                abrirModalPerfilAluno();
-            }
-        });
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\b7a03d0f-ffaf-4634-9812-dda5823ec8ee_resized.png")); // NOI18N
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
@@ -2761,6 +2777,10 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         jButton1.setText("Perfil");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
+        jButton2.setBackground(new java.awt.Color(19, 112, 178));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Voltar");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -2786,7 +2806,9 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGap(371, 371, 371)
+                                            .addGap(29, 29, 29)
+                                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(257, 257, 257)
                                             .addComponent(Inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addGap(312, 312, 312)
@@ -2847,7 +2869,10 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
                     .addComponent(Inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(Secao1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -3151,6 +3176,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
     private javax.swing.JPanel Secao5;
     private javax.swing.JPanel Secao6;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox12;
     private javax.swing.JCheckBox jCheckBox13;
