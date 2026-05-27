@@ -28,15 +28,33 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="painelAzul1" alignment="0" max="32767" attributes="0"/>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="462" max="-2" attributes="0"/>
+                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="462" max="32767" attributes="0"/>
+              </Group>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="painelAzul1" alignment="0" max="32767" attributes="0"/>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="334" max="-2" attributes="0"/>
+                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="334" max="32767" attributes="0"/>
+              </Group>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+    </Container>
     <Container class="javax.swing.JPanel" name="painelAzul1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -50,8 +68,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                   <Component id="painelCinza1" min="-2" pref="930" max="-2" attributes="0"/>
-                  <EmptySpace pref="37" max="32767" attributes="0"/>
-                  <Component id="jScrollBar1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="47" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -62,7 +79,6 @@
                   <Component id="painelCinza1" min="-2" pref="666" max="-2" attributes="0"/>
                   <EmptySpace pref="55" max="32767" attributes="0"/>
               </Group>
-              <Component id="jScrollBar1" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -83,7 +99,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="202" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="nota" min="-2" pref="135" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="nota" min="-2" pref="64" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jTextField1" min="-2" pref="77" max="-2" attributes="0"/>
+                          </Group>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                               <Component id="jScrollPane3" alignment="0" pref="0" max="32767" attributes="0"/>
@@ -113,7 +133,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane5" min="-2" pref="118" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="nota" min="-2" pref="55" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="nota" pref="55" max="32767" attributes="0"/>
+                          <Component id="jTextField1" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace pref="23" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -339,13 +362,20 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Nota: xx/10"/>
+                <Property name="text" type="java.lang.String" value="Nota:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="jTextField1">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Yu Gothic UI Semibold" size="18" style="1"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="xx/10"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JScrollBar" name="jScrollBar1">
-        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

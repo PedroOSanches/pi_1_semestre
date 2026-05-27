@@ -4,6 +4,8 @@
  */
 package br.maua.presentation.TelasNotasProfessor;
 
+
+import br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa;
 /**
  *
  * @author Luiza
@@ -11,6 +13,7 @@ package br.maua.presentation.TelasNotasProfessor;
 public class TelaNotasProfessor extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaNotasProfessor.class.getName());
+    
 
     /**
      * Creates new form TelaNotasProfessor
@@ -109,6 +112,11 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
 
     private void btnCorrigirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrigirTarefaActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa();
+        tct.pack();
+        tct.setLocationRelativeTo(null);
+        tct.setVisible(true);
     }//GEN-LAST:event_btnCorrigirTarefaActionPerformed
 
     /**
@@ -131,7 +139,7 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new TelaNotasProfessor().setVisible(true));
     }

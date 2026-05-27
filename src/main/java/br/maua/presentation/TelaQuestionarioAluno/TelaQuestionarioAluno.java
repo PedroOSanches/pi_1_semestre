@@ -160,6 +160,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         btnEnviarTarefa2.setBackground(new java.awt.Color(240, 147, 32));
         btnEnviarTarefa2.setForeground(new java.awt.Color(255, 255, 255));
         btnEnviarTarefa2.setText("Enviar Tarefa");
+        btnEnviarTarefa2.addActionListener(this::btnEnviarTarefa2ActionPerformed);
 
         javax.swing.GroupLayout painelCinza1Layout = new javax.swing.GroupLayout(painelCinza1);
         painelCinza1.setLayout(painelCinza1Layout);
@@ -264,6 +265,10 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
             jTextArea2.setForeground(java.awt.Color.GRAY);
         }
     }//GEN-LAST:event_jTextArea2FocusLost
+
+    private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
     /**
      * @param args the command line arguments
