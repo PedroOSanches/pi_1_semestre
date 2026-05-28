@@ -1,4 +1,4 @@
-package br.maua.presentation;
+package br.maua.presentation.TelaUploadAluno;
 
 import javax.swing.JFileChooser;
 import java.io.File;
