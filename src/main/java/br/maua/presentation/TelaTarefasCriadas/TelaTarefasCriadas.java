@@ -33,6 +33,8 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         painelCinza = new javax.swing.JPanel();
         Atividade = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        btnEnviar = new javax.swing.JButton();
+        titulo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +70,19 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         jComboBox1.setOpaque(true);
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
+        btnEnviar.setBackground(new java.awt.Color(240, 147, 32));
+        btnEnviar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
+        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnviar.setText("Voltar");
+        btnEnviar.setBorder(null);
+        btnEnviar.setBorderPainted(false);
+        btnEnviar.addActionListener(this::btnEnviarActionPerformed);
+
+        titulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 48)); // NOI18N
+        titulo.setForeground(new java.awt.Color(255, 255, 255));
+        titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titulo.setText("Tarefas Criadas");
+
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
         painelAzulLayout.setHorizontalGroup(
@@ -75,21 +90,30 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
             .addGroup(painelAzulLayout.createSequentialGroup()
                 .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29)
+                        .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(127, 127, 127)
+                        .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 834, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addGap(93, 93, 93)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 834, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelAzulLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         painelAzulLayout.setVerticalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzulLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
+                .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(titulo)
+                    .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(644, Short.MAX_VALUE))
+                .addContainerGap(603, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(painelAzul);
@@ -111,6 +135,12 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        // TODO add your handling code here:
+        new br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEnviarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,9 +169,11 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Atividade;
+    private javax.swing.JButton btnEnviar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JPanel painelCinza;
+    private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }
