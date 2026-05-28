@@ -285,19 +285,19 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         Number valor = (Number) campoNota.getValue();
 
         if (valor != null) {
-            float notaDigitada = valor.floatValue();
+            float nota = valor.floatValue();
 
-            this.tentativa.setNota(notaDigitada);
+            this.tentativa.setNota(nota);
             boolean confirmacaoCommit = tentativa.commitCorrecao();
 
             if (confirmacaoCommit) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Nota salva com sucesso!");
+                javax.swing.JOptionPane.showMessageDialog(this, "Nota salva!");
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar no banco.");
+                javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar.");
             }
         }
         else{
-            javax.swing.JOptionPane.showMessageDialog(this, "Digite a nota.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Digite uma nota.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

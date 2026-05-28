@@ -11,7 +11,6 @@ public class Tentativa {
     private Double nota;
     private Aluno aluno;
     private Tarefa tarefa;
-    private boolean concluida = false;
     private int idTentativa;
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
@@ -53,14 +52,17 @@ public class Tentativa {
         this.tarefa = tarefa;
     }
 
-    public boolean isConcluida() {
-        return concluida;
+    public int getIdTentativa() {
+        return idTentativa;
     }
-    public void setConcluida(boolean concluida) {
-        this.concluida = concluida;
+
+    public void setIdTentativa(int idTentativa) {
+        this.idTentativa = idTentativa;
     }
+
     public void registraTentativa(){
-        String sql = "INSERT INTO tentativa (id_questionario, id_usuario, concluido) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO tentativa (id_questionario, id_usuario, status)" +
+                "VALUES (?, ?, ?)";
 
         try(
                 Connection cx = ConnectionFactory.obterConexao();
@@ -71,7 +73,7 @@ public class Tentativa {
                     ){
                 ps.setInt(1, tarefa.getIdTarefa());
                 ps.setInt(2, aluno.getIdAluno());
-                ps.setBoolean(3, concluida);
+                ps.setString(3, "concluída");
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
@@ -81,7 +83,9 @@ public class Tentativa {
 
     public boolean commitCorrecao(){
 
-        String sql = "UPDATE tentativa SET nota = ? WHERE id_tentativa = ?";
+        String sql = "UPDATE tentativa" +
+                "SET nota = ?, status = ?" +
+                "WHERE id_tentativa = ?";
 
         try(
                 Connection cx = ConnectionFactory.obterConexao();
@@ -91,7 +95,9 @@ public class Tentativa {
 
             ){
                 ps.setDouble(1, this.nota);
-                ps.setInt(2, this.idTentativa);
+                ps.setString(2, "corrigida");
+                ps.setInt(3, this.idTentativa);
+                ps.executeUpdate();
             }
             return true;
 
