@@ -17,7 +17,12 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
      */
     public TelaCorrecaoTarefa() {
         initComponents();
-  
+        jTextPane1.setEditable(false);
+        jTextPane1.setFocusable(false);
+        jTextPane2.setEditable(false);
+        jTextPane2.setFocusable(false);
+        jTextPane3.setEditable(false);
+        jTextPane3.setFocusable(false);
     }
 
     /**
@@ -30,6 +35,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jScrollPane4 = new javax.swing.JScrollPane();
         painelAzul1 = new javax.swing.JPanel();
         painelCinza1 = new javax.swing.JPanel();
         titulo3 = new java.awt.Label();
@@ -47,7 +53,8 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         nota = new java.awt.Label();
-        jScrollBar1 = new javax.swing.JScrollBar();
+        campoNota = new javax.swing.JFormattedTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,7 +78,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         jTextPane2.setBackground(new java.awt.Color(240, 147, 32));
         jTextPane2.setForeground(new java.awt.Color(255, 255, 255));
         jTextPane2.setText("Questão 1: \nLaboris veniam do excepteur officia. Culpa veniam cillum irure reprehenderit nisi veniam sit fugiat ipsum. Laborum. consequat proident magna id adipiscing cupidatat ut magna mollit labore. Culpa officia in incididunt ut ex et");
-        jTextPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jTextPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane2.setViewportView(jTextPane2);
 
         jPanel2.setBackground(new java.awt.Color(240, 147, 32));
@@ -128,7 +135,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         jTextPane3.setBackground(new java.awt.Color(240, 147, 32));
         jTextPane3.setForeground(new java.awt.Color(255, 255, 255));
         jTextPane3.setText("Questão 2: \nLaboris veniam do excepteur officia. Culpa veniam cillum irure reprehenderit nisi veniam sit fugiat ipsum. Laborum. consequat proident magna id adipiscing cupidatat ut magna mollit labore. Culpa officia in incididunt ut ex et");
-        jTextPane3.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jTextPane3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane3.setViewportView(jTextPane3);
 
         jTextArea2.setEditable(false);
@@ -150,7 +157,15 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         nota.setBackground(new java.awt.Color(19, 112, 178));
         nota.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
         nota.setForeground(new java.awt.Color(255, 255, 255));
-        nota.setText("Nota: xx/10");
+        nota.setText("Nota:");
+
+        campoNota.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        campoNota.addActionListener(this::campoNotaActionPerformed);
+
+        jButton1.setBackground(new java.awt.Color(19, 112, 178));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("SALVAR");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout painelCinza1Layout = new javax.swing.GroupLayout(painelCinza1);
         painelCinza1.setLayout(painelCinza1Layout);
@@ -158,15 +173,19 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelCinza1Layout.createSequentialGroup()
                 .addGap(202, 202, 202)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nota, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane5)
-                        .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1)))
+                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(painelCinza1Layout.createSequentialGroup()
+                        .addComponent(nota, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(campoNota, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5)
+                    .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap(200, Short.MAX_VALUE))
         );
         painelCinza1Layout.setVerticalGroup(
@@ -185,7 +204,10 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nota, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nota, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(campoNota))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -196,8 +218,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             .addGroup(painelAzul1Layout.createSequentialGroup()
                 .addGap(47, 47, 47)
                 .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +226,6 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 .addGap(47, 47, 47)
                 .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(55, Short.MAX_VALUE))
-            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -213,10 +233,20 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(462, 462, 462)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(462, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(334, 334, 334)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(334, Short.MAX_VALUE)))
         );
 
         pack();
@@ -240,19 +270,36 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
     private void jTextArea2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusGained
         // TODO add your handling code here:
-        if (jTextArea2.getText().equals("Digite sua resposta...")) {
-            jTextArea2.setText("");
-            jTextArea2.setForeground(java.awt.Color.BLACK);
-        }
     }//GEN-LAST:event_jTextArea2FocusGained
 
     private void jTextArea2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusLost
         // TODO add your handling code here:
-        if (jTextArea2.getText().isEmpty()) {
-            jTextArea2.setText("Digite sua resposta...");
-            jTextArea2.setForeground(java.awt.Color.GRAY);
-        }
     }//GEN-LAST:event_jTextArea2FocusLost
+
+    private void campoNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoNotaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Number valor = (Number) campoNota.getValue();
+
+        if (valor != null) {
+            float notaDigitada = valor.floatValue();
+
+            this.tentativa.setNota(notaDigitada);
+            boolean confirmacaoCommit = tentativa.commitCorrecao();
+
+            if (confirmacaoCommit) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Nota salva com sucesso!");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar no banco.");
+            }
+        }
+        else{
+            javax.swing.JOptionPane.showMessageDialog(this, "Digite a nota.");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -281,15 +328,17 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JFormattedTextField campoNota;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextPane jTextPane1;

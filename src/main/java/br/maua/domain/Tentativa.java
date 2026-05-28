@@ -12,6 +12,7 @@ public class Tentativa {
     private Aluno aluno;
     private Tarefa tarefa;
     private boolean concluida = false;
+    private int idTentativa;
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
         this.setNota(nota);
@@ -22,6 +23,10 @@ public class Tentativa {
     public Tentativa(Aluno aluno, Tarefa tarefa){
         this.aluno = aluno;
         this.tarefa = tarefa;
+    }
+
+    public Tentativa(int idTentativa){
+        this.idTentativa = idTentativa;
     }
 
     public Double getNota() {
@@ -72,5 +77,27 @@ public class Tentativa {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean commitCorrecao(){
+
+        String sql = "UPDATE tentativa SET nota = ? WHERE id_tentativa = ?";
+
+        try(
+                Connection cx = ConnectionFactory.obterConexao();
+        ) {
+            assert cx != null;
+            try(PreparedStatement ps = cx.prepareStatement(sql);
+
+            ){
+                ps.setDouble(1, this.nota);
+                ps.setInt(2, this.idTentativa);
+            }
+            return true;
+
+        } catch (SQLException e) {
+            return false;
+        }
+
     }
 }

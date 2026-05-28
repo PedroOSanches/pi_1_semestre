@@ -6,6 +6,7 @@
 package br.maua.presentation.TelaModalPerfilAluno;
 
 import br.maua.domain.Aluno;
+import br.maua.presentation.TelaNotaAluno.TelaNotaAluno;
 
 /**
  *
