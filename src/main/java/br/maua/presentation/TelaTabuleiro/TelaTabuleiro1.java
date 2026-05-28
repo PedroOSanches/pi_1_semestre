@@ -4,7 +4,9 @@
  */
 package br.maua.presentation.TelaTabuleiro;
 
+import br.maua.domain.Professor;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
+import br.maua.presentation.TelaModalPerfilProfessor.ModalPerfilProfessor;
 
 /**
  *
@@ -14,6 +16,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTabuleiro1.class.getName());
     private br.maua.domain.Aluno alunoLogado;
+    private Professor professorLogado;
     private boolean mostrarVoltarParaAdmin = false;
 
     /**
@@ -21,6 +24,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
      */
     public TelaTabuleiro1(br.maua.domain.Aluno aluno) {
         this.alunoLogado = aluno;
+        this.professorLogado = null;
         this.mostrarVoltarParaAdmin = false;
         initComponents();
         configurarScroll();
@@ -40,6 +44,22 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
      */
     public TelaTabuleiro1(boolean mostrarVoltarParaAdmin) {
         this.alunoLogado = null;
+        this.professorLogado = null;
+        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
+        initComponents();
+        configurarScroll();
+        jButton2.setVisible(this.mostrarVoltarParaAdmin);
+        if (this.mostrarVoltarParaAdmin) {
+            jButton2.addActionListener(evt -> {
+                new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
+                this.dispose();
+            });
+        }
+    }
+
+    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
+        this.alunoLogado = null;
+        this.professorLogado = professor;
         this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
         initComponents();
         configurarScroll();
@@ -57,6 +77,12 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado); 
 
         // Centraliza e exibe
+        modal.setLocationRelativeTo(this);
+        modal.setVisible(true);
+    }
+
+    private void abrirModalPerfilProfessor() {
+        ModalPerfilProfessor modal = new ModalPerfilProfessor(this.professorLogado);
         modal.setLocationRelativeTo(this);
         modal.setVisible(true);
     }
@@ -3097,7 +3123,13 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox47ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (this.mostrarVoltarParaAdmin) {
+            abrirModalPerfilProfessor();
+        } else if (this.alunoLogado != null) {
+            abrirModalPerfilAluno();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Perfil do aluno indisponível nesta tela.");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 /**
     private void abrirModalPerfilAluno() {;

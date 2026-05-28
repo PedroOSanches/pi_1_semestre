@@ -5,6 +5,8 @@
 
 package br.maua.presentation.TelaPainelDeControle;
 
+import br.maua.domain.Professor;
+
 /**
  *
  * @author Luiza
@@ -12,10 +14,19 @@ package br.maua.presentation.TelaPainelDeControle;
 public class TelaPainelDeControle extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPainelDeControle.class.getName());
+    private final Professor professorLogado;
 
     /** Creates new form TelaPerfilAluno */
     public TelaPainelDeControle() {
+        this(null);
+    }
+
+    public TelaPainelDeControle(Professor professor) {
+        this.professorLogado = professor;
         initComponents();
+        if (this.professorLogado != null) {
+            nomeTitulo.setText("Bem vindo, " + this.professorLogado.getNomeCompleto() + "!");
+        }
     }
 
     /** This method is called from within the constructor to
@@ -144,7 +155,7 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
 
     private void botaoTabuleiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTabuleiroActionPerformed
 
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(true).setVisible(true);
+        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(this.professorLogado, true).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_botaoTabuleiroActionPerformed
 
