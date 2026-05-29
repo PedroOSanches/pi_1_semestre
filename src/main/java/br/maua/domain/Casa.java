@@ -1,13 +1,16 @@
 package br.maua.domain;
 
 public class Casa {
-
+    private String titulo;
     private int numeroCasa;
     private int nivelCasa;
 
     public Casa(int numeroCasa, int nivelCasa){
         this.numeroCasa = numeroCasa;
         this.nivelCasa = nivelCasa;
+    }
+    public Casa(String titulo){
+        this.titulo = titulo;
     }
 
     public int getNumeroCasa() {
@@ -21,5 +24,9 @@ public class Casa {
 
     public void avancarCasa() {
 
+    }
+
+    public String toString(){
+            return titulo;
     }
 }

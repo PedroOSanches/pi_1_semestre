@@ -4,18 +4,44 @@
  */
 package br.maua.presentation.TelaCriarTarefa;
 
+import br.maua.domain.*;
+import br.maua.infrastructure.CasaDAO;
+import br.maua.presentation.TelaCriarTarefa.Components.*;
+
+import javax.swing.*;
+import javax.swing.text.DateFormatter;
+import javax.swing.text.DefaultFormatterFactory;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Lenovo
  */
-public class TelaCriarTarefa2 extends javax.swing.JFrame {
+public class TelaCriarTarefa extends JFrame{
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCriarTarefa2.class.getName());
-
+    private static final Logger logger = Logger.getLogger(TelaCriarTarefa.class.getName());
+    private final Tarefa tarefa;
+    private final List<Casa> casas;
+    private final Map<JPanel, QuestaoUI> questoesUI = new HashMap<>();
     /**
      * Creates new form TelaCriarTarefa2
      */
-    public TelaCriarTarefa2() {
+    public TelaCriarTarefa() throws SQLException {
+        this.tarefa = new Tarefa();
+        this.casas = CasaDAO.listarCasas();
         initComponents();
 
         painelConteudo.removeAll();
@@ -23,19 +49,19 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         painelConteudo.add(jPanel1); 
         
         painelConteudo.add(jPanel2);
-        painelConteudo.add(javax.swing.Box.createVerticalStrut(20));
+        painelConteudo.add(Box.createVerticalStrut(20));
         
         painelConteudo.add(jPanel3); 
-        painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); 
+        painelConteudo.add(Box.createVerticalStrut(20));
         
         
         
         painelConteudo.add(jPanel15); // Botão "+ Adicionar Questão"
-        painelConteudo.add(javax.swing.Box.createVerticalStrut(40));
+        painelConteudo.add(Box.createVerticalStrut(40));
 
-        jButton1.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        jButton1.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelConteudo.add(jButton1); // Botão "Salvar Tarefa" dentro da área rolável
-        painelConteudo.add(javax.swing.Box.createVerticalStrut(40));
+        painelConteudo.add(Box.createVerticalStrut(40));
 
         
         painelConteudo.revalidate();
@@ -60,6 +86,9 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jComboBox2 = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new JPanel();
+        jLabel3 = new JLabel();
+        txtTitulo = new JTextField();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
@@ -92,9 +121,37 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(19, 112, 178));
         jPanel2.setMaximumSize(new java.awt.Dimension(592, 100));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Novo Questionário");
+
+        jPanel7.setBackground(new Color(19, 112, 178));
+
+        jLabel3.setText("Título:");
+        jLabel3.setForeground(new Color(255, 255, 255));
+        txtTitulo.setPreferredSize(new Dimension(580, 32));
+        txtTitulo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
+        GroupLayout jPanel7Layout = new GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+
+        jPanel7Layout.setHorizontalGroup(
+                jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTitulo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel7Layout.setVerticalGroup(
+                jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(txtTitulo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -116,9 +173,13 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         painelConteudo.add(jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel3.setMaximumSize(new java.awt.Dimension(630, 160));
+        jPanel3.setMaximumSize(new java.awt.Dimension(630, 200));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24" }));
+        DefaultComboBoxModel<Casa> model = new DefaultComboBoxModel<>();
+        for(Casa c : casas){
+            model.addElement(c);
+        }
+        jComboBox2.setModel(model);
         jComboBox2.addActionListener(this::jComboBox2ActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -174,6 +235,7 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(jPanel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,21 +244,24 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE)
+                    .addComponent(jPanel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            )
+
         );
 
         painelConteudo.add(jPanel3);
 
         jPanel15.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel15.setMaximumSize(new java.awt.Dimension(600, 68));
-        jPanel15.setPreferredSize(new java.awt.Dimension(600, 68));
+        jPanel15.setMaximumSize(new java.awt.Dimension(400, 68));
+        jPanel15.setPreferredSize(new java.awt.Dimension(600, 222));
         jPanel15.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel15MouseClicked(evt);
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24));
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("+ Adicionar Questão");
 
@@ -222,8 +287,8 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(240, 147, 32));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Salvar Tarefa");
-        jButton1.setPreferredSize(new java.awt.Dimension(180, 35));
-        jButton1.setMaximumSize(new java.awt.Dimension(180, 35));
+        jButton1.setMaximumSize(new java.awt.Dimension(100, 35));
+        painelConteudo.add(jButton1);
 
         jScrollPane1.setViewportView(painelConteudo);
 
@@ -232,129 +297,135 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
+    private void jComboBox2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        tarefa.setCasa( (Casa)jComboBox2.getSelectedItem());
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
-    private void jFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
+    private void jFormattedTextField1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
         // TODO add your handling code here:
+        String[] dataSeparada = jFormattedTextField1.getText().split("/");
+        String dataFormatada = dataSeparada[2] + "-" + dataSeparada[1] + "-" + dataSeparada[0];
+        tarefa.setPrazo(dataFormatada);
+
     }//GEN-LAST:event_jFormattedTextField1ActionPerformed
 
-    private void jPanel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel15MouseClicked
-
+    private void jPanel15MouseClicked(MouseEvent evt) {//GEN-FIRST:event_jPanel15MouseClicked
     int numeroQuestao = 1;
-    for (java.awt.Component c : painelConteudo.getComponents()) {
-        if (c instanceof javax.swing.JPanel && c != jPanel1 && c != jPanel2 && c != jPanel3 && c != jPanel15) {
+    for (Component c : painelConteudo.getComponents()) {
+        if (c instanceof JPanel && c != jPanel1 && c != jPanel2 && c != jPanel3 && c != jPanel15) {
             numeroQuestao++;
         }
     }
 
-    // 2. Cria o painel da nova questão completo usando o nosso método auxiliar
-    javax.swing.JPanel novaQuestaoCompleta = criarPainelNovaQuestao(numeroQuestao);
-    jPanel15.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+    JPanel novaQuestaoCompleta = criarPainelNovaQuestao(numeroQuestao);
+    jPanel15.setAlignmentX(Component.CENTER_ALIGNMENT);
     painelConteudo.remove(jPanel15);
     painelConteudo.remove(jButton1);
 
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(10)); 
+    painelConteudo.add(Box.createVerticalStrut(10));
     painelConteudo.add(novaQuestaoCompleta);
 
     
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(10)); 
+    painelConteudo.add(Box.createVerticalStrut(10));
     painelConteudo.add(jPanel15);
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(10)); 
+    painelConteudo.add(Box.createVerticalStrut(10));
     painelConteudo.add(jButton1);
-    painelConteudo.add(javax.swing.Box.createVerticalStrut(20)); 
+    painelConteudo.add(Box.createVerticalStrut(20));
 
     painelConteudo.revalidate();
     painelConteudo.repaint();
     
-    javax.swing.SwingUtilities.invokeLater(() -> {
+    SwingUtilities.invokeLater(() -> {
         jScrollPane1.getVerticalScrollBar().setValue(jScrollPane1.getVerticalScrollBar().getMaximum());
     });
     }//GEN-LAST:event_jPanel15MouseClicked
     
-    private javax.swing.JPanel criarPainelNovaQuestao(int numero) {
-        javax.swing.JPanel painelQuestao = new javax.swing.JPanel();
-        painelQuestao.setBackground(new java.awt.Color(240, 147, 32));
-        painelQuestao.setLayout(new javax.swing.BoxLayout(painelQuestao, javax.swing.BoxLayout.Y_AXIS));
-        painelQuestao.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 20, 14, 20));
+    private JPanel criarPainelNovaQuestao(int numero) {
+        JPanel painelQuestao = new JPanel();
+        painelQuestao.setBackground(new Color(240, 147, 32));
+        painelQuestao.setLayout(new BoxLayout(painelQuestao, BoxLayout.Y_AXIS));
+        painelQuestao.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
         
-        painelQuestao.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
-        painelQuestao.setMaximumSize(new java.awt.Dimension(632, 340));
-        painelQuestao.setPreferredSize(new java.awt.Dimension(632, 340));
+        painelQuestao.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painelQuestao.setMaximumSize(new Dimension(632, 340));
+        painelQuestao.setPreferredSize(new Dimension(632, 340));
 
-        javax.swing.JLabel lblTitulo = new javax.swing.JLabel("Questão - " + numero);
-        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
-        lblTitulo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+        JLabel lblTitulo = new JLabel("Questão - " + numero);
+        lblTitulo.setFont(new Font("Segoe UI", 1, 18));
+        lblTitulo.setForeground(new Color(255, 255, 255));
+        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelQuestao.add(lblTitulo);
-        painelQuestao.add(javax.swing.Box.createVerticalStrut(10));
+        painelQuestao.add(Box.createVerticalStrut(10));
 
-        javax.swing.JComboBox<String> comboTipo = new javax.swing.JComboBox<>(new String[] { "Múltipla Escolha", "Dissertativa", "Upload" });
-        comboTipo.setMaximumSize(new java.awt.Dimension(580, 35));
-        comboTipo.setPreferredSize(new java.awt.Dimension(580, 35));
-        comboTipo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+        JComboBox<String> comboTipo = new JComboBox<>(new String[] { "Múltipla Escolha", "Dissertativa", "Upload" });
+        comboTipo.setMaximumSize(new Dimension(580, 35));
+        comboTipo.setPreferredSize(new Dimension(580, 35));
+        comboTipo.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelQuestao.add(comboTipo);
-        painelQuestao.add(javax.swing.Box.createVerticalStrut(8));
+        painelQuestao.add(Box.createVerticalStrut(8));
 
-        javax.swing.JTextArea txtEnunciado = new javax.swing.JTextArea(4, 20);
+        JTextArea txtEnunciado = new JTextArea(4, 20);
         txtEnunciado.setText("Digite o enunciado da questão aqui...");
-        txtEnunciado.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        txtEnunciado.setFont(new Font("Segoe UI", 0, 14));
         txtEnunciado.setLineWrap(true);
         txtEnunciado.setWrapStyleWord(true);
 
-        javax.swing.JScrollPane scrollEnunciado = new javax.swing.JScrollPane(txtEnunciado);
-        scrollEnunciado.setMaximumSize(new java.awt.Dimension(580, 80));
-        scrollEnunciado.setPreferredSize(new java.awt.Dimension(580, 80));
-        scrollEnunciado.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+        JScrollPane scrollEnunciado = new JScrollPane(txtEnunciado);
+        scrollEnunciado.setMaximumSize(new Dimension(580, 80));
+        scrollEnunciado.setPreferredSize(new Dimension(580, 80));
+        scrollEnunciado.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelQuestao.add(scrollEnunciado);
-        painelQuestao.add(javax.swing.Box.createVerticalStrut(8));
+        painelQuestao.add(Box.createVerticalStrut(8));
 
-        javax.swing.JPanel painelDinamico = new javax.swing.JPanel();
-        painelDinamico.setBackground(new java.awt.Color(240, 147, 32));
-        painelDinamico.setLayout(new javax.swing.BoxLayout(painelDinamico, javax.swing.BoxLayout.Y_AXIS));
-        painelDinamico.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+        JPanel painelDinamico = new JPanel();
+        painelDinamico.setBackground(new Color(240, 147, 32));
+        painelDinamico.setLayout(new BoxLayout(painelDinamico, BoxLayout.Y_AXIS));
+        painelDinamico.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelQuestao.add(painelDinamico);
 
-        java.lang.Runnable atualizarCampos = () -> {
+        Runnable atualizarCampos = () -> {
             painelDinamico.removeAll();
             String tipo = (String) comboTipo.getSelectedItem();
 
             if ("Múltipla Escolha".equals(tipo)) {
-                javax.swing.ButtonGroup grupoRadio = new javax.swing.ButtonGroup();
-                javax.swing.JPanel painelAlternativas = new javax.swing.JPanel();
-                painelAlternativas.setBackground(new java.awt.Color(240, 147, 32));
-                painelAlternativas.setLayout(new javax.swing.BoxLayout(painelAlternativas, javax.swing.BoxLayout.Y_AXIS));
-                painelAlternativas.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                QuestaoAlternativaUI qalternativa = new QuestaoAlternativaUI();
+                qalternativa.enunciado = txtEnunciado;
+                questoesUI.put(painelQuestao, qalternativa);
+                ButtonGroup grupoRadio = new ButtonGroup();
+                JPanel painelAlternativas = new JPanel();
+                painelAlternativas.setBackground(new Color(240, 147, 32));
+                painelAlternativas.setLayout(new BoxLayout(painelAlternativas, BoxLayout.Y_AXIS));
+                painelAlternativas.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                java.util.function.BiConsumer<javax.swing.JPanel, javax.swing.ButtonGroup> adicionarAlternativa = (painel, grupo) -> {
-                    javax.swing.JPanel linhaAlternativa = new javax.swing.JPanel();
-                    linhaAlternativa.setBackground(new java.awt.Color(240, 147, 32));
-                    linhaAlternativa.setLayout(new javax.swing.BoxLayout(linhaAlternativa, javax.swing.BoxLayout.X_AXIS));
-                    linhaAlternativa.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                BiConsumer<JPanel, ButtonGroup> adicionarAlternativa = (painel, grupo) -> {
+                    AlternativaUI alternativa = new AlternativaUI();
+                    qalternativa.addAlternativa(alternativa);
+                    JPanel linhaAlternativa = new JPanel();
+                    linhaAlternativa.setBackground(new Color(240, 147, 32));
+                    linhaAlternativa.setLayout(new BoxLayout(linhaAlternativa, BoxLayout.X_AXIS));
+                    linhaAlternativa.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                    javax.swing.JRadioButton radio = new javax.swing.JRadioButton();
-                    radio.setBackground(new java.awt.Color(240, 147, 32));
-                    grupo.add(radio);
+                    alternativa.radio = new JRadioButton();
+                    alternativa.radio.setBackground(new Color(240, 147, 32));
+                    grupo.add(alternativa.radio);
 
-                    javax.swing.JTextField campoAlternativa = new javax.swing.JTextField("Digite a alternativa");
-                    campoAlternativa.setMaximumSize(new java.awt.Dimension(500, 32));
-                    campoAlternativa.setPreferredSize(new java.awt.Dimension(500, 32));
+                    alternativa.campo = new JTextField("Digite a alternativa");
+                    alternativa.campo.setMaximumSize(new Dimension(500, 32));
+                    alternativa.campo.setPreferredSize(new Dimension(500, 32));
 
-                    linhaAlternativa.add(radio);
-                    linhaAlternativa.add(javax.swing.Box.createHorizontalStrut(8));
-                    linhaAlternativa.add(campoAlternativa);
-
+                    linhaAlternativa.add(alternativa.radio);
+                    linhaAlternativa.add(Box.createHorizontalStrut(8));
+                    linhaAlternativa.add(alternativa.campo);
                     painel.add(linhaAlternativa);
-                    painel.add(javax.swing.Box.createVerticalStrut(8));
+                    painel.add(Box.createVerticalStrut(8));
                 };
 
                 for (int i = 0; i < 4; i++) {
                     adicionarAlternativa.accept(painelAlternativas, grupoRadio);
                 }
 
-                javax.swing.JButton btnAdicionarAlternativa = new javax.swing.JButton("Adicionar alternativa");
-                btnAdicionarAlternativa.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                JButton btnAdicionarAlternativa = new JButton("Adicionar alternativa");
+                btnAdicionarAlternativa.setAlignmentX(Component.LEFT_ALIGNMENT);
                 btnAdicionarAlternativa.addActionListener(evt -> {
                     adicionarAlternativa.accept(painelAlternativas, grupoRadio);
                     painelAlternativas.revalidate();
@@ -364,63 +435,85 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
                 });
 
                 painelDinamico.add(painelAlternativas);
-                painelDinamico.add(javax.swing.Box.createVerticalStrut(6));
+                painelDinamico.add(Box.createVerticalStrut(6));
                 painelDinamico.add(btnAdicionarAlternativa);
-                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 460));
-                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 460));
+                painelQuestao.setMaximumSize(new Dimension(632, 460));
+                painelQuestao.setPreferredSize(new Dimension(632, 460));
+                
             } else if ("Upload".equals(tipo)) {
-                javax.swing.JLabel lblArquivo = new javax.swing.JLabel("Arquivo:");
-                lblArquivo.setFont(new java.awt.Font("Segoe UI", 0, 14));
-                lblArquivo.setForeground(new java.awt.Color(255, 255, 255));
-                lblArquivo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                QuestaoUploadUI upload = new QuestaoUploadUI();
+                upload.enunciado =  txtEnunciado;
+                JLabel lblTituloArquivo = new JLabel("Título do arquivo:");
+                lblTituloArquivo.setFont(new Font("Segoe UI", 0, 14));
+                lblTituloArquivo.setForeground(new Color(255, 255, 255));
+                lblTituloArquivo.setAlignmentX(Component.LEFT_ALIGNMENT);
+                painelDinamico.add(lblTituloArquivo);
+                painelDinamico.add(Box.createVerticalStrut(5));
+
+                upload.titulo = new JTextField();
+                upload.titulo.setMaximumSize(new Dimension(580, 32));
+                upload.titulo.setPreferredSize(new Dimension(580, 32));
+                upload.titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+                painelDinamico.add(upload.titulo);
+
+                painelDinamico.add(Box.createVerticalStrut(10));
+                JLabel lblArquivo = new JLabel("Arquivo:");
+                lblArquivo.setFont(new Font("Segoe UI", 0, 14));
+                lblArquivo.setForeground(new Color(255, 255, 255));
+                lblArquivo.setAlignmentX(Component.LEFT_ALIGNMENT);
                 painelDinamico.add(lblArquivo);
-                painelDinamico.add(javax.swing.Box.createVerticalStrut(5));
+                painelDinamico.add(Box.createVerticalStrut(5));
 
-                javax.swing.JPanel linhaArquivo = new javax.swing.JPanel();
-                linhaArquivo.setBackground(new java.awt.Color(240, 147, 32));
-                linhaArquivo.setLayout(new javax.swing.BoxLayout(linhaArquivo, javax.swing.BoxLayout.X_AXIS));
-                linhaArquivo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                JPanel linhaArquivo = new JPanel();
+                linhaArquivo.setBackground(new Color(240, 147, 32));
+                linhaArquivo.setLayout(new BoxLayout(linhaArquivo, BoxLayout.X_AXIS));
+                linhaArquivo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                javax.swing.JTextField campoArquivo = new javax.swing.JTextField("Selecione o arquivo da tarefa");
+                JTextField campoArquivo = new JTextField("Selecione o arquivo da tarefa");
                 campoArquivo.setEditable(false);
-                campoArquivo.setMaximumSize(new java.awt.Dimension(430, 32));
-                campoArquivo.setPreferredSize(new java.awt.Dimension(430, 32));
+                campoArquivo.setMaximumSize(new Dimension(430, 32));
+                campoArquivo.setPreferredSize(new Dimension(430, 32));
 
-                javax.swing.JButton btnSelecionarArquivo = new javax.swing.JButton("Escolher arquivo");
+                JButton btnSelecionarArquivo = new JButton("Escolher arquivo");
                 btnSelecionarArquivo.addActionListener(evt -> {
-                    javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+                    JFileChooser chooser = new JFileChooser();
                     int resultado = chooser.showOpenDialog(painelQuestao);
-                    if (resultado == javax.swing.JFileChooser.APPROVE_OPTION) {
-                        java.io.File arquivo = chooser.getSelectedFile();
-                        campoArquivo.setText(arquivo.getAbsolutePath());
+                    if (resultado == JFileChooser.APPROVE_OPTION) {
+                        File arquivo = chooser.getSelectedFile();
+                        campoArquivo.setText(arquivo.getName());
+                        upload.arquivo = arquivo;
                     }
                 });
 
                 linhaArquivo.add(campoArquivo);
-                linhaArquivo.add(javax.swing.Box.createHorizontalStrut(8));
+                linhaArquivo.add(Box.createHorizontalStrut(8));
                 linhaArquivo.add(btnSelecionarArquivo);
 
                 painelDinamico.add(linhaArquivo);
-                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 360));
-                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 360));
+                painelQuestao.setMaximumSize(new Dimension(632, 360));
+                painelQuestao.setPreferredSize(new Dimension(632, 360));
+                questoesUI.put(painelQuestao, upload);
             } else {
-                javax.swing.JLabel lblResposta = new javax.swing.JLabel("Resposta:");
-                lblResposta.setFont(new java.awt.Font("Segoe UI", 0, 14));
-                lblResposta.setForeground(new java.awt.Color(255, 255, 255));
-                lblResposta.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                QuestaoDissertativaUI dissertativa = new QuestaoDissertativaUI();
+                dissertativa.enunciado = txtEnunciado;
+                JLabel lblResposta = new JLabel("Resposta Modelo:");
+                lblResposta.setFont(new Font("Segoe UI", 0, 14));
+                lblResposta.setForeground(new Color(255, 255, 255));
+                lblResposta.setAlignmentX(Component.LEFT_ALIGNMENT);
                 painelDinamico.add(lblResposta);
-                painelDinamico.add(javax.swing.Box.createVerticalStrut(5));
+                painelDinamico.add(Box.createVerticalStrut(5));
 
-                javax.swing.JTextArea txtResposta = new javax.swing.JTextArea(3, 20);
-                txtResposta.setEditable(false); // Geralmente o professor não responde nela
-                javax.swing.JScrollPane scrollResposta = new javax.swing.JScrollPane(txtResposta);
-                scrollResposta.setMaximumSize(new java.awt.Dimension(580, 60));
-                scrollResposta.setPreferredSize(new java.awt.Dimension(580, 60));
-                scrollResposta.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                dissertativa.resposta = new JTextArea(3, 20);
+                dissertativa.resposta.setEditable(true);
+                JScrollPane scrollResposta = new JScrollPane(dissertativa.resposta);
+                scrollResposta.setMaximumSize(new Dimension(580, 60));
+                scrollResposta.setPreferredSize(new Dimension(580, 60));
+                scrollResposta.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 painelDinamico.add(scrollResposta);
-                painelQuestao.setMaximumSize(new java.awt.Dimension(632, 300));
-                painelQuestao.setPreferredSize(new java.awt.Dimension(632, 300));
+                painelQuestao.setMaximumSize(new Dimension(632, 300));
+                painelQuestao.setPreferredSize(new Dimension(632, 300));
+                questoesUI.put(painelQuestao, dissertativa);
             }
 
             painelQuestao.revalidate();
@@ -430,13 +523,16 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
         comboTipo.addActionListener(e -> atualizarCampos.run());
 
         atualizarCampos.run();
-
         return painelQuestao;
 }
-    
-    
-    
-    
+
+    private void salvarTarefa() throws SQLException {
+        tarefa.setTitulo(txtTitulo.getText());
+        for(QuestaoUI q : questoesUI.values()){
+            q.salvar(tarefa);
+        }
+        tarefa.commitTarefa();
+    }
     /**
      * @param args the command line arguments
      */
@@ -447,24 +543,30 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ReflectiveOperationException | UnsupportedLookAndFeelException ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaCriarTarefa2().setVisible(true));
+            EventQueue.invokeLater(() -> {
+                try {
+                    new TelaCriarTarefa().setVisible(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<Casa> jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -475,7 +577,12 @@ public class TelaCriarTarefa2 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JTextField txtTitulo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel painelConteudo;
     // End of variables declaration//GEN-END:variables
+
+
 }

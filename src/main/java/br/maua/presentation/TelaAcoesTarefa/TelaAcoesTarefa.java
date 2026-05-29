@@ -4,7 +4,9 @@
  */
 package br.maua.presentation.TelaAcoesTarefa;
 
-import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa2;
+import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+
+import javax.swing.*;
 
 /**
  *
@@ -104,10 +106,14 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        TelaCriarTarefa2 cf = new TelaCriarTarefa2();
-        cf.pack();
-        cf.setLocationRelativeTo(null);
-        cf.setVisible(true);
+        try {
+            TelaCriarTarefa cf = new TelaCriarTarefa();
+            cf.pack();
+            cf.setLocationRelativeTo(null);
+            cf.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao criar Tarefa");
+        }
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
