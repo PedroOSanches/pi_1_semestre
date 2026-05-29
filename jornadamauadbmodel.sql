@@ -90,13 +90,13 @@ DROP TABLE IF EXISTS `casa`;
 ;
 CREATE TABLE `casa` (
     `id_casa` int NOT NULL AUTO_INCREMENT,
-    `id_sessao` int NOT NULL,
+    `id_secao` int NOT NULL,
     `ordem_casa` int NOT NULL,
     `titulo_casa` varchar(45) NOT NULL,
     `data_limite_casa` datetime NOT NULL,
     PRIMARY KEY (`id_casa`),
-    KEY `casa_pertence_sessao_idx` (`id_sessao`),
-    CONSTRAINT `casa_pertence_sessao` FOREIGN KEY (`id_sessao`) REFERENCES `sessao` (`id_sessao`) ON DELETE RESTRICT ON UPDATE CASCADE
+    KEY `casa_pertence_secao_idx` (`id_secao`),
+    CONSTRAINT `casa_pertence_secao` FOREIGN KEY (`id_secao`) REFERENCES `secao` (`id_secao`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
@@ -284,20 +284,20 @@ CREATE TABLE `semestre` (
 ;
 
 --
--- Table structure for table `sessao`
+-- Table structure for table `secao`
 --
 
-DROP TABLE IF EXISTS `sessao`;
+DROP TABLE IF EXISTS `secao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */
 ;
 /*!50503 SET character_set_client = utf8mb4 */
 ;
-CREATE TABLE `sessao` (
-    `id_sessao` int NOT NULL AUTO_INCREMENT,
-    `titulo_sessao` varchar(100) NOT NULL,
-    `ordem_sessao` int NOT NULL COMMENT 'Usado para armazenar qual a ordem correta das sessoes no tabuleiro',
-    `descricao_sessao` text NOT NULL,
-    PRIMARY KEY (`id_sessao`)
+CREATE TABLE `secao` (
+    `id_secao` int NOT NULL AUTO_INCREMENT,
+    `titulo_secao` varchar(100) NOT NULL,
+    `ordem_secao` int NOT NULL COMMENT 'Usado para armazenar qual a ordem correta das secoes no tabuleiro',
+    `descricao_secao` text NOT NULL,
+    PRIMARY KEY (`id_secao`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
