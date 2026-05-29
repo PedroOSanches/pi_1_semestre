@@ -4,6 +4,12 @@
  */
 package br.maua.presentation.TelaTarefasCriadas;
 
+import br.maua.infrastructure.ConnectionFactory;
+import br.maua.presentation.ModeloAtividade.Atividade;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
  *
  * @author Luiza
@@ -17,6 +23,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
      */
     public TelaTarefasCriadas() {
         initComponents();
+        dinamicaTela(filtroSecao.getSelectedItem().toString());
     }
 
     /**
@@ -30,91 +37,44 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         painelAzul = new javax.swing.JPanel();
-        painelCinza = new javax.swing.JPanel();
-        Atividade = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        btnEnviar = new javax.swing.JButton();
+        filtroSecao = new javax.swing.JComboBox<>();
+        btnVoltar = new javax.swing.JButton();
         titulo = new javax.swing.JLabel();
+        painelAtividades = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         painelAzul.setBackground(new java.awt.Color(19, 112, 178));
+        painelAzul.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        painelCinza.setBackground(new java.awt.Color(217, 217, 217));
+        filtroSecao.setBackground(new java.awt.Color(240, 147, 32));
+        filtroSecao.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        filtroSecao.setForeground(new java.awt.Color(255, 255, 255));
+        filtroSecao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Explorador", "Conector", "Transformador", "Conhecedor", "Planejador", "Realizador" }));
+        filtroSecao.setBorder(null);
+        filtroSecao.setOpaque(true);
+        filtroSecao.addItemListener(this::filtroSecaoItemStateChanged);
+        filtroSecao.addActionListener(this::filtroSecaoActionPerformed);
+        painelAzul.add(filtroSecao, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 116, 834, 66));
 
-        Atividade.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
-        Atividade.setText("Atividade:");
-
-        javax.swing.GroupLayout painelCinzaLayout = new javax.swing.GroupLayout(painelCinza);
-        painelCinza.setLayout(painelCinzaLayout);
-        painelCinzaLayout.setHorizontalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Atividade, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(788, Short.MAX_VALUE))
-        );
-        painelCinzaLayout.setVerticalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addComponent(Atividade)
-                .addGap(18, 18, 18))
-        );
-
-        jComboBox1.setBackground(new java.awt.Color(240, 147, 32));
-        jComboBox1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Explorador", "Conector", "Transformador", "Conhecedor", "Planejador", "Realizador" }));
-        jComboBox1.setBorder(null);
-        jComboBox1.setOpaque(true);
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-
-        btnEnviar.setBackground(new java.awt.Color(240, 147, 32));
-        btnEnviar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
-        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
-        btnEnviar.setText("Voltar");
-        btnEnviar.setBorder(null);
-        btnEnviar.setBorderPainted(false);
-        btnEnviar.addActionListener(this::btnEnviarActionPerformed);
+        btnVoltar.setBackground(new java.awt.Color(240, 147, 32));
+        btnVoltar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
+        btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        btnVoltar.setText("Voltar");
+        btnVoltar.setBorder(null);
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
+        painelAzul.add(btnVoltar, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 34, 72, 29));
 
         titulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 48)); // NOI18N
         titulo.setForeground(new java.awt.Color(255, 255, 255));
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titulo.setText("Tarefas Criadas");
+        painelAzul.add(titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 34, 504, -1));
 
-        javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
-        painelAzul.setLayout(painelAzulLayout);
-        painelAzulLayout.setHorizontalGroup(
-            painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(127, 127, 127)
-                        .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 834, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-        painelAzulLayout.setVerticalGroup(
-            painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(titulo)
-                    .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(603, Short.MAX_VALUE))
-        );
+        painelAtividades.setOpaque(false);
+        painelAtividades.setLayout(new javax.swing.BoxLayout(painelAtividades, javax.swing.BoxLayout.Y_AXIS));
+        painelAzul.add(painelAtividades, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 900, 540));
 
         jScrollPane1.setViewportView(painelAzul);
 
@@ -122,7 +82,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,16 +92,85 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void filtroSecaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroSecaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_filtroSecaoActionPerformed
 
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
         new br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnEnviarActionPerformed
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
+    private void filtroSecaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_filtroSecaoItemStateChanged
+        // TODO add your handling code here:
+        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED){
+            
+            String secao = filtroSecao.getSelectedItem().toString();
+            dinamicaTela(secao);
+            
+        }
+    }//GEN-LAST:event_filtroSecaoItemStateChanged
+
+    private void dinamicaTela(String secao){
+        
+        painelAtividades.removeAll();
+        
+        String sql = "SELECT q.titulo_questionario "
+                + "FROM questionario q "
+                + "JOIN casa c ON q.id_casa = c.id_casa "
+                + "JOIN secao s ON c.id_secao = s.id_secao "
+                + "WHERE s.titulo_secao = ?";
+        
+        int qntdAtividades = 0;
+        
+        try (
+                
+                Connection cx = ConnectionFactory.obterConexao();) {
+            assert cx != null;
+            try (PreparedStatement ps = cx.prepareStatement(sql);) {
+                
+                ps.setString(1, secao);
+                java.sql.ResultSet rs = ps.executeQuery();
+                
+                while (rs.next()){
+                    
+                    qntdAtividades++;
+                    
+                    String nome = rs.getString("nome_questionario");
+                    Atividade atividade = new Atividade(nome);
+                    atividade.setPreferredSize(new java.awt.Dimension(700, 60));
+                    atividade.setMinimumSize(new java.awt.Dimension(700, 60));
+                    atividade.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 60));
+                    
+                    painelAzul.add(atividade);
+                    painelAzul.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                    
+                }
+            }
+        } catch (SQLException e) {
+            
+            System.out.println("Erro: " + e.getMessage());
+            
+        }
+        
+        if (qntdAtividades == 0) {
+            
+            javax.swing.JLabel avisoNenhumaAtividade = new javax.swing.JLabel("Nenhuma atividade encontrada para: " + secao);
+            avisoNenhumaAtividade.setForeground(java.awt.Color.WHITE);
+            avisoNenhumaAtividade.setFont(new java.awt.Font("Arial", 2, 19));
+            avisoNenhumaAtividade.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+            painelAtividades.add(avisoNenhumaAtividade);
+            
+        }
+        
+        painelAtividades.revalidate();
+        painelAtividades.repaint();
+        this.getContentPane().revalidate();
+        this.getContentPane().repaint();
+
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -168,12 +197,11 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Atividade;
-    private javax.swing.JButton btnEnviar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnVoltar;
+    private javax.swing.JComboBox<String> filtroSecao;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel painelAtividades;
     private javax.swing.JPanel painelAzul;
-    private javax.swing.JPanel painelCinza;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

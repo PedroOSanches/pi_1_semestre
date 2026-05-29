@@ -2,6 +2,8 @@ br\maua\presentation\TelaModalPerfilAluno\ModalPerfilAluno.class
 br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.class
 br\maua\domain\Tarefa.class
 br\maua\domain\QuestaoUpload.class
+br\maua\presentation\TelaModalAdicionarTurma\TelaModalAdicionarTurma.class
+br\maua\presentation\TelaAdicionarAlunoNaTurma\TelaAdicionarAlunoNaTurma.class
 br\maua\domain\QuestaoAlternativa.class
 br\maua\presentation\TelasNotasProfessor\TelaNotasProfessor.class
 br\maua\presentation\TelaQuestionarioAluno\TelaQuestionarioAluno$1.class
@@ -25,6 +27,7 @@ br\maua\infrastructure\AlunoDAO.class
 br\maua\presentation\TelaCadastroProfessor\TelaCadastroProfessor.class
 br\maua\domain\QuestaoDissertativa.class
 br\maua\presentation\TelaPainelAdministrativo\TelaPainelAdministrativo1.class
+br\maua\presentation\ModeloAtividade\Atividade.class
 br\maua\presentation\TelaCorrecaoTarefa\TelaCorrecaoTarefa$1.class
 br\maua\Main.class
 br\maua\domain\Casa.class
