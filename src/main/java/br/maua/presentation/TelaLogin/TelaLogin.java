@@ -4,9 +4,7 @@
  */
 package br.maua.presentation.TelaLogin;
 
-import javax.swing.JOptionPane;
-import br.maua.infrastructure.AlunoDAO;
-import br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor;
+import br.maua.infrastructure.DAO.AlunoDAO;
 
 /**
  *
@@ -198,7 +196,7 @@ public class TelaLogin extends javax.swing.JFrame {
         }
 
         try {
-            br.maua.infrastructure.AlunoDAO alunoDAO = new br.maua.infrastructure.AlunoDAO();
+            AlunoDAO alunoDAO = new AlunoDAO();
             boolean usuarioValido = alunoDAO.autenticar(usuarioDigitado, senhaDigitada);
 
             if (usuarioValido) {

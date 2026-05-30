@@ -5,20 +5,16 @@
 package br.maua.presentation.TelaCriarTarefa;
 
 import br.maua.domain.*;
-import br.maua.infrastructure.CasaDAO;
+import br.maua.infrastructure.DAO.CasaDAO;
+import br.maua.infrastructure.DAO.TarefaDAO;
 import br.maua.presentation.TelaCriarTarefa.Components.*;
 
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +64,14 @@ public class TelaCriarTarefa extends JFrame{
         painelConteudo.repaint();
     }
 
+    private static void run() {
+        try {
+            new TelaCriarTarefa().setVisible(true);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao inicializar página\n Tente novamente mais Tarde", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -94,8 +98,20 @@ public class TelaCriarTarefa extends JFrame{
         jPanel15 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton1.addActionListener(e -> salvarTarefa());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        txtTitulo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { atualizar(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { atualizar(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { atualizar(); }
+
+            private void atualizar() {
+                tarefa.setTitulo(txtTitulo.getText());
+            }
+        });
+
 
         painelConteudo.setBackground(new java.awt.Color(255, 255, 255));
         painelConteudo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 30));
@@ -200,8 +216,25 @@ public class TelaCriarTarefa extends JFrame{
         );
 
         jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
-        jFormattedTextField1.addActionListener(this::jFormattedTextField1ActionPerformed);
+        jFormattedTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                String texto = jFormattedTextField1.getText();
 
+                try {
+                    java.time.format.DateTimeFormatter entrada = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    java.time.format.DateTimeFormatter saida = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                    java.time.LocalDate data = java.time.LocalDate.parse(texto, entrada);
+
+                    tarefa.setPrazo(data.format(saida));
+
+                } catch (Exception ex) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Data inválida! Use dd/MM/yyyy");
+                    jFormattedTextField1.setText("");
+                }
+            }
+        });
         jLabel2.setText("Prazo:");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -301,13 +334,6 @@ public class TelaCriarTarefa extends JFrame{
         tarefa.setCasa( (Casa)jComboBox2.getSelectedItem());
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
-    private void jFormattedTextField1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
-        // TODO add your handling code here:
-        String[] dataSeparada = jFormattedTextField1.getText().split("/");
-        String dataFormatada = dataSeparada[2] + "-" + dataSeparada[1] + "-" + dataSeparada[0];
-        tarefa.setPrazo(dataFormatada);
-
-    }//GEN-LAST:event_jFormattedTextField1ActionPerformed
 
     private void jPanel15MouseClicked(MouseEvent evt) {//GEN-FIRST:event_jPanel15MouseClicked
     int numeroQuestao = 1;
@@ -526,12 +552,18 @@ public class TelaCriarTarefa extends JFrame{
         return painelQuestao;
 }
 
-    private void salvarTarefa() throws SQLException {
+    private void salvarTarefa(){
         tarefa.setTitulo(txtTitulo.getText());
         for(QuestaoUI q : questoesUI.values()){
             q.salvar(tarefa);
         }
-        tarefa.commitTarefa();
+        try{
+        TarefaDAO.commitTarefa(tarefa);
+        JOptionPane.showMessageDialog(null, "Tarefa gerada com sucesso!", "Tarefa", JOptionPane.INFORMATION_MESSAGE);
+    } catch(SQLException e){
+            tarefa.getQuestoes().clear();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro ao Salvar Questao", JOptionPane.ERROR_MESSAGE);
+        }
     }
     /**
      * @param args the command line arguments
@@ -555,13 +587,7 @@ public class TelaCriarTarefa extends JFrame{
         //</editor-fold>
 
         /* Create and display the form */
-            EventQueue.invokeLater(() -> {
-                try {
-                    new TelaCriarTarefa().setVisible(true);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            EventQueue.invokeLater(TelaCriarTarefa::run);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

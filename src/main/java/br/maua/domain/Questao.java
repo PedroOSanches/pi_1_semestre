@@ -1,5 +1,8 @@
 package br.maua.domain;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class Questao {
 
     private int idQuestao;
@@ -45,4 +48,6 @@ public class Questao {
     public void setTarefa(Tarefa tarefa) {
         this.tarefa = tarefa;
     }
+
+    public void questaoCommit(Connection cx) throws SQLException {}
 }

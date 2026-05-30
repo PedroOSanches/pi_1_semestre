@@ -17,6 +17,7 @@ public class QuestaoAlternativaUI extends QuestaoUI {
         QuestaoAlternativa qa = new QuestaoAlternativa(enunciado.getText(), tarefa);
         for(AlternativaUI alt : alternativas){
             qa.adicionarAlternativa( new Alternativa(
+                    qa,
                     alt.campo.getText(),
                     alt.radio.isSelected()
             ));
