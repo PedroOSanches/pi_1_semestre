@@ -23,7 +23,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-74,
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-108,
 53843901-4d28-11f1-b1f4-76f7b9ecc862:1-31,
 ebee13f3-4dfb-11f1-a16b-c202e0cec888:1-39';
 
@@ -254,11 +254,32 @@ CREATE TABLE `tarefa` (
   `id_tarefa` int NOT NULL AUTO_INCREMENT,
   `titulo_tarefa` varchar(45) NOT NULL,
   `id_casa` int NOT NULL,
+  `prazo_tarefa` date NOT NULL,
   PRIMARY KEY (`id_tarefa`),
   KEY `tarefa_pertence_casa_idx` (`id_casa`),
   CONSTRAINT `tarefa_pertence_casa` FOREIGN KEY (`id_casa`) REFERENCES `casa` (`id_casa`) ON DELETE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`avnadmin`@`%`*/ /*!50003 TRIGGER `tarefa_BEFORE_INSERT` BEFORE INSERT ON `tarefa` FOR EACH ROW BEGIN
+	IF NEW.prazo_tarefa < NOW() THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'O prazo da tarefa deve ser maior ou igual a data de hoje';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `tentativa`
@@ -375,4 +396,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-30 10:29:28
+-- Dump completed on 2026-05-30 13:12:03
