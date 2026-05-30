@@ -4,6 +4,8 @@
  */
 
 package br.maua.presentation.TelaCadastroProfessor;
+import br.maua.infrastructure.DAO.AlunoDAO;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -279,10 +281,11 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
 
             br.maua.infrastructure.ProfessorDAO dao = new br.maua.infrastructure.ProfessorDAO();
             dao.salvarNoBanco(novoProfessor);
+            br.maua.domain.Aluno novoAluno = new br.maua.domain.Aluno(0, nome, sobrenome, username, "", senha);
             
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
             
-           
+
             new br.maua.presentation.TelaLogin.TelaLogin().setVisible(true);
             this.dispose();
             

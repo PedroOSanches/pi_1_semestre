@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Alternativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Aluno.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Casa.java
@@ -73,3 +74,37 @@ C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\ma
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTarefasCriadas\TelaTarefasCriadas.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaUploadAluno\TelaUploadAluno.java
 >>>>>>> bd2886707262c2077f48227b94eb82f1a2e6e7c9
+=======
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Alternativa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Aluno.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Casa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Curso.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Professor.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Questao.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\QuestaoAlternativa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\QuestaoDissertativa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\QuestaoUpload.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Tarefa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Tentativa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Turma.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\infrastructure\AlunoDAO.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\infrastructure\CasaDAO.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\infrastructure\ConnectionFactory.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\Main.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaAcoesTarefa\TelaAcoesTarefa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaCadastroProfessor\TelaCadastroProfessor.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaCorrecaoTarefa\TelaCorrecaoTarefa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaHomeProfessor\TelaPainelAdministrativo.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaLogin\TelaLogin.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalPerfilAluno\ModalPerfilAluno.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalPerfilProfessor\ModalPerfilProfessor.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaNotaAluno\TelaNotaAluno.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaPainelAdministrativo\TelaPainelAdministrativo1.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaPainelDeControle\TelaPainelDeControle.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaQuestionarioAluno\TelaQuestionarioAluno.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelasNotasProfessor\TelaNotasProfessor.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabueiro.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.java
+C:\Users\pedro\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaUploadAluno\TelaUploadAluno.java
+>>>>>>> feature/criar_tarefa

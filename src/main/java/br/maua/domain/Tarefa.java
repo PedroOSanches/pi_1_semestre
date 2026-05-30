@@ -1,20 +1,23 @@
 package br.maua.domain;
+import br.maua.infrastructure.DAO.TarefaDAO;
 
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.regex.*;
 import java.util.List;
 
 public class Tarefa {
     private int idTarefa;
-    private String prazo;
+    private String titulo;
+    private Date prazo;
     private Casa casa;
-    private List<QuestaoAlternativa> questoesAlternativa;
-    private List<QuestaoDissertativa> questoesDissertativas;
-    private List<QuestaoUpload> questoesUploads;
+    private List<Questao> questoes = new ArrayList<>();
+
 
     public Tarefa(String prazo, Casa casa) {
-
-      this.prazo = prazo;
-      this.casa = casa;
-
+      setPrazo(prazo);
+      setCasa(casa);
 
     }
 
@@ -23,22 +26,47 @@ public class Tarefa {
     public int getIdTarefa() {
         return idTarefa;
   }
-  public void setIdTarefa(int idTarefa) {
+    public void setIdTarefa(int idTarefa) {
         this.idTarefa = idTarefa;
   }
 
-  public String getPrazo() {
+    public String getTitulo() {
+        return titulo;
+    }
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public Date getPrazo() {
         return prazo;
   }
-  public void setPrazo(String prazo) {
-        this.prazo = prazo;
-  }
-  public Casa getCasa() {
-        return casa;
-  }
-  public void setCasa(Casa casa) {
-        this.casa = casa;
+    public void setPrazo(String prazo) {
+        Pattern pattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
+        if (!pattern.matcher(prazo).matches())
+            throw new IllegalArgumentException("O valor deve ser no formato dd/mm/yyyy");
+        this.prazo = Date.valueOf(prazo);
   }
 
-  public void exibirQuestao() {}
+    public Casa getCasa() {
+        return casa;
+  }
+    public void setCasa(Casa casa) {this.casa = casa;
+  }
+
+    public List<Questao> getQuestoes() {
+        return questoes;
+    }
+    public void addQuestao(QuestaoAlternativa questaoAlternativa) {
+        this.questoes.add(questaoAlternativa);
+    }
+    public void addQuestao(QuestaoDissertativa questaoDissertativa) {
+        this.questoes.add(questaoDissertativa);
+    }
+    public void addQuestao(QuestaoUpload questaoUpload) {
+        this.questoes.add(questaoUpload);
+    }
+
+    public void commitTarefa() throws SQLException{
+        TarefaDAO.commitTarefa(this);
+    }
 }

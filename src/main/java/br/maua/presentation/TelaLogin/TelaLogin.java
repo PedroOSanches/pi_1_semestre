@@ -6,7 +6,6 @@ package br.maua.presentation.TelaLogin;
 
 import javax.swing.JOptionPane;
 import br.maua.infrastructure.AlunoDAO;
-import br.maua.infrastructure.ProfessorDAO;
 import br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor;
 
 /**
