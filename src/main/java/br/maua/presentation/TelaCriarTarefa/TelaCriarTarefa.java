@@ -29,18 +29,22 @@ import java.util.logging.Logger;
 public class TelaCriarTarefa extends JFrame{
     
     private static final Logger logger = Logger.getLogger(TelaCriarTarefa.class.getName());
+    private final JFrame telaAnterior;
     private final Tarefa tarefa;
     private final List<Casa> casas;
     private final Map<JPanel, QuestaoUI> questoesUI = new HashMap<>();
     /**
      * Creates new form TelaCriarTarefa2
      */
-    public TelaCriarTarefa() throws SQLException {
+    public TelaCriarTarefa(JFrame telaAnterior) throws SQLException {
+        this.telaAnterior = telaAnterior;
         this.tarefa = new Tarefa();
         this.casas = CasaDAO.listarCasas();
         initComponents();
 
         painelConteudo.removeAll();
+        painelConteudo.add(criarBarraTopo());
+        painelConteudo.add(Box.createVerticalStrut(5));
 
         painelConteudo.add(jPanel1); 
         
@@ -62,14 +66,6 @@ public class TelaCriarTarefa extends JFrame{
         
         painelConteudo.revalidate();
         painelConteudo.repaint();
-    }
-
-    private static void run() {
-        try {
-            new TelaCriarTarefa().setVisible(true);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao inicializar página\n Tente novamente mais Tarde", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     /**
@@ -100,7 +96,13 @@ public class TelaCriarTarefa extends JFrame{
         jButton1 = new javax.swing.JButton();
         jButton1.addActionListener(e -> salvarTarefa());
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                telaAnterior.setVisible(true);
+            }
+        });
 
         txtTitulo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { atualizar(); }
@@ -117,6 +119,8 @@ public class TelaCriarTarefa extends JFrame{
         painelConteudo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 30));
         painelConteudo.setMaximumSize(new java.awt.Dimension(32827, 32827));
         painelConteudo.setLayout(new javax.swing.BoxLayout(painelConteudo, javax.swing.BoxLayout.Y_AXIS));
+
+
 
         jPanel1.setMaximumSize(new java.awt.Dimension(32767, 30));
         jPanel1.setOpaque(false);
@@ -185,7 +189,6 @@ public class TelaCriarTarefa extends JFrame{
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18))
         );
-
         painelConteudo.add(jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(19, 112, 178));
@@ -560,40 +563,42 @@ public class TelaCriarTarefa extends JFrame{
         try{
         TarefaDAO.commitTarefa(tarefa);
         JOptionPane.showMessageDialog(null, "Tarefa gerada com sucesso!", "Tarefa", JOptionPane.INFORMATION_MESSAGE);
+        dispose();
+        telaAnterior.setVisible(true);
     } catch(SQLException e){
             tarefa.getQuestoes().clear();
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro ao Salvar Questao", JOptionPane.ERROR_MESSAGE);
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | UnsupportedLookAndFeelException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-            EventQueue.invokeLater(TelaCriarTarefa::run);
+    private JPanel criarBarraTopo() {
+        barraTopo = new JPanel();
+        barraTopo.setLayout(new BorderLayout());
+        barraTopo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        barraTopo.setBackground(Color.WHITE);
+
+        btnVoltar = new JButton("← Voltar");
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.setContentAreaFilled(false);
+        btnVoltar.setFocusPainted(false);
+        btnVoltar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        btnVoltar.addActionListener(e -> {
+            dispose();
+            telaAnterior.setVisible(true);
+        });
+
+        barraTopo.add(btnVoltar, BorderLayout.WEST);
+
+        return barraTopo;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<Casa> jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
+    private javax.swing.JPanel barraTopo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;

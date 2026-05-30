@@ -107,12 +107,14 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         try {
-            TelaCriarTarefa cf = new TelaCriarTarefa();
+            TelaCriarTarefa cf = new TelaCriarTarefa(this);
             cf.pack();
             cf.setLocationRelativeTo(null);
             cf.setVisible(true);
         } catch (Exception e) {
+            this.setVisible(true);
             JOptionPane.showMessageDialog(rootPane, "Erro ao criar Tarefa");
+            e.printStackTrace();
         }
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
