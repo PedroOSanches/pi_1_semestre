@@ -1,4 +1,4 @@
-package br.maua.infrastructure;
+package br.maua.service;
 
 import br.maua.exception.UpdateException;
 
