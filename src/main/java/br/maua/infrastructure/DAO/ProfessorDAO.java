@@ -1,6 +1,8 @@
-package br.maua.infrastructure;
+package br.maua.infrastructure.DAO;
 
 import br.maua.domain.Professor;
+import br.maua.infrastructure.ConnectionFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +15,7 @@ public class ProfessorDAO {
 		String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
-			 PreparedStatement comando = conexao.prepareStatement(sql)) {
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
 
 			comando.setString(1, username);
 			comando.setString(2, senha);
