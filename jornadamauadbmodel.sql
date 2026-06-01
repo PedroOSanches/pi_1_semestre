@@ -1,5 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS "jornadamauadb" /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `jornadamauadb`;
+CREATE DATABASE  IF NOT EXISTS "jornadamauadb" /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `jornadamauadb`;
 -- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: pi-gameficacao-db-pedrohenriqueoliveirasanches3-0b27.i.aivencloud.com    Database: jornadamauadb
@@ -23,7 +25,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-39,
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-108,
 53843901-4d28-11f1-b1f4-76f7b9ecc862:1-31,
 ebee13f3-4dfb-11f1-a16b-c202e0cec888:1-39';
 
@@ -42,7 +44,7 @@ CREATE TABLE `alternativa` (
   PRIMARY KEY (`id_alternativa`,`id_questao`),
   KEY `alternativa_questao_idx` (`id_questao`),
   CONSTRAINT `alternativa_questao` FOREIGN KEY (`id_questao`) REFERENCES `questao` (`id_questao`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,30 +120,13 @@ DROP TABLE IF EXISTS `questao`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `questao` (
   `id_questao` int NOT NULL AUTO_INCREMENT,
-  `id_questionario` int NOT NULL,
+  `id_tarefa` int NOT NULL,
   `tipo_questao` enum('alternativa','dissertativa','upload') NOT NULL,
   `enunciado_questao` varchar(250) NOT NULL,
   PRIMARY KEY (`id_questao`),
-  KEY `questao_pertence_questionario_idx` (`id_questionario`),
-  CONSTRAINT `questao_pertence_questionario` FOREIGN KEY (`id_questionario`) REFERENCES `questionario` (`id_questionario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `questionario`
---
-
-DROP TABLE IF EXISTS `questionario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `questionario` (
-  `id_questionario` int NOT NULL AUTO_INCREMENT,
-  `titulo_questionario` varchar(45) NOT NULL,
-  `id_casa` int NOT NULL,
-  PRIMARY KEY (`id_questionario`),
-  KEY `questionario_pertence_casa_idx` (`id_casa`),
-  CONSTRAINT `questionario_pertence_casa` FOREIGN KEY (`id_casa`) REFERENCES `casa` (`id_casa`) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `questao_pertence_tarefa_idx` (`id_tarefa`),
+  CONSTRAINT `questao_pertence_tarefa` FOREIGN KEY (`id_tarefa`) REFERENCES `tarefa` (`id_tarefa`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -162,7 +147,7 @@ CREATE TABLE `resposta` (
   KEY `resposta_questao_idx` (`id_questao`),
   CONSTRAINT `resposta_questao` FOREIGN KEY (`id_questao`) REFERENCES `questao` (`id_questao`),
   CONSTRAINT `resposta_questao_tentativa` FOREIGN KEY (`id_tentativa`) REFERENCES `tentativa` (`id_tentativa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,6 +246,44 @@ CREATE TABLE `subturma` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tarefa`
+--
+
+DROP TABLE IF EXISTS `tarefa`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tarefa` (
+  `id_tarefa` int NOT NULL AUTO_INCREMENT,
+  `titulo_tarefa` varchar(45) NOT NULL,
+  `id_casa` int NOT NULL,
+  `prazo_tarefa` date NOT NULL,
+  PRIMARY KEY (`id_tarefa`),
+  KEY `tarefa_pertence_casa_idx` (`id_casa`),
+  CONSTRAINT `tarefa_pertence_casa` FOREIGN KEY (`id_casa`) REFERENCES `casa` (`id_casa`) ON DELETE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`avnadmin`@`%`*/ /*!50003 TRIGGER `tarefa_BEFORE_INSERT` BEFORE INSERT ON `tarefa` FOR EACH ROW BEGIN
+	IF NEW.prazo_tarefa < NOW() THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'O prazo da tarefa deve ser maior ou igual a data de hoje';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
 -- Table structure for table `tentativa`
 --
 
@@ -272,13 +295,13 @@ CREATE TABLE `tentativa` (
   `status_tentativa` enum('pendente','concluida','corrigida') NOT NULL DEFAULT 'pendente',
   `data_tentativa` timestamp NOT NULL,
   `id_usuario` int NOT NULL,
-  `id_questionario` int NOT NULL,
+  `id_tarefa` int NOT NULL,
   PRIMARY KEY (`id_tentativa`),
-  KEY `tentativa_responde_questionario_idx` (`id_questionario`),
   KEY `usuario_tentou_idx` (`id_usuario`),
-  CONSTRAINT `tentativa_responde_questionario` FOREIGN KEY (`id_questionario`) REFERENCES `questionario` (`id_questionario`),
+  KEY `tentativa_responde_tarefa_idx` (`id_tarefa`),
+  CONSTRAINT `tentativa_responde_tarefa` FOREIGN KEY (`id_tarefa`) REFERENCES `tarefa` (`id_tarefa`),
   CONSTRAINT `usuario_tentou` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,4 +398,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-28 19:16:49
+-- Dump completed on 2026-05-30 13:12:03

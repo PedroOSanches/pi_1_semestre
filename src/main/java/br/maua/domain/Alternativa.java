@@ -1,32 +1,40 @@
 package br.maua.domain;
 
-public class Alternativa {
 
-    private int idAlternativa;
+public class Alternativa {
+    private QuestaoAlternativa questaoAlternativa;
     private String enunciado;
     private boolean alternativaAssinalada;
+    private boolean alternativaCorreta;
 
-    public int getIdAlternativa() {
-        return idAlternativa;
-    }
-
-    public void setIdAlternativa(int idAlternativa) {
-        this.idAlternativa = idAlternativa;
+    public Alternativa(QuestaoAlternativa questaoAlternativa, String enunciado, boolean alternativaCorreta) {
+        setQuestaoAlternativa(questaoAlternativa);
+        setEnunciado(enunciado);
+        setAlternativaCorreta(alternativaCorreta);
     }
 
     public String getEnunciado() {
         return enunciado;
     }
-
     public void setEnunciado(String enunciado) {
         this.enunciado = enunciado;
     }
 
-    public boolean isAlternativaAssinalada() {
-        return alternativaAssinalada;
+    public boolean isAlternativaCorreta() {
+        return alternativaCorreta;
+    }
+    public void setAlternativaCorreta(boolean alternativaCorreta) {
+        this.alternativaCorreta = alternativaCorreta;
     }
 
-    public void setAlternativaAssinalada(boolean alternativaAssinalada) {
-        this.alternativaAssinalada = alternativaAssinalada;
+    public QuestaoAlternativa getQuestaoAlternativa() {
+        return questaoAlternativa;
+    }
+    public void setQuestaoAlternativa(QuestaoAlternativa questaoAlternativa) {
+        this.questaoAlternativa = questaoAlternativa;
+    }
+
+    public void alternativaCommit(Connection cx)throws SQLException {
+        AlternativaDAO.commit(this, cx);
     }
 }
