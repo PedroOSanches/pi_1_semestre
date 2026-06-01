@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Alternativa.java
 C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Aluno.java
 C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\domain\Casa.java
@@ -36,3 +37,25 @@ C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presenta
 C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.java
 C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaTarefasCriadas\TelaTarefasCriadas.java
 C:\Users\Administrator\IdeaProjects\pi_1_semestre\src\main\java\br\maua\presentation\TelaUploadAluno\TelaUploadAluno.java
+=======
+<<<<<<< HEAD
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\App.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Aluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Casa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Curso.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Professor.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Questao.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Tarefa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Tentativa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Turma.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\ConnectionFactory.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\Main.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\ModalPerfilAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaNotaAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaQuestionarioAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaUploadAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\module-info.java
+=======
+C:\Users\marjo\OneDrive\Documentos\NetBeansProjects\TelaLoginNovo\src\main\java\com\mycompany\telaloginnovo\TelaLoginNovo.java
+>>>>>>> 50f805cf7df1d8c94ec4c68134df9346409a6ba0
+>>>>>>> main

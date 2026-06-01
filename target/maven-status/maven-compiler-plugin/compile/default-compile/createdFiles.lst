@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 br\maua\presentation\TelaModalPerfilAluno\ModalPerfilAluno.class
 br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.class
 br\maua\domain\Tarefa.class
@@ -40,3 +41,9 @@ br\maua\domain\Turma.class
 br\maua\presentation\TelaNotaAluno\TelaNotaAluno.class
 br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa2.class
 br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa2$1.class
+=======
+com\mycompany\telaloginnovo\TelaLoginNovo$2.class
+com\mycompany\telaloginnovo\TelaLoginNovo.class
+com\mycompany\telaloginnovo\TelaLoginNovo$1.class
+com\mycompany\telaloginnovo\TelaLoginNovo$3.class
+>>>>>>> main

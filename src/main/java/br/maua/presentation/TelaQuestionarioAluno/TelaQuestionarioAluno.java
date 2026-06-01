@@ -4,14 +4,16 @@
  */
 package br.maua.presentation.TelaQuestionarioAluno;
 
-import javax.swing.JFileChooser;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import java.awt.Dimension;
+
+import br.maua.domain.RespostaAlternativa;
+import br.maua.domain.RespostaDissertativa;
 /**
  *
  * @author Luiza
@@ -349,6 +351,17 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
 
     private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
         // TODO add your handling code here:
+        RespostaAlternativa respostaAlt = new RespostaAlternativa();
+        respostaAlt.setIdAlternativa(idAlternativa);
+
+        
+        
+        String respostaTexto = jTextArea2.getText();
+        RespostaDissertativa respostaDis = new RespostaDissertativa();
+        respostaDis.setTextoResposta(respostaTexto);
+        
+        JOptionPane.showMessageDialog(this,"Tarefa enviada!");
+
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
     private void jTextArea2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusLost
