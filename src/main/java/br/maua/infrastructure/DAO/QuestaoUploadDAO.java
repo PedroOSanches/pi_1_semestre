@@ -2,7 +2,7 @@ package br.maua.infrastructure.DAO;
 
 import br.maua.domain.QuestaoUpload;
 import br.maua.exception.UpdateException;
-import br.maua.infrastructure.ArquivoService;
+import br.maua.service.ArquivoService;
 
 import java.io.File;
 import java.nio.file.StandardCopyOption;
