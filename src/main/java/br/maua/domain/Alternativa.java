@@ -1,6 +1,11 @@
 package br.maua.domain;
 
 
+import br.maua.infrastructure.DAO.AlternativaDAO;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class Alternativa {
     private QuestaoAlternativa questaoAlternativa;
     private String enunciado;

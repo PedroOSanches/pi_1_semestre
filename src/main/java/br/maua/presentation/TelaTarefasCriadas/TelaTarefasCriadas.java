@@ -23,6 +23,10 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
      */
     public TelaTarefasCriadas() {
         initComponents();
+        jScrollPane2.setOpaque(false);
+        jScrollPane2.getViewport().setOpaque(false);
+        painelAtividades.setOpaque(true);
+        painelAtividades.setBackground(painelAzul.getBackground());
         dinamicaTela(filtroSecao.getSelectedItem().toString());
     }
 
@@ -40,6 +44,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         filtroSecao = new javax.swing.JComboBox<>();
         btnVoltar = new javax.swing.JButton();
         titulo = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
         painelAtividades = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -72,9 +77,15 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         titulo.setText("Tarefas Criadas");
         painelAzul.add(titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 34, 504, -1));
 
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        jScrollPane2.setOpaque(false);
+
+        painelAtividades.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         painelAtividades.setOpaque(false);
         painelAtividades.setLayout(new javax.swing.BoxLayout(painelAtividades, javax.swing.BoxLayout.Y_AXIS));
-        painelAzul.add(painelAtividades, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 900, 540));
+        jScrollPane2.setViewportView(painelAtividades);
+
+        painelAzul.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, 840, 520));
 
         jScrollPane1.setViewportView(painelAzul);
 
@@ -82,7 +93,9 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1026, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,9 +129,9 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         
         painelAtividades.removeAll();
         
-        String sql = "SELECT q.titulo_questionario "
-                + "FROM questionario q "
-                + "JOIN casa c ON q.id_casa = c.id_casa "
+        String sql = "SELECT t.titulo_tarefa "
+                + "FROM tarefa t "
+                + "JOIN casa c ON t.id_casa = c.id_casa "
                 + "JOIN secao s ON c.id_secao = s.id_secao "
                 + "WHERE s.titulo_secao = ?";
         
@@ -132,19 +145,21 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
                 
                 ps.setString(1, secao);
                 java.sql.ResultSet rs = ps.executeQuery();
-                
+
+                int posicaoYAtividades = 10;
+
                 while (rs.next()){
                     
                     qntdAtividades++;
                     
-                    String nome = rs.getString("nome_questionario");
+                    String nome = rs.getString("titulo_tarefa");
                     Atividade atividade = new Atividade(nome);
                     atividade.setPreferredSize(new java.awt.Dimension(700, 60));
                     atividade.setMinimumSize(new java.awt.Dimension(700, 60));
                     atividade.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 60));
                     
-                    painelAzul.add(atividade);
-                    painelAzul.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                    painelAtividades.add(atividade);
+                    painelAtividades.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 10)));
                     
                 }
             }
@@ -164,10 +179,9 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
             
         }
         
+        painelAtividades.setPreferredSize(new java.awt.Dimension(700, 60));
         painelAtividades.revalidate();
         painelAtividades.repaint();
-        this.getContentPane().revalidate();
-        this.getContentPane().repaint();
 
     }
     
@@ -200,6 +214,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<String> filtroSecao;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel painelAtividades;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JLabel titulo;
