@@ -4,7 +4,9 @@
  */
 package br.maua.presentation.TelaAdicionarCasa;
 
+import br.maua.domain.Secao;
 import br.maua.infrastructure.ConnectionFactory;
+import br.maua.infrastructure.DAO.SecaoDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,6 +14,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,12 +26,15 @@ import javax.swing.JOptionPane;
 public class TelaAdicionarCasa extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdicionarCasa.class.getName());
+    private final SecaoDAO secaoDAO = new SecaoDAO();
+    private JComboBox<Secao> comboSecao;
 
     /**
      * Creates new form TelaAdicionarCasa
      */
     public TelaAdicionarCasa() {
         initComponents();
+        carregarSecoesNoCombo();
     }
 
     /**
@@ -46,6 +54,7 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
+        comboSecao = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
@@ -76,7 +85,7 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Seção");
 
-        jTextField3.addActionListener(this::jTextField3ActionPerformed);
+        comboSecao.setModel(new javax.swing.DefaultComboBoxModel<Secao>());
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -111,6 +120,7 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
                         .addGap(279, 279, 279)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                            .addComponent(comboSecao, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                             .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,8 +129,7 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel3))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))))
+                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))))
                 .addGap(325, 325, 325))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -144,15 +153,15 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboSecao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
                 .addComponent(jButton2)
                 .addContainerGap(71, Short.MAX_VALUE))
@@ -185,19 +194,19 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String numeroTexto = jTextField3.getText().trim();
-        String secaoTexto = jTextField4.getText().trim();
-        String tituloCasa = jTextField2.getText().trim();
-        String dataLimiteTexto = jTextField5.getText().trim();
+            String numeroTexto = jTextField3.getText().trim();      // Ordem/Número da Casa
+            String dataLimiteTexto = jTextField4.getText().trim();  // Data Limite
+            String tituloCasa = jTextField5.getText().trim();       // Título da Casa
+            Secao secaoSelecionada = (Secao) comboSecao.getSelectedItem();
 
-        if (numeroTexto.isEmpty() || secaoTexto.isEmpty() || tituloCasa.isEmpty() || dataLimiteTexto.isEmpty()) {
+        if (numeroTexto.isEmpty() || secaoSelecionada == null || tituloCasa.isEmpty() || dataLimiteTexto.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha o número, a seção, o título e a data limite da casa.", "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
             int ordemCasa = Integer.parseInt(numeroTexto);
-            int idSecao = Integer.parseInt(secaoTexto);
+            int idSecao = secaoSelecionada.getidSecao();
             SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
             formatoData.setLenient(false);
             Date dataParseada = formatoData.parse(dataLimiteTexto);
@@ -217,10 +226,7 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(this, "Casa criada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            jTextField3.setText("");
-            jTextField4.setText("");
-            jTextField2.setText("");
-            jTextField5.setText("");
+            br.maua.presentation.TelaNavegacao.voltar(this);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Número da casa e seção precisam ser numéricos.", "Valor inválido", JOptionPane.ERROR_MESSAGE);
         } catch (ParseException e) {
@@ -230,18 +236,29 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
-        dispose();
+        br.maua.presentation.TelaNavegacao.voltar(this);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void carregarSecoesNoCombo() {
+        comboSecao.setModel(new DefaultComboBoxModel<>());
+        try {
+            List<Secao> secoes = SecaoDAO.listarSecoes();
+            DefaultComboBoxModel<Secao> model = new DefaultComboBoxModel<>();
+
+            for (Secao secao : secoes) {
+                model.addElement(secao);
+            }
+
+            comboSecao.setModel(model);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar seções: " + e.getMessage(), "Erro no banco", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments

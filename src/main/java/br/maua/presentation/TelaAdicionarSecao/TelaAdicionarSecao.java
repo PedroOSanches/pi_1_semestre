@@ -4,9 +4,10 @@
  */
 package br.maua.presentation.TelaAdicionarSecao;
 
-import br.maua.infrastructure.SecaoDAO;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+
+import br.maua.infrastructure.DAO.SecaoDAO;
 
 /**
  *
@@ -159,8 +160,7 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Voltar para o tabuleiro
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
-        dispose();
+        br.maua.presentation.TelaNavegacao.voltar(this);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -178,9 +178,7 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
             secaoDAO.salvarNoBanco(tituloSecao, ordemSecao, descricaoSecao);
 
             JOptionPane.showMessageDialog(this, "Seção criada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            jTextField2.setText("");
-            jTextField3.setText("");
-            jTextField4.setText("");
+            br.maua.presentation.TelaNavegacao.voltar(this);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "A ordem da seção precisa ser numérica.", "Valor inválido", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException e) {

@@ -112,11 +112,7 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
 
     private void btnCorrigirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrigirTarefaActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa();
-        tct.pack();
-        tct.setLocationRelativeTo(null);
-        tct.setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaCorrecaoTarefa());
     }//GEN-LAST:event_btnCorrigirTarefaActionPerformed
 
     /**

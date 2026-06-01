@@ -1,13 +1,15 @@
 package br.maua.presentation.TelaTabuleiro;
 
 import br.maua.domain.Aluno;
+import br.maua.domain.Casa;
 import br.maua.domain.Professor;
+import br.maua.domain.Secao;
 import br.maua.infrastructure.ConnectionFactory;
 import br.maua.presentation.TelaAdicionarCasa.TelaAdicionarCasa;
 import br.maua.presentation.TelaAdicionarSecao.TelaAdicionarSecao;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
 import br.maua.presentation.TelaModalPerfilProfessor.ModalPerfilProfessor;
-import br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno;
+import br.maua.presentation.TelaTarefasAluno.TelaTarefaAluno;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -23,7 +25,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -45,6 +49,9 @@ public class TelaTabuleiro1 extends JFrame {
     private Aluno alunoLogado;
     private Professor professorLogado;
     private boolean mostrarVoltarParaAdmin;
+    private List<Casa> casasInformadas;
+    private List<Secao> secoesInformadas;
+    
 
     private JScrollPane jScrollPane1;
     private JPanel jPanel1;
@@ -62,31 +69,37 @@ public class TelaTabuleiro1 extends JFrame {
     private static final int ALTURA_CASA = 168;
 
     public TelaTabuleiro1(Aluno aluno) {
-        this.alunoLogado = aluno;
-        this.professorLogado = null;
-        this.mostrarVoltarParaAdmin = false;
-        initComponents();
-        montarTabuleiroDinamico();
+        this(aluno, null, false, null, null);
+    }
+
+    public TelaTabuleiro1(Aluno aluno, List<Casa> casas, List<Secao> secoes) {
+        this(aluno, null, false, casas, secoes);
     }
 
     public TelaTabuleiro1(boolean mostrarVoltarParaAdmin) {
-        this.alunoLogado = null;
-        this.professorLogado = null;
-        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
-        initComponents();
-        montarTabuleiroDinamico();
+        this(null, null, mostrarVoltarParaAdmin, null, null);
     }
 
     public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
-        this.alunoLogado = null;
-        this.professorLogado = professor;
-        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
-        initComponents();
-        montarTabuleiroDinamico();
+        this(null, professor, mostrarVoltarParaAdmin, null, null);
+    }
+
+    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
+        this(null, professor, mostrarVoltarParaAdmin, casas, secoes);
     }
 
     public TelaTabuleiro1() {
         this((Aluno) null);
+    }
+
+    private TelaTabuleiro1(Aluno aluno, Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
+        this.alunoLogado = aluno;
+        this.professorLogado = professor;
+        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
+        this.casasInformadas = casas;
+        this.secoesInformadas = secoes;
+        initComponents();
+        montarTabuleiroDinamico();
     }
 
     private void initComponents() {
@@ -115,16 +128,14 @@ public class TelaTabuleiro1 extends JFrame {
         jButton3.setBackground(COR_AZUL);
         jButton3.setForeground(Color.WHITE);
         jButton3.addActionListener(evt -> {
-            new TelaAdicionarCasa().setVisible(true);
-            dispose();
+            br.maua.presentation.TelaNavegacao.abrir(this, new TelaAdicionarCasa());
         });
 
         jButton4 = new JButton("Adicionar Seção");
         jButton4.setBackground(COR_AZUL);
         jButton4.setForeground(Color.WHITE);
         jButton4.addActionListener(evt -> {
-            new TelaAdicionarSecao().setVisible(true);
-            dispose();
+            br.maua.presentation.TelaNavegacao.abrir(this, new TelaAdicionarSecao());
         });
 
         acoes.add(jButton1);
@@ -148,7 +159,10 @@ public class TelaTabuleiro1 extends JFrame {
         root.add(jScrollPane1, BorderLayout.CENTER);
         setContentPane(root);
 
+        boolean usuarioProfessor = this.professorLogado != null;
         jButton2.setVisible(mostrarVoltarParaAdmin);
+        jButton3.setVisible(usuarioProfessor);
+        jButton4.setVisible(usuarioProfessor);
 
         setSize(1140, 760);
         setLocationRelativeTo(null);
@@ -157,15 +171,13 @@ public class TelaTabuleiro1 extends JFrame {
     private void abrirPerfil() {
         if (mostrarVoltarParaAdmin) {
             ModalPerfilProfessor modal = new ModalPerfilProfessor(this.professorLogado);
-            modal.setLocationRelativeTo(this);
-            modal.setVisible(true);
+            br.maua.presentation.TelaNavegacao.abrir(this, modal);
             return;
         }
 
         if (this.alunoLogado != null) {
             ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado);
-            modal.setLocationRelativeTo(this);
-            modal.setVisible(true);
+            br.maua.presentation.TelaNavegacao.abrir(this, modal);
             return;
         }
 
@@ -173,45 +185,135 @@ public class TelaTabuleiro1 extends JFrame {
     }
 
     private void voltarParaPainel() {
-        new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-        dispose();
+        br.maua.presentation.TelaNavegacao.voltar(this);
     }
 
-    private void montarTabuleiroDinamico() {
-        jPanel1.removeAll();
+private void montarTabuleiroDinamico() {
+    jPanel1.removeAll();
 
-        jPanel1.add(criarCabecalhoTabuleiro());
-        jPanel1.add(Box.createRigidArea(new Dimension(0, 16)));
+    jPanel1.add(criarCabecalhoTabuleiro());
+    jPanel1.add(Box.createRigidArea(new Dimension(0, 16)));
 
-        try {
-            List<RegistroCasaTabuleiro> registros = carregarCasasDoBanco();
-            if (registros.isEmpty()) {
-                jPanel1.add(criarEstadoVazio());
-            } else {
-                Integer secaoAtual = null;
-                for (RegistroCasaTabuleiro registro : registros) {
-                    if (!Objects.equals(secaoAtual, registro.idSecao)) {
-                        if (secaoAtual != null) {
-                            jPanel1.add(Box.createRigidArea(new Dimension(0, 20)));
-                        }
-                        jPanel1.add(criarCabecalhoSecao(registro));
-                        jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
-                        secaoAtual = registro.idSecao;
+    try {
+        List<RegistroCasaTabuleiro> registros = temListasInformadas()
+            ? carregarCasasDasListas()
+            : carregarCasasDoBanco();
+        registros.sort((r1, r2) -> {
+            int secao1 = r1.idSecao;
+            int secao2 = r2.idSecao;
+            if (secao1 != secao2) {
+                return Integer.compare(secao1, secao2);
+            }
+
+            int casa1 = r1.idCasa != null ? r1.idCasa : Integer.MAX_VALUE;
+            int casa2 = r2.idCasa != null ? r2.idCasa : Integer.MAX_VALUE;
+            return Integer.compare(casa1, casa2);
+        });
+        if (registros.isEmpty()) {
+            jPanel1.add(criarEstadoVazio());
+        } else {
+            // 1. Descobre qual é a casa que está travando o avanço do aluno
+            Integer idCasaPendente = descobrirProximaCasaObrigatoria();
+            boolean bloquearProximas = false;
+            int numeroCasaExibida = 0;
+
+            Integer secaoAtual = null;
+            for (RegistroCasaTabuleiro registro : registros) {
+                if (!Objects.equals(secaoAtual, registro.idSecao)) {
+                    if (secaoAtual != null) {
+                        jPanel1.add(Box.createRigidArea(new Dimension(0, 20)));
                     }
+                    jPanel1.add(criarCabecalhoSecao(registro));
+                    jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
+                    secaoAtual = registro.idSecao;
+                }
 
-                    if (registro.idCasa != null) {
-                        jPanel1.add(criarCartaoCasa(registro));
-                        jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
+                numeroCasaExibida++;
+
+                // 2. Passamos o status de bloqueio para a criação do cartão
+                jPanel1.add(criarCartaoCasa(registro, bloquearProximas, numeroCasaExibida));
+                
+                // 3. Se esta casa que acabamos de renderizar é a casa pendente, 
+                // ativamos o bloqueio para que as próximas venham trancadas!
+                if (idCasaPendente != null && idCasaPendente.equals(registro.idCasa)) {
+                    bloquearProximas = true;
+                }
+                
+                jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
+            }
+        }
+    } catch (SQLException e) {
+        jPanel1.add(criarEstadoErro(e.getMessage()));
+    }
+
+    jPanel1.add(Box.createVerticalGlue());
+    jPanel1.revalidate();
+    jPanel1.repaint();
+}
+
+    private boolean temListasInformadas() {
+        return (this.casasInformadas != null && !this.casasInformadas.isEmpty())
+            || (this.secoesInformadas != null && !this.secoesInformadas.isEmpty());
+    }
+
+    private List<RegistroCasaTabuleiro> carregarCasasDasListas() {
+        List<RegistroCasaTabuleiro> registros = new ArrayList<>();
+        List<Casa> casasBase = this.casasInformadas != null ? new ArrayList<>(this.casasInformadas) : new ArrayList<>();
+        List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas) : new ArrayList<>();
+
+        secoesBase.sort((s1, s2) -> Integer.compare(s1.getidSecao(), s2.getidSecao()));
+        casasBase.sort((c1, c2) -> {
+            int secao1 = c1.getSecao() != null ? c1.getSecao().getidSecao() : Integer.MAX_VALUE;
+            int secao2 = c2.getSecao() != null ? c2.getSecao().getidSecao() : Integer.MAX_VALUE;
+            if (secao1 != secao2) {
+                return Integer.compare(secao1, secao2);
+            }
+            return Integer.compare(c1.getIdCasa(), c2.getIdCasa());
+        });
+
+        if (!secoesBase.isEmpty()) {
+            for (Secao secao : secoesBase) {
+                int ordemSecao = secao.getidSecao();
+                for (Casa casa : casasBase) {
+                    if (casa.getSecao() != null && casa.getSecao().getidSecao() == secao.getidSecao()) {
+                        registros.add(new RegistroCasaTabuleiro(
+                            casa.getIdCasa(),
+                            secao.getidSecao(),
+                            casa.getOrdemCasa(),
+                            casa.getTitulo(),
+                            null,
+                            secao.getTitulo(),
+                            ordemSecao,
+                            null,
+                            new ArrayList<>()
+                        ));
                     }
                 }
             }
-        } catch (SQLException e) {
-            jPanel1.add(criarEstadoErro(e.getMessage()));
+            return registros;
         }
 
-        jPanel1.add(Box.createVerticalGlue());
-        jPanel1.revalidate();
-        jPanel1.repaint();
+        for (Casa casa : casasBase) {
+            int idSecao = casa.getSecao() != null ? casa.getSecao().getidSecao() : 0;
+            String tituloSecao = casa.getSecao() != null ? casa.getSecao().getTitulo() : "Seção";
+            registros.add(new RegistroCasaTabuleiro(
+                casa.getIdCasa(),
+                idSecao,
+                casa.getOrdemCasa(),
+                casa.getTitulo(),
+                null,
+                tituloSecao,
+                idSecao,
+                null,
+                new ArrayList<>()
+            ));
+        }
+
+        return registros;
+    }
+    public void atualizarTabuleiro(Aluno aluno) {
+        this.alunoLogado = aluno;
+        montarTabuleiroDinamico(); 
     }
 
     private JPanel criarCabecalhoTabuleiro() {
@@ -341,75 +443,164 @@ public class TelaTabuleiro1 extends JFrame {
         return new ImageIcon(imagem);
     }
 
-    private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro) {
-        JPanel painel = new JPanel(new BorderLayout(18, 8));
-        boolean secaoPar = registro.ordemSecao % 2 == 0;
-        Color corBase = secaoPar ? COR_AZUL : COR_LARANJA;
-        painel.setBackground(Color.WHITE);
-        painel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(corBase, 2),
-                BorderFactory.createEmptyBorder(16, 18, 16, 18)));
-        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
-        painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
-        painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqueada, int numeroCasaExibida) {
+    JPanel painel = new JPanel(new BorderLayout(18, 10));
+    boolean secaoPar = registro.ordemSecao % 2 == 0;
+    Color corBase = secaoPar ? COR_AZUL : COR_LARANJA;
+    
+    // Se a casa estiver bloqueada, vamos deixar a borda cinza para dar o feedback visual
+    Color corBorda = casaBloqueada ? Color.LIGHT_GRAY : corBase;
 
-        JLabel numeroCasa = new JLabel(String.valueOf(registro.ordemCasa));
-        numeroCasa.setHorizontalAlignment(SwingConstants.CENTER);
-        numeroCasa.setPreferredSize(new Dimension(60, 60));
-        numeroCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
-        numeroCasa.setForeground(corBase);
+    painel.setBackground(Color.WHITE);
+    painel.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(corBorda, 2),
+        BorderFactory.createEmptyBorder(16, 18, 16, 18)));
+    painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+    painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+    painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
 
-        JLabel tituloCasa = new JLabel(registro.tituloCasa);
-        tituloCasa.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        tituloCasa.setForeground(corBase);
+    JLabel badgeCasa = new JLabel(String.valueOf(numeroCasaExibida));
+    badgeCasa.setHorizontalAlignment(SwingConstants.CENTER);
+    badgeCasa.setPreferredSize(new Dimension(60, 60));
+    badgeCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
+    // Número da casa também fica cinza se estiver bloqueada
+    badgeCasa.setForeground(corBorda);
 
-        JLabel prazoCasa = new JLabel("Data limite: " + formatoData(registro.dataLimiteCasa));
-        prazoCasa.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        prazoCasa.setForeground(new Color(90, 90, 90));
+    JLabel tituloCasa = criarLabelFormatado(registro.tituloCasa, new Font("Segoe UI", Font.BOLD, 22), corBorda, 310);
+    tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // substituir botão por um pequeno painel que mostra um checkbox e o título do questionário
-        JPanel miniQuestionario = new JPanel();
-        miniQuestionario.setLayout(new BorderLayout(6, 0));
-        miniQuestionario.setBackground(Color.WHITE);
-        miniQuestionario.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), 2),
-                BorderFactory.createEmptyBorder(6, 8, 6, 8)));
+    JLabel info = criarLabelFormatado(
+        "Casa " + numeroCasaExibida + " | Data limite: " + formatoData(registro.dataLimiteCasa),
+        new Font("Segoe UI", Font.PLAIN, 15),
+        new Color(130, 130, 130),
+        310);
+    info.setHorizontalAlignment(SwingConstants.LEFT);
 
-        javax.swing.JCheckBox cb = new javax.swing.JCheckBox();
-        cb.setBackground(Color.WHITE);
-        cb.setSelected(false);
+    // Configuração do botão de ação
+    JButton linkPagina = new JButton();
+    linkPagina.setFocusPainted(false);
 
-        String tituloQuestionario = registro.tituloQuestionario != null ? registro.tituloQuestionario : "Questionário";
-        JLabel lblMini = new JLabel(tituloQuestionario);
-        lblMini.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblMini.setForeground(new Color(60, 60, 60));
-
-        miniQuestionario.add(cb, BorderLayout.WEST);
-        miniQuestionario.add(lblMini, BorderLayout.CENTER);
-        // tornar clicável: abre a tela do questionário ao clicar no painel ou no label
-        java.awt.event.MouseAdapter abrirClique = new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                abrirQuestionarioAluno();
-            }
-        };
-        miniQuestionario.addMouseListener(abrirClique);
-        lblMini.addMouseListener(abrirClique);
-
-        JPanel textos = new JPanel();
-        textos.setOpaque(false);
-        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
-        textos.add(tituloCasa);
-        textos.add(Box.createRigidArea(new Dimension(0, 6)));
-        textos.add(prazoCasa);
-        textos.add(Box.createRigidArea(new Dimension(0, 12)));
-        textos.add(miniQuestionario);
-
-        painel.add(numeroCasa, BorderLayout.WEST);
-        painel.add(textos, BorderLayout.CENTER);
-        return painel;
+    if (casaBloqueada) {
+        // Estilo de botão desativado/bloqueado
+        linkPagina.setText("Bloqueado");
+        linkPagina.setBackground(Color.GRAY);
+        linkPagina.setForeground(Color.LIGHT_GRAY);
+        
+        // Se tentar clicar, toma o aviso na tela e não sai daqui
+        linkPagina.addActionListener(evt -> {
+            JOptionPane.showMessageDialog(
+                this, 
+                "Acesso Bloqueado!\nVocê precisa concluir a casa anterior com nota igual ou maior que 6.0 antes de poder abrir esta.", 
+                "Aviso", 
+                JOptionPane.WARNING_MESSAGE
+            );
+        });
+    } else {
+        // Estilo normal de botão liberado
+        linkPagina.setText("Tarefas");
+        linkPagina.setBackground(COR_LARANJA);
+        linkPagina.setForeground(Color.WHITE);
+        linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(registro.idCasa, registro.tituloCasa));
     }
+
+    JPanel textos = new JPanel();
+    textos.setOpaque(false);
+    textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+    textos.add(tituloCasa);
+    textos.add(Box.createRigidArea(new Dimension(0, 6)));
+    textos.add(info);
+    textos.add(Box.createRigidArea(new Dimension(0, 12)));
+    textos.add(linkPagina);
+
+    painel.add(badgeCasa, BorderLayout.WEST);
+    painel.add(textos, BorderLayout.CENTER);
+    return painel;
+}
+
+    // private JPanel criarCartaoCasa(Casa casa) {
+    //     JPanel painel = new JPanel(new BorderLayout(18, 10));
+    //     painel.setBackground(Color.WHITE);
+    //     painel.setBorder(BorderFactory.createCompoundBorder(
+    //         BorderFactory.createLineBorder(COR_AZUL, 2),
+    //         BorderFactory.createEmptyBorder(16, 18, 16, 18)));
+    //     painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    //     painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+    //     painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+    //     painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+
+    //     JLabel badgeCasa = new JLabel(String.valueOf(casa.getOrdemCasa() > 0 ? casa.getOrdemCasa() : "-"));
+    //     badgeCasa.setHorizontalAlignment(SwingConstants.CENTER);
+    //     badgeCasa.setPreferredSize(new Dimension(60, 60));
+    //     badgeCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
+    //     badgeCasa.setForeground(COR_AZUL);
+
+    //     JLabel tituloCasa = criarLabelFormatado(casa.getTitulo(), new Font("Segoe UI", Font.BOLD, 22), COR_AZUL, 310);
+    //     tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
+
+    //     JLabel info = criarLabelFormatado(
+    //         "Casa " + (casa.getOrdemCasa() > 0 ? casa.getOrdemCasa() : "-") ,
+    //         new Font("Segoe UI", Font.PLAIN, 15),
+    //         new Color(130, 130, 130),
+    //         310);
+    //     info.setHorizontalAlignment(SwingConstants.LEFT);
+
+    //     JButton linkPagina = new JButton("Tarefas");
+    //     linkPagina.setBackground(COR_LARANJA);
+    //     linkPagina.setForeground(Color.WHITE);
+    //     linkPagina.setFocusPainted(false);
+    //     linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(casa.getIdCasa(), casa.getTitulo()));
+
+    //     JPanel textos = new JPanel();
+    //     textos.setOpaque(false);
+    //     textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+    //     textos.add(tituloCasa);
+    //     textos.add(Box.createRigidArea(new Dimension(0, 6)));
+    //     textos.add(info);
+    //     textos.add(Box.createRigidArea(new Dimension(0, 12)));
+    //     textos.add(linkPagina);
+
+    //     painel.add(badgeCasa, BorderLayout.WEST);
+    //     painel.add(textos, BorderLayout.CENTER);
+    //     return painel;
+    // }
+
+    // private JPanel criarCabecalhoSecao(Secao secao, int ordemSecao) {
+    //     JPanel painel = new JPanel(new BorderLayout());
+    //     boolean secaoPar = ordemSecao % 2 == 0;
+    //     Color corPrincipal = secaoPar ? COR_AZUL : COR_LARANJA;
+
+    //     painel.setBackground(corPrincipal);
+    //     painel.setBorder(BorderFactory.createCompoundBorder(
+    //         BorderFactory.createLineBorder(Color.WHITE, 8),
+    //         BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+    //     painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    //     painel.setPreferredSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+    //     painel.setMinimumSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+    //     painel.setMaximumSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+
+    //     JLabel numero = new JLabel(String.valueOf(ordemSecao));
+    //     numero.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 54));
+    //     numero.setForeground(Color.WHITE);
+
+    //     JLabel titulo = criarLabelFormatado(secao.getTitulo(), new Font("Segoe UI", Font.BOLD, 18), Color.WHITE, 280);
+    //     titulo.setHorizontalAlignment(SwingConstants.LEFT);
+
+    //     JPanel textos = new JPanel();
+    //     textos.setOpaque(false);
+    //     textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+
+    //     JPanel topo = new JPanel(new BorderLayout());
+    //     topo.setOpaque(false);
+    //     topo.add(numero, BorderLayout.WEST);
+
+    //     textos.add(topo);
+    //     textos.add(Box.createRigidArea(new Dimension(0, 10)));
+    //     textos.add(titulo);
+
+    //     painel.add(textos, BorderLayout.CENTER);
+    //     return painel;
+    // }
 
     private JPanel criarEstadoVazio() {
         JPanel painel = new JPanel(new BorderLayout());
@@ -452,53 +643,146 @@ public class TelaTabuleiro1 extends JFrame {
         LocalDateTime dataHora = dataLimite.toLocalDateTime();
         return dataHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
+//     private boolean alunoPodeAvancar(Integer idCasa) {
+//     if (this.alunoLogado == null) {
+//         return true; 
+//     }
+//     String sql = "SELECT COUNT(*) AS pendentes " +
+//                  "FROM tarefa t " +
+//                  "LEFT JOIN tentativa ten ON t.id_tarefa = ten.id_tarefa " +
+//                  "    AND ten.id_usuario = ? " +
+//                  "    AND ten.status_tentativa = 'corrigida' " +
+//                  "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+//                  "WHERE t.id_casa = ? " +
+//                  "  AND (ten.id_tentativa IS NULL OR r.nota_resposta IS NULL OR r.nota_resposta < 6.0)";
+
+//     try (Connection conexao = ConnectionFactory.obterConexao();
+//          PreparedStatement comando = conexao.prepareStatement(sql)) {
+//         comando.setInt(1, this.alunoLogado.getIdAluno()); 
+//         comando.setInt(2, idCasa);
+        
+//         try (ResultSet resultado = comando.executeQuery()) {
+//             if (resultado.next()) {
+//                 int pendentes = resultado.getInt("pendentes");
+//                 return pendentes == 0;
+//             }
+//         }
+//     } catch (SQLException e) {
+//         logger.log(java.util.logging.Level.SEVERE, "Erro ao validar requisitos da casa", e);
+//         JOptionPane.showMessageDialog(this, "Erro ao verificar progresso no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+//         return false;
+//     }
+//     return false;
+// }
+
+    private Integer descobrirProximaCasaObrigatoria() {
+        if (this.alunoLogado == null) {
+            return null; // Se for professor ou admin, não bloqueia nada
+        }
+
+        /*
+        Esta query avalia cada casa do tabuleiro e conta quantas tarefas 
+        NÃO foram concluídas com nota >= 6 pelo aluno.
+        A primeira casa que tiver 'tarefas_pendentes > 0' será retornada como a trava.
+        */
+        String sql = "SELECT c.id_casa, " +
+                    "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
+                    "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
+                    "FROM secao s " +
+                    "JOIN casa c ON c.id_secao = s.id_secao " +
+                    "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                    "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
+                    "    AND ten.id_usuario = ? " +
+                    "    AND ten.status_tentativa = 'corrigida' " +
+                    "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                    "GROUP BY s.ordem_secao, c.ordem_casa, c.id_casa " +
+                    "HAVING total_tarefas > tarefas_completas " +
+                    "ORDER BY s.id_secao, c.id_casa " +
+                    "LIMIT 1";
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+            PreparedStatement comando = conexao.prepareStatement(sql)) {
+            
+            comando.setInt(1, this.alunoLogado.getIdAluno());
+            
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    return resultado.getInt("id_casa");
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(java.util.logging.Level.SEVERE, "Erro ao buscar casa atual do aluno", e);
+        }
+        return null; // Se retornar null, todas as casas estão feitas com nota >= 6
+    }
 
     private List<RegistroCasaTabuleiro> carregarCasasDoBanco() throws SQLException {
         String sql = "SELECT c.id_casa, c.id_secao, c.ordem_casa, c.titulo_casa, c.data_limite_casa, "
-            + "s.titulo_secao, s.ordem_secao, s.descricao_secao "
-            + "FROM secao s LEFT JOIN casa c ON c.id_secao = s.id_secao "
-            + "ORDER BY s.ordem_secao, c.ordem_casa";
-
-        List<RegistroCasaTabuleiro> registros = new ArrayList<>();
+        + "s.titulo_secao, s.ordem_secao, s.descricao_secao, q.titulo_tarefa "
+        + "FROM secao s "
+        + "LEFT JOIN casa c ON c.id_secao = s.id_secao "
+        + "LEFT JOIN tarefa q ON q.id_casa = c.id_casa "
+        + "ORDER BY s.id_secao, c.id_casa";
+        Map<Integer, RegistroCasaTabuleiro> registrosPorCasa = new LinkedHashMap<>();
 
         try (Connection conexao = ConnectionFactory.obterConexao();
              PreparedStatement comando = conexao.prepareStatement(sql);
              ResultSet resultado = comando.executeQuery()) {
 
-            QuestionarioDAO qdao = new QuestionarioDAO();
             while (resultado.next()) {
                 Integer idCasa = resultado.getObject("id_casa") != null ? resultado.getInt("id_casa") : null;
-                String tituloQ = null;
-                if (idCasa != null) {
-                    try {
-                        tituloQ = qdao.obterTituloPorCasa(idCasa);
-                    } catch (SQLException e) {
-                        // não interrompe o carregamento do tabuleiro; apenas logue
-                        logger.warning("Erro ao obter título do questionário para casa " + idCasa + ": " + e.getMessage());
-                    }
+                Integer idSecao = resultado.getInt("id_secao");
+                Integer ordemCasa = resultado.getObject("ordem_casa") != null ? resultado.getInt("ordem_casa") : null;
+                String tituloTarefa = resultado.getString("titulo_tarefa");
+
+                if (idCasa == null) {
+                    continue;
                 }
 
-                registros.add(new RegistroCasaTabuleiro(
+                RegistroCasaTabuleiro registro = registrosPorCasa.get(idCasa);
+                if (registro == null) {
+                    registro = new RegistroCasaTabuleiro(
                         idCasa,
-                        resultado.getInt("id_secao"),
-                        resultado.getObject("ordem_casa") != null ? resultado.getInt("ordem_casa") : null,
+                        idSecao,
+                        ordemCasa,
                         resultado.getString("titulo_casa"),
                         resultado.getTimestamp("data_limite_casa"),
                         resultado.getString("titulo_secao"),
                         resultado.getInt("ordem_secao"),
                         resultado.getString("descricao_secao"),
-                        tituloQ
-                ));
+                        new ArrayList<>()
+                    );
+                    registrosPorCasa.put(idCasa, registro);
+                }
+
+                if (tituloTarefa != null && !tituloTarefa.isBlank()) {
+                    registro.titulosQuestionario.add(tituloTarefa);
+                }
             }
         }
-
-        return registros;
+        return new ArrayList<>(registrosPorCasa.values());
     }
 
-    private void abrirQuestionarioAluno() {
-        new TelaQuestionarioAluno().setVisible(true);
-        dispose();
-    }
+    // private void abrirQuestionarioAluno() {
+    //     new TelaQuestionarioAluno().setVisible(true);
+    //     dispose();
+    // }
+
+private void abrirTelaTarefasAluno(int idCasa, String tituloCasa) {
+   
+    Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getIdAluno() : null;
+    TelaTarefaAluno telaTarefas = new TelaTarefaAluno(idAluno, idCasa, tituloCasa);
+
+    telaTarefas.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+
+            atualizarTabuleiro(alunoLogado);
+        }
+    });
+    
+    br.maua.presentation.TelaNavegacao.abrir(this, telaTarefas);
+}
 
     private static final class RegistroCasaTabuleiro {
         private final Integer idCasa;
@@ -509,11 +793,11 @@ public class TelaTabuleiro1 extends JFrame {
         private final String tituloSecao;
         private final int ordemSecao;
         private final String descricaoSecao;
-        private final String tituloQuestionario;
+        private final List<String> titulosQuestionario;
 
         private RegistroCasaTabuleiro(Integer idCasa, int idSecao, Integer ordemCasa, String tituloCasa,
                                     Timestamp dataLimiteCasa, String tituloSecao, int ordemSecao,
-                                                              String descricaoSecao, String tituloQuestionario) {
+                                                              String descricaoSecao, List<String> titulosQuestionario) {
             this.idCasa = idCasa;
             this.idSecao = idSecao;
             this.ordemCasa = ordemCasa;
@@ -522,7 +806,7 @@ public class TelaTabuleiro1 extends JFrame {
             this.tituloSecao = tituloSecao;
             this.ordemSecao = ordemSecao;
                                     this.descricaoSecao = descricaoSecao;
-                                    this.tituloQuestionario = tituloQuestionario;
+                                    this.titulosQuestionario = titulosQuestionario;
         }
     }
 

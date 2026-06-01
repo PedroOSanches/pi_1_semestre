@@ -104,21 +104,13 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
 
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        TelaCriarTarefa2 cf = new TelaCriarTarefa2();
-        cf.pack();
-        cf.setLocationRelativeTo(null);
-        cf.setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaCriarTarefa2());
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        TelaTarefasCriadas ttc = new TelaTarefasCriadas();
-        ttc.pack();
-        ttc.setLocationRelativeTo(null);
-        ttc.setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas());
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
 
     /**

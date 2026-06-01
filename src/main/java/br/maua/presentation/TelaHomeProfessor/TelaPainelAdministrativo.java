@@ -165,8 +165,7 @@ public class TelaPainelAdministrativo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-        this.dispose();
+        br.maua.presentation.TelaNavegacao.voltar(this);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -7,18 +7,18 @@ C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\ma
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestaoAlternativa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestaoDissertativa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestaoUpload.java
-C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestionarioResumo.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\RespostaAlternativa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\RespostaDissertativa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\RespostaUpload.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Secao.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Tarefa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Tentativa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Turma.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\AlunoDAO.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\ConnectionFactory.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\DAO\CasaDAO.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\DAO\SecaoDAO.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\ProfessorDAO.java
-C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\QuestionarioDAO.java
-C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\SecaoDAO.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\Main.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaAcoesTarefa\TelaAcoesTarefa.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaAdicionarAlunoNaTurma\TelaAdicionarAlunoNaTurma.java
@@ -32,6 +32,7 @@ C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\ma
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalAdicionarTurma\TelaModalAdicionarTurma.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalPerfilAluno\ModalPerfilAluno.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalPerfilProfessor\ModalPerfilProfessor.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaNavegacao.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaNotaAluno\TelaNotaAluno.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaPainelAdministrativo\TelaPainelAdministrativo1.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaPainelDeControle\TelaPainelDeControle.java
@@ -39,5 +40,6 @@ C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\ma
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelasNotasProfessor\TelaNotasProfessor.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabueiro.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTarefasAluno\TelaTarefaAluno.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTarefasCriadas\TelaTarefasCriadas.java
 C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaUploadAluno\TelaUploadAluno.java
