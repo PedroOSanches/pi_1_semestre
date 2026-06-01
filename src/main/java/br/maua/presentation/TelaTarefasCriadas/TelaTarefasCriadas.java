@@ -33,6 +33,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         painelCinza = new javax.swing.JPanel();
         Atividade = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        botaoVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +69,12 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         jComboBox1.setOpaque(true);
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
+        botaoVoltar.setBackground(new java.awt.Color(240, 147, 23));
+        botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        botaoVoltar.setText("Voltar");
+        botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
+        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
         painelAzulLayout.setHorizontalGroup(
@@ -78,15 +85,22 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
                         .addGap(16, 16, 16)
                         .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(92, 92, 92)
+                        .addGap(4, 4, 4)
+                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 834, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         painelAzulLayout.setVerticalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelAzulLayout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelAzulLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(644, Short.MAX_VALUE))
@@ -111,6 +125,12 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
+        // TODO add your handling code here:
+        new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_botaoVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,6 +159,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Atividade;
+    private javax.swing.JButton botaoVoltar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel painelAzul;

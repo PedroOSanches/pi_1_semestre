@@ -38,6 +38,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         btnCriarTarefas = new javax.swing.JButton();
         btnTarefasCriadas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
+        botaoVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,6 +64,12 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         Titulo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         Titulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        botaoVoltar.setBackground(new java.awt.Color(240, 147, 23));
+        botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        botaoVoltar.setText("Voltar");
+        botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
+        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
         PainelAzul1Layout.setHorizontalGroup(
@@ -75,15 +82,22 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                             .addGap(122, 122, 122)
                             .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(PainelAzul1Layout.createSequentialGroup()
-                            .addGap(423, 423, 423)
+                            .addGap(40, 40, 40)
+                            .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(301, 301, 301)
                             .addComponent(Titulo))))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
         PainelAzul1Layout.setVerticalGroup(
             PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PainelAzul1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PainelAzul1Layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PainelAzul1Layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(103, 103, 103)
                 .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(124, 124, 124)
@@ -121,6 +135,8 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
+    
+    
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
@@ -129,6 +145,12 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         ttc.setLocationRelativeTo(null);
         ttc.setVisible(true);
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
+
+    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
+        // TODO add your handling code here:
+        new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_botaoVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -158,6 +180,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAzul1;
     private javax.swing.JLabel Titulo;
+    private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
     private javax.swing.JButton btnTarefasCriadas;
     // End of variables declaration//GEN-END:variables
