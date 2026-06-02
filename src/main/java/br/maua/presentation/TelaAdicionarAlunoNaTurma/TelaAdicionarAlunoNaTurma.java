@@ -6,6 +6,8 @@ import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.infrastructure.DAO.TurmaDAO;
 import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 
+import java.awt.event.WindowEvent;
+
 /**
  *
  * @author Lenovo
@@ -26,6 +28,18 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
     public TelaAdicionarAlunoNaTurma(TelaAlunosDaTurma telaAnterior) {
         initComponents();
         this.telaAnterior = telaAnterior;
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent we) {
+
+                if (telaAnterior != null){
+                    telaAnterior.atualizarTabelaAlunosTurma();
+                    telaAnterior.setVisible(true);
+                }
+            }
+        });
     }
 
     public TelaAdicionarAlunoNaTurma() {
@@ -179,7 +193,6 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
             if (sucesso) {
 
                 javax.swing.JOptionPane.showMessageDialog(this, "Aluno adicionado com sucesso!");
-                this.telaAnterior.setVisible(true);
                 this.dispose();
 
             }

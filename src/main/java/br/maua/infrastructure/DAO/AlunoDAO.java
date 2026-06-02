@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlunoDAO {
 
@@ -135,5 +137,33 @@ public class AlunoDAO {
 
         return null;
 
+    }
+
+    public List <Aluno> listarAlunosTurma (int idTurma, int idSubturma, int idCurso, int idSemestre) {
+
+        List <Aluno> alunos =  new ArrayList<>();
+        String sql = "SELECT u.id_usuario, u.nome_usuario, u.sobrenome_usuario, u.username_usuario " +
+                "FROM usuario u " +
+                "INNER JOIN turma_subturma tst ON u.id_usuario = tst.id_usuario " +
+                "WHERE tst.id_turma = ? AND tst.id_subturma = ? AND tst.id_curso = ? AND tst.semestre_id_semestre = ?";
+
+        try (Connection cx = ConnectionFactory.obterConexao();
+            PreparedStatement ps = cx.prepareStatement(sql)) {
+
+            ps.setInt(1, idTurma);
+            ps.setInt(2, idSubturma);
+            ps.setInt(3, idCurso);
+            ps.setInt(4, idSemestre);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    alunos.add(new Aluno(rs.getInt("id_usuario"), rs.getString("nome_usuario"), rs.getString("sobrenome_usuario"), rs.getString("username_usuario")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return alunos;
     }
 }
