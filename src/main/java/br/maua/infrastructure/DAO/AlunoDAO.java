@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AlunoDAO {
+
     public boolean autenticar(String username, String senha) throws SQLException {
 
         String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?"; 
@@ -87,5 +88,34 @@ public class AlunoDAO {
                 return null;
             }
         }
+    }
+
+    public Aluno obterAlunoPelaTelaAdicionarAlunoNaTurma(String nome, String sobrenome, String username) throws SQLException {
+
+        String sql = "SELECT id_usuario, nome_usuario, sobrenome_usuario, username_usuario " +
+                "FROM usuario WHERE nome_usuario = ? AND sobrenome_usuario = ? AND username_usuario = ?";
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement ps = conexao.prepareStatement(sql)) {
+
+            ps.setString(1, nome);
+            ps.setString(2, sobrenome);
+            ps.setString(3, username);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Aluno(rs.getInt("id_usuario"),
+                            rs.getString("nome_usuario"),
+                            rs.getString("sobrenome_usuario"),
+                            rs.getString("username_usuario"));
+
+                }
+            }
+        }
+
+        return null;
+
     }
 }
