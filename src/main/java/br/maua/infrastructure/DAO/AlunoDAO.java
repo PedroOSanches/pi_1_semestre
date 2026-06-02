@@ -49,7 +49,25 @@ public class AlunoDAO {
     }
 
     public String determinarTipoUsuario(String username) {
-        return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
+
+        String sql = "SELECT 1 FROM usuario WHERE username_usuario = ?";
+
+        try (Connection cx = ConnectionFactory.obterConexao();
+            PreparedStatement ps = cx.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+                    return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 
     public void salvarNoBanco(Aluno aluno) throws SQLException {

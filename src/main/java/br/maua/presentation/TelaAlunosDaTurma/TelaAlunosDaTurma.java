@@ -15,6 +15,27 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAlunosDaTurma.class.getName());
 
+    private int idTurma;
+    private int idSubturma;
+    private int idCurso;
+    private int idSemestre;
+
+    public int getIdTurma() {
+        return idTurma;
+    }
+
+    public int getIdSubturma() {
+        return idSubturma;
+    }
+
+    public int getIdCurso() {
+        return idCurso;
+    }
+
+    public int getIdSemestre() {
+        return idSemestre;
+    }
+
     /** Creates new form TelaAlunosDaTurma */
     public TelaAlunosDaTurma() {
         initComponents();

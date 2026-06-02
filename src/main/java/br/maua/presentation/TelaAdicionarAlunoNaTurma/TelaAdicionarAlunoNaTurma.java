@@ -1,5 +1,9 @@
 package br.maua.presentation.TelaAdicionarAlunoNaTurma;
 
+import br.maua.domain.Aluno;
+import br.maua.domain.Turma;
+import br.maua.infrastructure.DAO.AlunoDAO;
+import br.maua.infrastructure.DAO.TurmaDAO;
 import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 
 /**
@@ -9,6 +13,11 @@ import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
 
     private TelaAlunosDaTurma telaAnterior;
+    private int idTurma;
+    private int idSubturma;
+    private int idCurso;
+    private int idSemestre;
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdicionarAlunoNaTurma.class.getName());
 
     /**
@@ -34,13 +43,13 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        campoSobrenome = new javax.swing.JTextField();
+        campoNome = new javax.swing.JTextField();
+        campoUsername = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        buttonAdicionar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,7 +59,7 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Adicionar Aluno");
 
-        jTextField4.addActionListener(this::jTextField4ActionPerformed);
+        campoUsername.addActionListener(this::campoUsernameActionPerformed);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -64,8 +73,8 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Username");
 
-        jButton1.setText("Adicionar");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        buttonAdicionar.setText("Adicionar");
+        buttonAdicionar.addActionListener(this::buttonAdicionarActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -77,15 +86,15 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jLabel4)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(campoUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addComponent(campoSobrenome, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                        .addComponent(campoNome, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addContainerGap(131, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(buttonAdicionar)
                 .addGap(46, 46, 46))
         );
         jPanel1Layout.setVerticalGroup(
@@ -96,17 +105,17 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(campoSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(campoUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
-                .addComponent(jButton1)
+                .addComponent(buttonAdicionar)
                 .addContainerGap(102, Short.MAX_VALUE))
         );
 
@@ -126,13 +135,64 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void campoUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_campoUsernameActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void buttonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdicionarActionPerformed
+        
+        String nome = campoNome.getText().trim();
+        String sobrenome = campoSobrenome.getText().trim();
+        String username = campoUsername.getText().trim();
+
+        if (nome.isEmpty() || sobrenome.isEmpty() || username.isEmpty()) {
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
+            return;
+
+        }
+
+        AlunoDAO alunoDAO = new AlunoDAO();
+        TurmaDAO turmaDAO = new TurmaDAO();
+
+        try {
+
+            String tipoUsuario = alunoDAO.determinarTipoUsuario(username);
+            if (tipoUsuario == null || tipoUsuario.trim().isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Username não encontrado!");
+                return;
+            }
+            if (!"aluno".equalsIgnoreCase(tipoUsuario)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Tipo de usuário incompatível!");
+                return;
+            }
+
+            Aluno aluno = alunoDAO.obterAlunoPelaTelaAdicionarAlunoNaTurma(nome, sobrenome, username);
+
+            if (aluno == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Usuário não encontrado!");
+                return;
+            }
+
+            boolean sucesso = turmaDAO.vincularAluno(aluno.getIdAluno(), this.telaAnterior.getIdTurma(), this.telaAnterior.getIdSubturma(), this.telaAnterior.getIdCurso(), this.telaAnterior.getIdSemestre());
+
+            if (sucesso) {
+
+                javax.swing.JOptionPane.showMessageDialog(this, "Aluno adicionado com sucesso!");
+                this.telaAnterior.setVisible(true);
+                this.dispose();
+
+            }
+
+            else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Não foi possível adicionar o aluno na turma!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        
+    }//GEN-LAST:event_buttonAdicionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,14 +220,14 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton buttonAdicionar;
+    private javax.swing.JTextField campoNome;
+    private javax.swing.JTextField campoSobrenome;
+    private javax.swing.JTextField campoUsername;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
