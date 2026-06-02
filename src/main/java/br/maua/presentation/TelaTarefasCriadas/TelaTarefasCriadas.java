@@ -5,10 +5,12 @@
 package br.maua.presentation.TelaTarefasCriadas;
 
 import br.maua.infrastructure.ConnectionFactory;
+import br.maua.infrastructure.DAO.TarefaDAO;
 import br.maua.presentation.ModeloAtividade.Atividade;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -126,65 +128,42 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     }//GEN-LAST:event_filtroSecaoItemStateChanged
 
     private void dinamicaTela(String secao){
-        
+
         painelAtividades.removeAll();
-        
-        String sql = "SELECT t.titulo_tarefa "
-                + "FROM tarefa t "
-                + "JOIN casa c ON t.id_casa = c.id_casa "
-                + "JOIN secao s ON c.id_secao = s.id_secao "
-                + "WHERE s.titulo_secao = ?";
-        
-        int qntdAtividades = 0;
-        
-        try (
-                
-                Connection cx = ConnectionFactory.obterConexao();) {
-            assert cx != null;
-            try (PreparedStatement ps = cx.prepareStatement(sql);) {
-                
-                ps.setString(1, secao);
-                java.sql.ResultSet rs = ps.executeQuery();
+        TarefaDAO tarefaDAO = new TarefaDAO();
+        List<String> titulos = tarefaDAO.buscarTitulosPorSecao(secao);
 
-                int posicaoYAtividades = 10;
+        if (titulos.isEmpty()){
 
-                while (rs.next()){
-                    
-                    qntdAtividades++;
-                    
-                    String nome = rs.getString("titulo_tarefa");
-                    Atividade atividade = new Atividade(nome);
-                    atividade.setPreferredSize(new java.awt.Dimension(700, 60));
-                    atividade.setMinimumSize(new java.awt.Dimension(700, 60));
-                    atividade.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 60));
-                    
-                    painelAtividades.add(atividade);
-                    painelAtividades.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 10)));
-                    
-                }
-            }
-        } catch (SQLException e) {
-            
-            System.out.println("Erro: " + e.getMessage());
-            
-        }
-        
-        if (qntdAtividades == 0) {
-            
             javax.swing.JLabel avisoNenhumaAtividade = new javax.swing.JLabel("Nenhuma atividade encontrada para: " + secao);
             avisoNenhumaAtividade.setForeground(java.awt.Color.WHITE);
             avisoNenhumaAtividade.setFont(new java.awt.Font("Arial", 2, 19));
             avisoNenhumaAtividade.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
             painelAtividades.add(avisoNenhumaAtividade);
-            
+
         }
-        
+        else {
+
+            for (String titulo : titulos) {
+
+                Atividade atividade = new Atividade(titulo);
+                atividade.setPreferredSize(new java.awt.Dimension(700, 60));
+                atividade.setMinimumSize(new java.awt.Dimension(700, 60));
+                atividade.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 60));
+
+                painelAtividades.add(atividade);
+                painelAtividades.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 10)));
+
+            }
+
+        }
+
         painelAtividades.setPreferredSize(new java.awt.Dimension(700, 60));
         painelAtividades.revalidate();
         painelAtividades.repaint();
 
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -192,7 +171,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

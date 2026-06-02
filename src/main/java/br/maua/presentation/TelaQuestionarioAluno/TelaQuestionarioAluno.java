@@ -19,7 +19,7 @@ import br.maua.domain.RespostaDissertativa;
  * @author Luiza
  */
 public class TelaQuestionarioAluno extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
 
     /**
@@ -55,7 +55,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         java.awt.Dimension tamanhoReal = painelCinza1.getLayout().preferredLayoutSize(painelCinza1);
         painelCinza1.setPreferredSize(tamanhoReal);
 
-      
+
         jScrollPane6.setViewportView(painelCinza1);
     }
 
@@ -352,14 +352,13 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
         // TODO add your handling code here:
         RespostaAlternativa respostaAlt = new RespostaAlternativa();
-        respostaAlt.setIdAlternativa(idAlternativa);
 
-        
-        
+
+
         String respostaTexto = jTextArea2.getText();
         RespostaDissertativa respostaDis = new RespostaDissertativa();
         respostaDis.setTextoResposta(respostaTexto);
-        
+
         JOptionPane.showMessageDialog(this,"Tarefa enviada!");
 
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
@@ -403,7 +402,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
