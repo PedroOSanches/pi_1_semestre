@@ -3,9 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+<<<<<<<< HEAD:src/main/java/br/maua/presentation/TelaHomeProfessor/TelaHomeProfessor.java
+package br.maua.presentation.TelaHomeProfessor;
+========
 package br.maua.presentation.TelaPainelDeControle;
 
 import br.maua.domain.Professor;
+>>>>>>>> origin/master:src/main/java/br/maua/presentation/TelaPainelDeControle/TelaPainelDeControle.java
 
 /**
  *
@@ -71,7 +75,11 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         botaoAdmin.setName("botaoAdmin"); // NOI18N
         botaoAdmin.addActionListener(this::botaoAdminActionPerformed);
         painelCinza.add(botaoAdmin);
+<<<<<<<< HEAD:src/main/java/br/maua/presentation/TelaHomeProfessor/TelaHomeProfessor.java
+        botaoAdmin.setBounds(590, 260, 143, 32);
+========
         botaoAdmin.setBounds(569, 260, 160, 32);
+>>>>>>>> origin/master:src/main/java/br/maua/presentation/TelaPainelDeControle/TelaPainelDeControle.java
         botaoAdmin.getAccessibleContext().setAccessibleName("botaoAdmin");
 
         painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
@@ -122,7 +130,7 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         painelAzulLayout.setHorizontalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
+                .addContainerGap(78, Short.MAX_VALUE)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68))
         );

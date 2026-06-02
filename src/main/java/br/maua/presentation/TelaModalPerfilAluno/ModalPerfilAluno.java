@@ -3,8 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+<<<<<<<< HEAD:src/main/java/br/maua/presentation/ModalPerfilAluno/ModalPerfilAluno.java
+package br.maua.presentation.ModalPerfilAluno;
+import br.maua.presentation.TelaNotaAluno.TelaNotaAluno;
+========
 package br.maua.presentation.TelaModalPerfilAluno;
 
+>>>>>>>> origin/master:src/main/java/br/maua/presentation/TelaModalPerfilAluno/ModalPerfilAluno.java
 import br.maua.domain.Aluno;
 import br.maua.presentation.TelaNotaAluno.TelaNotaAluno;
 
