@@ -5,6 +5,8 @@
 
 package br.maua.presentation.TelaAlunosDaTurma;
 
+import br.maua.presentation.TelaAdicionarAlunoNaTurma.TelaAdicionarAlunoNaTurma;
+
 /**
  *
  * @author marjo
@@ -143,6 +145,10 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAddAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAlunoActionPerformed
+        
+        TelaAdicionarAlunoNaTurma telaAdicionarAlunoNaTurma = new TelaAdicionarAlunoNaTurma(this);
+        this.setVisible(false);
+        telaAdicionarAlunoNaTurma.setVisible(true);
         
     }//GEN-LAST:event_buttonAddAlunoActionPerformed
 

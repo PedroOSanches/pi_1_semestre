@@ -20,7 +20,6 @@ public class Aluno {
         this.senha = senha;
 
     }
-    
 
     public int getIdAluno() {
         return idAluno;
@@ -65,7 +64,6 @@ public class Aluno {
     public void setSenha(String senha){
         this.senha = senha;
     }
-    
 
     public void realizarTentativa(Tarefa tarefa) {
         entregarTentativa(tarefa);

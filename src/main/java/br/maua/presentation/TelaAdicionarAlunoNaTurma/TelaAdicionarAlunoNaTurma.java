@@ -1,20 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package br.maua.presentation.TelaAdicionarAlunoNaTurma;
+
+import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 
 /**
  *
  * @author Lenovo
  */
 public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
-    
+
+    private TelaAlunosDaTurma telaAnterior;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdicionarAlunoNaTurma.class.getName());
 
     /**
      * Creates new form TelaAdicionarAlunoNaTurma
      */
+    public TelaAdicionarAlunoNaTurma(TelaAlunosDaTurma telaAnterior) {
+        initComponents();
+        this.telaAnterior = telaAnterior;
+    }
+
     public TelaAdicionarAlunoNaTurma() {
         initComponents();
     }
