@@ -1,11 +1,14 @@
 package br.maua.infrastructure.DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import br.maua.domain.Questao;
 import br.maua.domain.Tarefa;
 import br.maua.infrastructure.ConnectionFactory;
-
-import javax.swing.*;
-import java.sql.*;
 
 public class TarefaDAO {
 
@@ -34,7 +37,7 @@ public class TarefaDAO {
                     }
                         cx.commit();
                     }
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     cx.rollback();
                     throw ex;
                 }
