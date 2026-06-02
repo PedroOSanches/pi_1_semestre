@@ -6,13 +6,18 @@ public class Aluno {
     private String sobrenome;
     private String username;
     private String curso;
+    private String senha;
 
-    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso){
+    public Aluno() {
+    }
+
+    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
         this.idAluno = idAluno;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.username = username;
         this.curso = curso;
+        this.senha = senha;
 
     }
     
@@ -51,6 +56,14 @@ public class Aluno {
 
     public void setCurso(String curso) {
         this.curso = curso;
+    }
+
+    public String getSenha(){
+        return senha;
+    }
+
+    public void setSenha(String senha){
+        this.senha = senha;
     }
     
 

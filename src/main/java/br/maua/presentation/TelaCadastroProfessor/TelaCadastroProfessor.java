@@ -4,7 +4,8 @@
  */
 
 package br.maua.presentation.TelaCadastroProfessor;
-import br.maua.presentation.TelaHomeProfessor.TelaHomeProfessor;
+import br.maua.infrastructure.DAO.AlunoDAO;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -18,7 +19,7 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
     /** Creates new form TelaPerfilAluno */
     public TelaCadastroProfessor() {
         initComponents();
-        campoNome.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        campoUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         campoSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         campoConfirmarSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
@@ -37,16 +38,19 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         painelAzul = new javax.swing.JPanel();
         nomeTitulo = new javax.swing.JLabel();
         CadastroTitulo = new javax.swing.JLabel();
-        campoNome = new javax.swing.JTextField();
+        campoUsername = new javax.swing.JTextField();
         campoSenha = new javax.swing.JTextField();
         senhaTitulo = new javax.swing.JLabel();
         ConfirmarSenhaTitulo = new javax.swing.JLabel();
         campoConfirmarSenha = new javax.swing.JTextField();
         entrarBotao = new javax.swing.JButton();
+        campoNome = new javax.swing.JTextField();
+        campoSobrenome = new javax.swing.JTextField();
+        nomeTitulo1 = new javax.swing.JLabel();
+        nomeTitulo2 = new javax.swing.JLabel();
         imagemFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1024, 768));
 
         painelPrincipal.setBackground(new java.awt.Color(19, 112, 178));
         painelPrincipal.setOpaque(false);
@@ -55,9 +59,9 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         painelPrincipal.setLayout(painelPrincipalLayout);
 
         painelAzul.setBackground(new java.awt.Color(19, 112, 178));
-        painelAzul.setMaximumSize(new java.awt.Dimension(500, 500));
+        painelAzul.setMaximumSize(new java.awt.Dimension(500, 540));
         painelAzul.setMinimumSize(new java.awt.Dimension(500, 500));
-        painelAzul.setPreferredSize(new java.awt.Dimension(500, 500));
+        painelAzul.setPreferredSize(new java.awt.Dimension(500, 540));
 
         nomeTitulo.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
         nomeTitulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -69,12 +73,13 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         CadastroTitulo.setText("Cadastro");
         CadastroTitulo.setName("CadastroTitulo"); // NOI18N
 
-        campoNome.setBackground(new java.awt.Color(204, 204, 204));
-        campoNome.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        campoNome.setBorder(null);
-        campoNome.setMargin(new java.awt.Insets(8, 5, 2, 6));
-        campoNome.setName("campoNome"); // NOI18N
-        campoNome.addActionListener(this::campoNomeActionPerformed);
+        campoUsername.setBackground(new java.awt.Color(204, 204, 204));
+        campoUsername.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        campoUsername.setToolTipText("");
+        campoUsername.setBorder(null);
+        campoUsername.setMargin(new java.awt.Insets(8, 5, 2, 6));
+        campoUsername.setName("campoUsername"); // NOI18N
+        campoUsername.addActionListener(this::campoUsernameActionPerformed);
 
         campoSenha.setBackground(new java.awt.Color(204, 204, 204));
         campoSenha.setBorder(null);
@@ -104,10 +109,40 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         entrarBotao.setName("entrarBotao"); // NOI18N
         entrarBotao.addActionListener(this::entrarBotaoActionPerformed);
 
+        campoNome.setBackground(new java.awt.Color(204, 204, 204));
+        campoNome.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        campoNome.setToolTipText("");
+        campoNome.setBorder(null);
+        campoNome.setMargin(new java.awt.Insets(8, 5, 2, 6));
+        campoNome.setName("campoNome"); // NOI18N
+        campoNome.addActionListener(this::campoNomeActionPerformed);
+
+        campoSobrenome.setBackground(new java.awt.Color(204, 204, 204));
+        campoSobrenome.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        campoSobrenome.setToolTipText("");
+        campoSobrenome.setBorder(null);
+        campoSobrenome.setMargin(new java.awt.Insets(8, 5, 2, 6));
+        campoSobrenome.setName("campoNome"); // NOI18N
+        campoSobrenome.addActionListener(this::campoSobrenomeActionPerformed);
+
+        nomeTitulo1.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
+        nomeTitulo1.setForeground(new java.awt.Color(255, 255, 255));
+        nomeTitulo1.setText("Username");
+        nomeTitulo1.setName("nomeTitulo"); // NOI18N
+
+        nomeTitulo2.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
+        nomeTitulo2.setForeground(new java.awt.Color(255, 255, 255));
+        nomeTitulo2.setText("Sobrenome");
+        nomeTitulo2.setName("nomeTitulo"); // NOI18N
+
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
         painelAzulLayout.setHorizontalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(entrarBotao, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
             .addGroup(painelAzulLayout.createSequentialGroup()
                 .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelAzulLayout.createSequentialGroup()
@@ -118,41 +153,49 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
                             .addComponent(senhaTitulo)
                             .addComponent(campoSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(nomeTitulo)
-                            .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(campoUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(campoSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nomeTitulo1)
+                            .addComponent(nomeTitulo2)))
                     .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(136, 136, 136)
+                        .addGap(130, 130, 130)
                         .addComponent(CadastroTitulo)))
                 .addContainerGap(122, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(entrarBotao, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
         );
         painelAzulLayout.setVerticalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(24, 24, 24)
                 .addComponent(CadastroTitulo)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(nomeTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nomeTitulo2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(campoSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(nomeTitulo1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(campoUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(senhaTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(campoSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConfirmarSenhaTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(campoConfirmarSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addGap(23, 23, 23)
                 .addComponent(entrarBotao, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
 
         nomeTitulo.getAccessibleContext().setAccessibleName("nomeTitulo");
         CadastroTitulo.getAccessibleContext().setAccessibleName("CadastroTitulo");
-        campoNome.getAccessibleContext().setAccessibleName("campoNome");
+        campoUsername.getAccessibleContext().setAccessibleName("campoNome");
         campoSenha.getAccessibleContext().setAccessibleName("campoSenha");
         senhaTitulo.getAccessibleContext().setAccessibleName("senhaTitulo");
         ConfirmarSenhaTitulo.getAccessibleContext().setAccessibleName("ConfirmarSenhaTitulo");
@@ -195,9 +238,9 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
+    private void campoUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_campoNomeActionPerformed
+    }//GEN-LAST:event_campoUsernameActionPerformed
 
     private void campoSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSenhaActionPerformed
         // TODO add your handling code here:
@@ -211,22 +254,57 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         String nome = campoNome.getText();
+        String sobrenome = campoSobrenome.getText();
+        String username = campoUsername.getText();
         String senha = campoSenha.getText();
         String senhaConfirmacao = campoConfirmarSenha.getText();
 
-        if (nome.isEmpty() || senhaConfirmacao.isEmpty() || senha.isEmpty()) {
+        if (nome.isEmpty() || senha.isEmpty() || senhaConfirmacao.isEmpty()|| username.isEmpty() || sobrenome.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "Preencha todos os campos!");
+                "Preencha todos os campos!", 
+                "Aviso", 
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        JOptionPane.showMessageDialog(this,
-            "Cadastro realizado com sucesso!");
         
-        new TelaHomeProfessor().setVisible(true);
-        this.dispose();
- 
+        if (!senha.equals(senhaConfirmacao)) {
+            JOptionPane.showMessageDialog(this,
+                "As senhas não coincidem! Digite novamente.", 
+                "Erro de Senha", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            
+            br.maua.domain.Professor novoProfessor = new br.maua.domain.Professor(nome, sobrenome, username, senha);
+
+            br.maua.infrastructure.DAO.ProfessorDAO dao = new br.maua.infrastructure.DAO.ProfessorDAO();
+            dao.salvarNoBanco(novoProfessor);
+            br.maua.domain.Aluno novoAluno = new br.maua.domain.Aluno(0, nome, sobrenome, username, "", senha);
+            
+            JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
+            
+
+            new br.maua.presentation.TelaLogin.TelaLogin().setVisible(true);
+            this.dispose();
+            
+        } catch (java.sql.SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,
+                "Erro ao salvar no banco de dados: " + ex.getMessage(),
+                "Erro de Banco",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_entrarBotaoActionPerformed
+
+    private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoNomeActionPerformed
+
+    private void campoSobrenomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSobrenomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoSobrenomeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,9 +337,13 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
     private javax.swing.JTextField campoConfirmarSenha;
     private javax.swing.JTextField campoNome;
     private javax.swing.JTextField campoSenha;
+    private javax.swing.JTextField campoSobrenome;
+    private javax.swing.JTextField campoUsername;
     private javax.swing.JButton entrarBotao;
     private javax.swing.JLabel imagemFundo;
     private javax.swing.JLabel nomeTitulo;
+    private javax.swing.JLabel nomeTitulo1;
+    private javax.swing.JLabel nomeTitulo2;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JPanel painelPrincipal;
     private javax.swing.JLabel senhaTitulo;
