@@ -8,6 +8,12 @@ import br.maua.domain.Professor;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
 import br.maua.presentation.TelaModalPerfilProfessor.ModalPerfilProfessor;
 
+import java.awt.Component;
+import javax.swing.JPanel;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 /**
  *
  * @author Lenovo
@@ -27,6 +33,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         this.professorLogado = null;
         this.mostrarVoltarParaAdmin = false;
         initComponents();
+        configurarCasas();
         configurarScroll();
         // por padrão, se construído com um Aluno, não mostra o Voltar para Admin
         jButton2.setVisible(this.mostrarVoltarParaAdmin);
@@ -47,6 +54,7 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         this.professorLogado = null;
         this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
         initComponents();
+        configurarCasas();
         configurarScroll();
         jButton2.setVisible(this.mostrarVoltarParaAdmin);
         if (this.mostrarVoltarParaAdmin) {
@@ -62,6 +70,8 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         this.professorLogado = professor;
         this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
         initComponents();
+        configurarAtalhoCasa(Casa1);
+        configurarCasas();
         configurarScroll();
         jButton2.setVisible(this.mostrarVoltarParaAdmin);
         if (this.mostrarVoltarParaAdmin) {
@@ -86,12 +96,59 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
         modal.setLocationRelativeTo(this);
         modal.setVisible(true);
     }
-
-    public TelaTabuleiro1() {
-        this((br.maua.domain.Aluno) null);
+    
+    private void abrirTelaEscolhaDeQuestionario() {
+        new br.maua.presentation.TelaEscolhaDeQuestionario.TelaEscolhaDeQuestionario().setVisible(true);
+        this.dispose();
     }
 
+    private void configurarCasas() {
+        configurarAtalhoCasa(Casa1);
+        configurarAtalhoCasa(Casa2);
+        configurarAtalhoCasa(Casa3);
+        configurarAtalhoCasa(Casa4);
+        configurarAtalhoCasa(Casa5);
+        configurarAtalhoCasa(Casa6);
+        configurarAtalhoCasa(Casa7);
+        configurarAtalhoCasa(Casa8);
+        configurarAtalhoCasa(Casa9);
+        configurarAtalhoCasa(Casa10);
+        configurarAtalhoCasa(Casa11);
+        configurarAtalhoCasa(Casa12);
+        configurarAtalhoCasa(Casa13);
+        configurarAtalhoCasa(Casa14);
+        configurarAtalhoCasa(Casa15);
+        configurarAtalhoCasa(Casa16);
+        configurarAtalhoCasa(Casa17);
+        configurarAtalhoCasa(Casa18);
+        configurarAtalhoCasa(Casa51);
+        configurarAtalhoCasa(Casa52);
+        configurarAtalhoCasa(Casa53);
+        configurarAtalhoCasa(Casa54);
+        configurarAtalhoCasa(Casa54);
+        configurarAtalhoCasa(Casa56);
+        configurarAtalhoCasa(Casa57);
+    }
+            
+    private void configurarAtalhoCasa(javax.swing.JPanel casa) {
+        Cursor cursorMao = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        casa.setCursor(cursorMao);
+
+        MouseAdapter abrirQuestionario = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                abrirTelaEscolhaDeQuestionario();
+            }
+        };
+
+        casa.addMouseListener(abrirQuestionario);
+    }
     
+    public TelaTabuleiro1() {
+        this((br.maua.domain.Aluno) null);
+        configurarCasas();
+    }
+
     private void configurarScroll() {
         // 1. Remove os tamanhos travados que o NetBeans colocou e deixa o layout livre
         jPanel1.setPreferredSize(null);

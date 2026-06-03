@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa;
+import br.maua.presentation.TelaTurmasDoProfessor.TelaTurmasDoProfessor;
 
 /**
  *
@@ -25,6 +26,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
     public TelaPainelAdministrativo1() {
         initComponents();
         configurarAtalhoTarefas();
+        configurarAtalhoTurmas();
     }
 
     private void configurarAtalhoTarefas() {
@@ -42,6 +44,23 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
 
         jPanel3.addMouseListener(abrirTarefas);
         jLabel3.addMouseListener(abrirTarefas);
+    }
+    
+     private void configurarAtalhoTurmas() {
+        Cursor cursorMao = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        jPanel2.setCursor(cursorMao);
+        jLabel2.setCursor(cursorMao);
+
+        MouseAdapter abrirTurmas = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                new TelaTurmasDoProfessor().setVisible(true);
+                dispose();
+            }
+        };
+
+        jPanel2.addMouseListener(abrirTurmas);
+        jLabel2.addMouseListener(abrirTurmas);
     }
 
     /**

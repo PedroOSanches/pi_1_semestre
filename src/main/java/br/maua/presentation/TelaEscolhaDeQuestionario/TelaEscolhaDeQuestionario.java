@@ -3,29 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-package br.maua.presentation.TelaPainelDeControle;
-import br.maua.domain.Professor;
+package br.maua.presentation.TelaEscolhaDeQuestionario;
 
 /**
  *
  * @author Luiza
  */
-public class TelaPainelDeControle extends javax.swing.JFrame {
+public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPainelDeControle.class.getName());
-    private final Professor professorLogado;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEscolhaDeQuestionario.class.getName());
 
     /** Creates new form TelaPerfilAluno */
-    public TelaPainelDeControle() {
-        this(null);
-    }
-
-    public TelaPainelDeControle(Professor professor) {
-        this.professorLogado = professor;
+    public TelaEscolhaDeQuestionario() {
         initComponents();
-        if (this.professorLogado != null) {
-            nomeTitulo.setText("Bem vindo, " + this.professorLogado.getNomeCompleto() + "!");
-        }
     }
 
     /** This method is called from within the constructor to
@@ -39,12 +29,9 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
 
         painelAzul = new javax.swing.JPanel();
         painelCinza = new javax.swing.JPanel();
-        botaoTabuleiro = new javax.swing.JButton();
-        botaoAdmin = new javax.swing.JButton();
         painelAzul1 = new javax.swing.JPanel();
         nomeTitulo = new javax.swing.JLabel();
-        fundoTabuleiro = new javax.swing.JLabel();
-        fundoAdmin = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,24 +42,6 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         painelCinza.setMinimumSize(new java.awt.Dimension(900, 600));
         painelCinza.setLayout(null);
 
-        botaoTabuleiro.setBackground(new java.awt.Color(153, 153, 153));
-        botaoTabuleiro.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
-        botaoTabuleiro.setText("Tabuleiro");
-        botaoTabuleiro.setName("botaoTabuleiro"); // NOI18N
-        botaoTabuleiro.addActionListener(this::botaoTabuleiroActionPerformed);
-        painelCinza.add(botaoTabuleiro);
-        botaoTabuleiro.setBounds(590, 450, 140, 32);
-        botaoTabuleiro.getAccessibleContext().setAccessibleName("botaoTabuleiro");
-
-        botaoAdmin.setBackground(new java.awt.Color(153, 153, 153));
-        botaoAdmin.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
-        botaoAdmin.setText("Administração");
-        botaoAdmin.setName("botaoAdmin"); // NOI18N
-        botaoAdmin.addActionListener(this::botaoAdminActionPerformed);
-        painelCinza.add(botaoAdmin);
-        botaoAdmin.setBounds(569, 260, 160, 32);
-        botaoAdmin.getAccessibleContext().setAccessibleName("botaoAdmin");
-
         painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
         painelAzul1.setMaximumSize(new java.awt.Dimension(710, 90));
         painelAzul1.setMinimumSize(new java.awt.Dimension(710, 90));
@@ -81,17 +50,17 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
 
         nomeTitulo.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 48)); // NOI18N
         nomeTitulo.setForeground(new java.awt.Color(255, 255, 255));
-        nomeTitulo.setText("Bem vindo, nomeProfessor!");
+        nomeTitulo.setText("Tarefas");
         nomeTitulo.setName("nomeTitulo"); // NOI18N
 
         javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
         painelAzul1.setLayout(painelAzul1Layout);
         painelAzul1Layout.setHorizontalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzul1Layout.createSequentialGroup()
-                .addContainerGap(90, Short.MAX_VALUE)
+            .addGroup(painelAzul1Layout.createSequentialGroup()
+                .addGap(271, 271, 271)
                 .addComponent(nomeTitulo)
-                .addGap(60, 60, 60))
+                .addContainerGap(301, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,17 +73,13 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         painelCinza.add(painelAzul1);
         painelAzul1.setBounds(94, 37, 720, 90);
 
-        fundoTabuleiro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/Rectangle 31.png"))); // NOI18N
-        fundoTabuleiro.setName("fundoTabuleiro"); // NOI18N
-        painelCinza.add(fundoTabuleiro);
-        fundoTabuleiro.setBounds(170, 340, 581, 175);
-        fundoTabuleiro.getAccessibleContext().setAccessibleName("fundoTabuleiro");
-
-        fundoAdmin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/image fixed.png"))); // NOI18N
-        fundoAdmin.setName("fundoAdmin"); // NOI18N
-        painelCinza.add(fundoAdmin);
-        fundoAdmin.setBounds(170, 150, 581, 175);
-        fundoAdmin.getAccessibleContext().setAccessibleName("fundoAdmin");
+        jButton1.setBackground(new java.awt.Color(240, 147, 23));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Voltar");
+        jButton1.setMaximumSize(new java.awt.Dimension(92, 33));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+        painelCinza.add(jButton1);
+        jButton1.setBounds(20, 10, 72, 23);
 
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
@@ -147,16 +112,10 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botaoAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdminActionPerformed
-        new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1().setVisible(true);
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_botaoAdminActionPerformed
-
-    private void botaoTabuleiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTabuleiroActionPerformed
-
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(this.professorLogado, true).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_botaoTabuleiroActionPerformed
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,14 +139,11 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaPainelDeControle().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaEscolhaDeQuestionario().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoAdmin;
-    private javax.swing.JButton botaoTabuleiro;
-    private javax.swing.JLabel fundoAdmin;
-    private javax.swing.JLabel fundoTabuleiro;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel nomeTitulo;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JPanel painelAzul1;

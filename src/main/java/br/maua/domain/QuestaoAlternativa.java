@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestaoAlternativa extends Questao {
+
     private List<Alternativa> alternativas = new ArrayList<>();
-    private boolean alternativaAssinalada;
+
 
     public QuestaoAlternativa() {
         super();

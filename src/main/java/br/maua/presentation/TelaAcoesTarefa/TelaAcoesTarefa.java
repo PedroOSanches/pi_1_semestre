@@ -39,6 +39,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         btnCriarTarefas = new javax.swing.JButton();
         btnTarefasCriadas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
+        botaoVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,6 +73,12 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         Titulo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         Titulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        botaoVoltar.setBackground(new java.awt.Color(240, 147, 23));
+        botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        botaoVoltar.setText("Voltar");
+        botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
+        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
         PainelAzul1Layout.setHorizontalGroup(
@@ -84,6 +91,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                             .addGap(122, 122, 122)
                             .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(PainelAzul1Layout.createSequentialGroup()
+
                             .addGap(39, 39, 39)
                             .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(319, 319, 319)
@@ -137,6 +145,8 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
+    
+    
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
@@ -146,11 +156,13 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         ttc.setVisible(true);
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
 
+
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
         new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -180,6 +192,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAzul1;
     private javax.swing.JLabel Titulo;
+    private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
     private javax.swing.JButton btnTarefasCriadas;
     private javax.swing.JButton btnVoltar;
