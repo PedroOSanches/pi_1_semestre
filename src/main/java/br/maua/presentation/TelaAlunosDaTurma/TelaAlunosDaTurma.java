@@ -18,6 +18,14 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         initComponents();
     }
 
+    public TelaAlunosDaTurma(String nomeTurma) {
+        initComponents();
+
+        if (nomeTurma != null) {
+            jLabel1.setText(nomeTurma);
+        }
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

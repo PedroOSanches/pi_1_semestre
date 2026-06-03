@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.maua.presentation.TelaTurmasDoProfessor;
+import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 
 /**
  *
@@ -121,6 +122,11 @@ public class TelaTurmasDoProfessor extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void abrirTurma(String nomeTurma) {
+        new TelaAlunosDaTurma(nomeTurma).setVisible(true);
+        this.dispose();
+    }
+    
     /**
      * @param args the command line arguments
      */
