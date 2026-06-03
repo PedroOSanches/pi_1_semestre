@@ -44,38 +44,8 @@ import javax.swing.SwingConstants;
 
 public class TelaTabuleiro1 extends JFrame {
 
-<<<<<<< HEAD
-import java.awt.Component;
-import javax.swing.JPanel;
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-/**
- *
- * @author Lenovo
- */
-public class TelaTabuleiro1 extends javax.swing.JFrame {
-    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTabuleiro1.class.getName());
-    /**
-     * Creates new form TelaTabuleiro1
-     */
-    public TelaTabuleiro1(br.maua.domain.Aluno aluno) {
-        this.alunoLogado = aluno;
-        this.professorLogado = null;
-        this.mostrarVoltarParaAdmin = false;
-        initComponents();
-        configurarCasas();
-        configurarScroll();
-        // por padrão, se construído com um Aluno, não mostra o Voltar para Admin
-        jButton2.setVisible(this.mostrarVoltarParaAdmin);
-        if (this.mostrarVoltarParaAdmin) {
-            jButton2.addActionListener(evt -> {
-                new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-                this.dispose();
-            });
-        }
+
     private Aluno alunoLogado;
     private Professor professorLogado;
     private boolean mostrarVoltarParaAdmin;
@@ -107,132 +77,16 @@ public class TelaTabuleiro1 extends javax.swing.JFrame {
     }
 
     public TelaTabuleiro1(boolean mostrarVoltarParaAdmin) {
-
-        this.alunoLogado = null;
-        this.professorLogado = null;
-        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
-        initComponents();
-        configurarCasas();
-        configurarScroll();
-        jButton2.setVisible(this.mostrarVoltarParaAdmin);
-        if (this.mostrarVoltarParaAdmin) {
-            jButton2.addActionListener(evt -> {
-                new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-                this.dispose();
-            });
-        }
-    }
-
-    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
-        this.alunoLogado = null;
-        this.professorLogado = professor;
-        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
-        initComponents();
-        configurarAtalhoCasa(Casa1);
-        configurarCasas();
-        configurarScroll();
-        jButton2.setVisible(this.mostrarVoltarParaAdmin);
-        if (this.mostrarVoltarParaAdmin) {
-            jButton2.addActionListener(evt -> {
-                new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-                this.dispose();
-            });
-        }
-    }
-    
-    private void abrirModalPerfilAluno() {
-        // Passa apenas o aluno logado, que é o que o construtor do modal espera
-        ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado); 
-
-        // Centraliza e exibe
-        modal.setLocationRelativeTo(this);
-        modal.setVisible(true);
-
         this(null, null, mostrarVoltarParaAdmin, null, null);
     }
 
-    // public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
-    //     this(null, professor, mostrarVoltarParaAdmin, null, null);
-
-    // }
+    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
+        this(null, professor, mostrarVoltarParaAdmin, null, null);
+    }
 
     public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
         this(null, professor, mostrarVoltarParaAdmin, casas, secoes);
     }
-
-    
-    private void abrirTelaEscolhaDeQuestionario() {
-        new br.maua.presentation.TelaEscolhaDeQuestionario.TelaEscolhaDeQuestionario().setVisible(true);
-        this.dispose();
-    }
-
-    private void configurarCasas() {
-        configurarAtalhoCasa(Casa1);
-        configurarAtalhoCasa(Casa2);
-        configurarAtalhoCasa(Casa3);
-        configurarAtalhoCasa(Casa4);
-        configurarAtalhoCasa(Casa5);
-        configurarAtalhoCasa(Casa6);
-        configurarAtalhoCasa(Casa7);
-        configurarAtalhoCasa(Casa8);
-        configurarAtalhoCasa(Casa9);
-        configurarAtalhoCasa(Casa10);
-        configurarAtalhoCasa(Casa11);
-        configurarAtalhoCasa(Casa12);
-        configurarAtalhoCasa(Casa13);
-        configurarAtalhoCasa(Casa14);
-        configurarAtalhoCasa(Casa15);
-        configurarAtalhoCasa(Casa16);
-        configurarAtalhoCasa(Casa17);
-        configurarAtalhoCasa(Casa18);
-        configurarAtalhoCasa(Casa51);
-        configurarAtalhoCasa(Casa52);
-        configurarAtalhoCasa(Casa53);
-        configurarAtalhoCasa(Casa54);
-        configurarAtalhoCasa(Casa54);
-        configurarAtalhoCasa(Casa56);
-        configurarAtalhoCasa(Casa57);
-    }
-            
-    private void configurarAtalhoCasa(javax.swing.JPanel casa) {
-        Cursor cursorMao = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-        casa.setCursor(cursorMao);
-
-        MouseAdapter abrirQuestionario = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent evt) {
-                abrirTelaEscolhaDeQuestionario();
-            }
-        };
-
-        casa.addMouseListener(abrirQuestionario);
-    }
-    
-    public TelaTabuleiro1() {
-        this((br.maua.domain.Aluno) null);
-        configurarCasas();
-    }
-
-    private void configurarScroll() {
-        // 1. Remove os tamanhos travados que o NetBeans colocou e deixa o layout livre
-        jPanel1.setPreferredSize(null);
-        jPanel1.setMinimumSize(null);
-        jPanel1.setMaximumSize(null);
-
-        // 2. Força a barra vertical a estar sempre visível
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        // 3. Pede para o Swing recalcular os tamanhos reais com base nos componentes internos
-        jPanel1.revalidate();
-        jPanel1.repaint();
-
-        // 4. Pega o tamanho real combinado de tudo e aplica de forma definitiva
-        java.awt.Dimension tamanhoReal = jPanel1.getLayout().preferredLayoutSize(jPanel1);
-        jPanel1.setPreferredSize(tamanhoReal);
-
-        // 5. Atualiza o viewport do scroll
-        jScrollPane1.setViewportView(jPanel1);
 
     public TelaTabuleiro1() {
         this((Aluno) null);
