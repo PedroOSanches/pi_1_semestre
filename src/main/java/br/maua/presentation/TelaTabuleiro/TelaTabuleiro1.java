@@ -368,7 +368,12 @@ private void montarTabuleiroDinamico() {
         JLabel titulo = criarLabelFormatado(registro.tituloSecao, new Font("Segoe UI", Font.BOLD, 18), corTexto, 280);
         titulo.setHorizontalAlignment(SwingConstants.LEFT);
 
-        JLabel icone = new JLabel(carregarIconeSecao(registro.ordemSecao, corPrincipal));
+        boolean liberarIcone = isSecaoConcluidaComSucesso(registro.idSecao);
+        
+        JLabel icone = new JLabel();
+        if (liberarIcone) {
+            icone.setIcon(carregarIconeSecao(registro.ordemSecao, corPrincipal));
+        }
         icone.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel descricao = criarLabelFormatado(registro.descricaoSecao, new Font("Segoe UI", Font.PLAIN, 13), corTexto, 280);
@@ -441,6 +446,43 @@ private void montarTabuleiroDinamico() {
         }
 
         return new ImageIcon(imagem);
+    }
+
+        private boolean isSecaoConcluidaComSucesso(int idSecao) {
+        // Se não for aluno (ex: professor), exibe o ícone por padrão
+            if (this.alunoLogado == null) {
+                return true; 
+            }
+
+            String sql = "SELECT " +
+                        "  (SELECT COUNT(*) FROM tarefa t2 JOIN casa c2 ON t2.id_casa = c2.id_casa WHERE c2.id_secao = s.id_secao) AS total_tarefas, " +
+                        "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
+                        "FROM secao s " +
+                        "JOIN casa c ON c.id_secao = s.id_secao " +
+                        "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                        "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa AND ten.id_usuario = ? AND ten.status_tentativa = 'corrigida' " +
+                        "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                        "WHERE s.id_secao = ? " +
+                        "GROUP BY s.id_secao";
+
+            try (Connection conexao = ConnectionFactory.obterConexao();
+                PreparedStatement comando = conexao.prepareStatement(sql)) {
+                
+                comando.setInt(1, this.alunoLogado.getIdAluno());
+                comando.setInt(2, idSecao);
+                
+                try (ResultSet resultado = comando.executeQuery()) {
+                    if (resultado.next()) {
+                        int total = resultado.getInt("total_tarefas");
+                        int completas = resultado.getInt("tarefas_completas");
+                        // Só retorna true se houver tarefas e todas passarem de 6.0
+                        return total > 0 && total == completas;
+                    }
+                }
+            } catch (SQLException e) {
+                logger.log(java.util.logging.Level.SEVERE, "Erro ao verificar conclusão da seção", e);
+            }
+            return false;
     }
 
 private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqueada, int numeroCasaExibida) {
@@ -677,14 +719,8 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
 
     private Integer descobrirProximaCasaObrigatoria() {
         if (this.alunoLogado == null) {
-            return null; // Se for professor ou admin, não bloqueia nada
+            return null;
         }
-
-        /*
-        Esta query avalia cada casa do tabuleiro e conta quantas tarefas 
-        NÃO foram concluídas com nota >= 6 pelo aluno.
-        A primeira casa que tiver 'tarefas_pendentes > 0' será retornada como a trava.
-        */
         String sql = "SELECT c.id_casa, " +
                     "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
                     "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
