@@ -169,12 +169,12 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
             return;
         }
 
-        this.setVisible(false);
-        new TelaNotaAluno(aluno, this).setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaNotaAluno(aluno, this));
     }//GEN-LAST:event_btnNotasActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
+        new br.maua.presentation.TelaLogin.TelaLogin().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**

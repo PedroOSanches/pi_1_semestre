@@ -25,6 +25,11 @@ public class Secao {
     public String getTitulo() {
         return titulo;
     }
+    
+    @Override
+    public String toString() {
+        return titulo;
+    }
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
@@ -37,4 +42,8 @@ public class Secao {
     public void setCasas(List<Casa> casas) {
         this.casas = casas;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/tela_tabuleiro

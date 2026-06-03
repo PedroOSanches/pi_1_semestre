@@ -37,8 +37,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         MouseAdapter abrirTarefas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                new TelaAcoesTarefa().setVisible(true);
-                dispose();
+                br.maua.presentation.TelaNavegacao.abrir(TelaPainelAdministrativo1.this, new TelaAcoesTarefa());
             }
         };
 
@@ -140,7 +139,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
         btnVoltar.setText("Voltar");
         btnVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
+        btnVoltar.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -196,10 +195,10 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        br.maua.presentation.TelaNavegacao.voltar(this);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

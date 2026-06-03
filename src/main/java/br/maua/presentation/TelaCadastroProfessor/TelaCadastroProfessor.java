@@ -283,9 +283,7 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
             
-
-            new br.maua.presentation.TelaLogin.TelaLogin().setVisible(true);
-            this.dispose();
+            br.maua.presentation.TelaNavegacao.voltar(this);
             
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);

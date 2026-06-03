@@ -52,3 +52,4 @@ public class Casa {
         this.secao = secao;
     }
 }
+

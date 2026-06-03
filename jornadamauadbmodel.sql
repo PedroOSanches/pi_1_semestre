@@ -1,7 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS "jornadamauadb" /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `jornadamauadb`;
-CREATE DATABASE  IF NOT EXISTS "jornadamauadb" /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `jornadamauadb`;
 -- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: pi-gameficacao-db-pedrohenriqueoliveirasanches3-0b27.i.aivencloud.com    Database: jornadamauadb
@@ -398,4 +394,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-30 13:12:03
+-- Dump completed on 2026-05-27 21:31:23
