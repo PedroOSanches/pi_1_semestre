@@ -1,10 +1,10 @@
 package br.maua.domain;
 
-import br.maua.infrastructure.ConnectionFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import br.maua.infrastructure.ConnectionFactory;
 
 public class Tentativa {
 
@@ -12,6 +12,7 @@ public class Tentativa {
     private Aluno aluno;
     private Tarefa tarefa;
     private boolean concluida = false;
+    private int idTentativa;
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
         this.setNota(nota);
@@ -72,5 +73,8 @@ public class Tentativa {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    public int getIdTentativa() {
+        return idTentativa;
     }
 }

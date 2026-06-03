@@ -35,6 +35,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private void initComponents() {
 
         PainelAzul1 = new javax.swing.JPanel();
+        btnVoltar = new javax.swing.JButton();
         btnCriarTarefas = new javax.swing.JButton();
         btnTarefasCriadas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
@@ -43,6 +44,14 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         PainelAzul1.setBackground(new java.awt.Color(19, 112, 178));
+
+        btnVoltar.setBackground(new java.awt.Color(240, 147, 32));
+        btnVoltar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
+        btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        btnVoltar.setText("Voltar");
+        btnVoltar.setBorder(null);
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
 
         btnCriarTarefas.setBackground(new java.awt.Color(240, 147, 32));
         btnCriarTarefas.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
@@ -82,9 +91,10 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                             .addGap(122, 122, 122)
                             .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(PainelAzul1Layout.createSequentialGroup()
-                            .addGap(40, 40, 40)
-                            .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(301, 301, 301)
+
+                            .addGap(39, 39, 39)
+                            .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(319, 319, 319)
                             .addComponent(Titulo))))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
@@ -96,8 +106,8 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                         .addGap(47, 47, 47)
                         .addComponent(Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PainelAzul1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(31, 31, 31)
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(103, 103, 103)
                 .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(124, 124, 124)
@@ -146,11 +156,13 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         ttc.setVisible(true);
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
 
-    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
-        new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1().setVisible(true);
+        new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_botaoVoltarActionPerformed
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -183,5 +195,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
     private javax.swing.JButton btnTarefasCriadas;
+    private javax.swing.JButton btnVoltar;
     // End of variables declaration//GEN-END:variables
 }

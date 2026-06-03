@@ -1,11 +1,16 @@
 package br.maua.infrastructure.DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import br.maua.domain.Questao;
 import br.maua.domain.Tarefa;
 import br.maua.infrastructure.ConnectionFactory;
-
-import javax.swing.*;
-import java.sql.*;
 
 public class TarefaDAO {
 
@@ -34,13 +39,41 @@ public class TarefaDAO {
                     }
                         cx.commit();
                     }
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     cx.rollback();
                     throw ex;
                 }
             } catch (SQLException e) {
                 throw e;
             }
+        }
+
+        public List <String> buscarTitulosPorSecao (String secao) {
+
+            List <String> titulos = new ArrayList<>();
+
+            String sql = "SELECT t.titulo_tarefa "
+                    + "FROM tarefa t "
+                    + "JOIN casa c ON t.id_casa = c.id_casa "
+                    + "JOIN secao s ON c.id_secao = s.id_secao "
+                    + "WHERE s.titulo_secao = ?";
+
+            try (Connection cx = ConnectionFactory.obterConexao();
+                 PreparedStatement ps = cx.prepareStatement(sql)) {
+
+                ps.setString(1, secao);
+                java.sql.ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    titulos.add(rs.getString("titulo_tarefa"));
+                }
+
+            } catch (SQLException e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
+
+            return titulos;
+
         }
 
     }

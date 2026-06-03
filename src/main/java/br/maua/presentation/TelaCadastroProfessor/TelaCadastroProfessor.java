@@ -4,8 +4,6 @@
  */
 
 package br.maua.presentation.TelaCadastroProfessor;
-import br.maua.infrastructure.DAO.AlunoDAO;
-
 import javax.swing.JOptionPane;
 
 /**
