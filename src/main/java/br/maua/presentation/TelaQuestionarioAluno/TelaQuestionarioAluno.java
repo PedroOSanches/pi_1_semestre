@@ -4,24 +4,23 @@
  */
 package br.maua.presentation.TelaQuestionarioAluno;
 
-import java.io.File;
-
-
-import javax.swing.JOptionPane;
-import javax.swing.BoxLayout;
-import java.util.List;
 import java.awt.Component;
+import java.io.File;
+import java.util.List;
 
-import br.maua.domain.RespostaAlternativa;
-import br.maua.domain.RespostaDissertativa;
-import br.maua.domain.RespostaUpload;
-import br.maua.infrastructure.ArquivoService;
+import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
+
 import br.maua.domain.Questao;
 import br.maua.domain.QuestaoAlternativa;
 import br.maua.domain.QuestaoDissertativa;
 import br.maua.domain.QuestaoUpload;
-import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
+import br.maua.domain.RespostaAlternativa;
+import br.maua.domain.RespostaDissertativa;
+import br.maua.domain.RespostaUpload;
+import br.maua.infrastructure.ArquivoService;
 import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
+import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
 import br.maua.infrastructure.DAO.RespostaUploadDAO;
 
 /**
@@ -29,8 +28,7 @@ import br.maua.infrastructure.DAO.RespostaUploadDAO;
  * @author Luiza
  */
 public class TelaQuestionarioAluno extends javax.swing.JFrame {
-    
-    private File arquivoSelecionado;
+
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
 
@@ -45,6 +43,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                 BoxLayout.Y_AXIS
             )
         );
+    
         
         painelAzul1.setLayout(new java.awt.GridBagLayout());
         painelAzul1.add(painelCinza1);
@@ -53,6 +52,11 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         
         
     }
+    public TelaQuestionarioAluno(List<Questao> questoes) {
+        this(); 
+        carregarQuestoes(questoes);
+    }
+
     private void carregarQuestoes(List<Questao>questoes){
         for (Questao q : questoes){
             if (q instanceof QuestaoDissertativa qd){
@@ -89,7 +93,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         java.awt.Dimension tamanhoReal = painelCinza1.getLayout().preferredLayoutSize(painelCinza1);
         painelCinza1.setPreferredSize(tamanhoReal);
 
-      
+
         jScrollPane6.setViewportView(painelCinza1);
     }
 
@@ -102,7 +106,6 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane6 = new javax.swing.JScrollPane();
         painelAzul1 = new javax.swing.JPanel();
         painelCinza1 = new javax.swing.JPanel();
@@ -213,7 +216,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code her
         for (Component c : PainelQuestoes.getComponents()){
             if (c instanceof PainelQuestaoDissertativa painel){
                 String textoResposta = painel.getTextoResposta();
@@ -277,6 +280,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
             }
         }
 
+        JOptionPane.showMessageDialog(this,"Tarefa enviada!");
 
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
@@ -287,7 +291,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -308,7 +312,6 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelQuestoes;
     private javax.swing.JButton btnEnviarTarefa2;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JPanel painelAzul1;
     private javax.swing.JPanel painelCinza1;

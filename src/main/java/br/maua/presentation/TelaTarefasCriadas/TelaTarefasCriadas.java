@@ -5,10 +5,12 @@
 package br.maua.presentation.TelaTarefasCriadas;
 
 import br.maua.infrastructure.ConnectionFactory;
+import br.maua.infrastructure.DAO.TarefaDAO;
 import br.maua.presentation.ModeloAtividade.Atividade;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -23,6 +25,10 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
      */
     public TelaTarefasCriadas() {
         initComponents();
+        jScrollPane2.setOpaque(false);
+        jScrollPane2.getViewport().setOpaque(false);
+        painelAtividades.setOpaque(true);
+        painelAtividades.setBackground(painelAzul.getBackground());
         dinamicaTela(filtroSecao.getSelectedItem().toString());
     }
 
@@ -40,6 +46,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         filtroSecao = new javax.swing.JComboBox<>();
         btnVoltar = new javax.swing.JButton();
         titulo = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
         painelAtividades = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -72,9 +79,15 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         titulo.setText("Tarefas Criadas");
         painelAzul.add(titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 34, 504, -1));
 
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        jScrollPane2.setOpaque(false);
+
+        painelAtividades.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         painelAtividades.setOpaque(false);
         painelAtividades.setLayout(new javax.swing.BoxLayout(painelAtividades, javax.swing.BoxLayout.Y_AXIS));
-        painelAzul.add(painelAtividades, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 900, 540));
+        jScrollPane2.setViewportView(painelAtividades);
+
+        painelAzul.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, 840, 520));
 
         jScrollPane1.setViewportView(painelAzul);
 
@@ -82,7 +95,9 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1026, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,64 +128,42 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     }//GEN-LAST:event_filtroSecaoItemStateChanged
 
     private void dinamicaTela(String secao){
-        
+
         painelAtividades.removeAll();
-        
-        String sql = "SELECT q.titulo_questionario "
-                + "FROM questionario q "
-                + "JOIN casa c ON q.id_casa = c.id_casa "
-                + "JOIN secao s ON c.id_secao = s.id_secao "
-                + "WHERE s.titulo_secao = ?";
-        
-        int qntdAtividades = 0;
-        
-        try (
-                
-                Connection cx = ConnectionFactory.obterConexao();) {
-            assert cx != null;
-            try (PreparedStatement ps = cx.prepareStatement(sql);) {
-                
-                ps.setString(1, secao);
-                java.sql.ResultSet rs = ps.executeQuery();
-                
-                while (rs.next()){
-                    
-                    qntdAtividades++;
-                    
-                    String nome = rs.getString("nome_questionario");
-                    Atividade atividade = new Atividade(nome);
-                    atividade.setPreferredSize(new java.awt.Dimension(700, 60));
-                    atividade.setMinimumSize(new java.awt.Dimension(700, 60));
-                    atividade.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 60));
-                    
-                    painelAzul.add(atividade);
-                    painelAzul.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-                    
-                }
-            }
-        } catch (SQLException e) {
-            
-            System.out.println("Erro: " + e.getMessage());
-            
-        }
-        
-        if (qntdAtividades == 0) {
-            
+        TarefaDAO tarefaDAO = new TarefaDAO();
+        List<String> titulos = tarefaDAO.buscarTitulosPorSecao(secao);
+
+        if (titulos.isEmpty()){
+
             javax.swing.JLabel avisoNenhumaAtividade = new javax.swing.JLabel("Nenhuma atividade encontrada para: " + secao);
             avisoNenhumaAtividade.setForeground(java.awt.Color.WHITE);
             avisoNenhumaAtividade.setFont(new java.awt.Font("Arial", 2, 19));
             avisoNenhumaAtividade.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
             painelAtividades.add(avisoNenhumaAtividade);
-            
+
         }
-        
+        else {
+
+            for (String titulo : titulos) {
+
+                Atividade atividade = new Atividade(titulo);
+                atividade.setPreferredSize(new java.awt.Dimension(700, 60));
+                atividade.setMinimumSize(new java.awt.Dimension(700, 60));
+                atividade.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 60));
+
+                painelAtividades.add(atividade);
+                painelAtividades.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 10)));
+
+            }
+
+        }
+
+        painelAtividades.setPreferredSize(new java.awt.Dimension(700, 60));
         painelAtividades.revalidate();
         painelAtividades.repaint();
-        this.getContentPane().revalidate();
-        this.getContentPane().repaint();
 
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -178,7 +171,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -200,6 +193,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<String> filtroSecao;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel painelAtividades;
     private javax.swing.JPanel painelAzul;
     private javax.swing.JLabel titulo;

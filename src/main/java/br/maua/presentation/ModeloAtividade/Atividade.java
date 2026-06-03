@@ -7,14 +7,14 @@ package br.maua.presentation.ModeloAtividade;/*
  *
  * @author Administrator
  */
-public class Atividade extends javax.swing.JPanel {
+public class Atividade extends javax.swing.JButton {
 
     /**
      * Creates new form Atividade
      */
     public Atividade(String nome) {
         initComponents();
-        labelAtividade.setText("Atividade: " + nome);
+        buttonAtividade.setText("Atividade: " + nome);
     }
 
     /**
@@ -26,31 +26,9 @@ public class Atividade extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        painelCinza = new javax.swing.JPanel();
-        labelAtividade = new javax.swing.JLabel();
+        buttonAtividade = new javax.swing.JButton();
 
-        painelCinza.setBackground(new java.awt.Color(217, 217, 217));
-        painelCinza.setMaximumSize(new java.awt.Dimension(32767, 60));
-
-        labelAtividade.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
-        labelAtividade.setText("Atividade:");
-
-        javax.swing.GroupLayout painelCinzaLayout = new javax.swing.GroupLayout(painelCinza);
-        painelCinza.setLayout(painelCinzaLayout);
-        painelCinzaLayout.setHorizontalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelAtividade, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(788, Short.MAX_VALUE))
-        );
-        painelCinzaLayout.setVerticalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addComponent(labelAtividade)
-                .addGap(18, 18, 18))
-        );
+        buttonAtividade.setText("Atividade:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -58,21 +36,20 @@ public class Atividade extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonAtividade, javax.swing.GroupLayout.PREFERRED_SIZE, 991, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonAtividade, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel labelAtividade;
-    private javax.swing.JPanel painelCinza;
+    private javax.swing.JButton buttonAtividade;
     // End of variables declaration//GEN-END:variables
 }
