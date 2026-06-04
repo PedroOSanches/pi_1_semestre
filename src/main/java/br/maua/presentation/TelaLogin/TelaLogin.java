@@ -205,7 +205,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
         try {
             AlunoDAO alunoDAO = new AlunoDAO();
-            br.maua.infrastructure.ProfessorDAO professorDAO = new br.maua.infrastructure.ProfessorDAO();
+            ProfessorDAO professorDAO = new ProfessorDAO();
             boolean usuarioValido = alunoDAO.autenticar(usuarioDigitado, senhaDigitada);
 
             if (usuarioValido) {
