@@ -1,6 +1,9 @@
 package br.maua.domain;
 
-public class Aluno {
+import java.security.InvalidParameterException;
+import java.util.regex.Pattern;
+
+public class Aluno extends Usuario {
     private int idAluno;
     private String nome;
     private String sobrenome;
@@ -8,48 +11,22 @@ public class Aluno {
     private String curso;
     private String senha;
 
-    public Aluno() {
-    }
-
+    public Aluno(){}
     public Aluno(String nome, String sobrenome, String username, String senha) {
-        setNome(nome);
-        setSobrenome(sobrenome);
-        setUsername(username);
-        setSenha(senha);
+        super(nome, sobrenome, username, senha);
     }
 
     public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
         this(nome, sobrenome, username, senha);
-        setIdAluno(idAluno);
         setCurso(curso);
     }
 
-
-    public int getIdAluno() {
-        return idAluno;
-    }
-    public void setIdAluno(int idAluno) {
-        this.idAluno = idAluno;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getSobrenome() {
-        return sobrenome;
-    }
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
-    }
-    public String getNomeCompleto(){
-        return nome + " " + sobrenome;
-    }
-    public String getUsername() {
-        return username;
-    }
+    @Override
     public void setUsername(String username) {
+        Pattern pattern = Pattern.compile("^\\d{2}\\.\\d{5}-\\d@maua\\.br$");
+        if (!pattern.matcher(username).matches()) {
+            throw new InvalidParameterException("Username invalido");
+        }
         this.username = username;
     }
 
@@ -60,15 +37,6 @@ public class Aluno {
     public void setCurso(String curso) {
         this.curso = curso;
     }
-
-    public String getSenha(){
-        return senha;
-    }
-
-    public void setSenha(String senha){
-        this.senha = senha;
-    }
-    
 
     public void realizarTentativa(Tarefa tarefa) {
         entregarTentativa(tarefa);

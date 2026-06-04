@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CursoDAO {
     public static List<Curso> listarCursos() throws SQLException {
-        String sql = "SELECT id_curso, nomecurso FROM curso ORDER BY nomecurso";
+        String sql = "SELECT id_curso, nome_curso FROM curso ORDER BY nome_curso";
         List<Curso> list = new ArrayList<>();
 
         try (
@@ -23,7 +23,7 @@ public class CursoDAO {
         ) {
             while (rs.next()) {
                 int idCurso = rs.getInt("id_curso");
-                String nomeCurso = rs.getString("nomecurso");
+                String nomeCurso = rs.getString("nome_curso");
                 list.add(new Curso(idCurso, nomeCurso));
             }
             return list;
@@ -31,7 +31,7 @@ public class CursoDAO {
     }
 
     public static void salvar(Curso curso) throws SQLException {
-        String sql = "INSERT INTO curso (nomecurso) VALUES (?)";
+        String sql = "INSERT INTO curso (nome_curso) VALUES (?)";
         try (
                 Connection cx = ConnectionFactory.obterConexao();
                 PreparedStatement ps = cx.prepareStatement(sql)

@@ -21,13 +21,15 @@ import java.util.Objects;
 public class TelaAdicionarTurma extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdicionarTurma.class.getName());
-
+    private final JFrame anterior;
     /**
      * Creates new form TelaModalAdicionarTurma
      */
-    public TelaAdicionarTurma() {
+    public TelaAdicionarTurma(JFrame anterior) {
+        this.anterior = anterior;
         initComponents();
 
+        carregarComboAsync(comboBoxProfessor, ProfessorDAO::listarProfessores);
         carregarComboAsync(comboBoxCurso, CursoDAO::listarCursos);
         carregarComboAsync(comboBoxAno, AnoDAO::getAnos);
         carregarComboAsync(comboBoxTurma, TurmaDAO::listarTurmas);
@@ -43,174 +45,183 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton3 = new javax.swing.JButton();
         gapAno = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        botaoSalvar = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        botaoAddAno = new javax.swing.JButton();
-        botaoAddSubturma = new javax.swing.JButton();
-        botaoAddCurso = new javax.swing.JButton();
-        botaoAddTurma = new javax.swing.JButton();
+        titulo = new javax.swing.JLabel();
+        labelSemestre = new javax.swing.JLabel();
         comboBoxSemestre = new javax.swing.JComboBox<>();
+        labelProfessor = new javax.swing.JLabel();
+        comboBoxProfessor = new javax.swing.JComboBox<>();
+        labelAno = new javax.swing.JLabel();
         comboBoxAno = new javax.swing.JComboBox<>();
-        comboBoxSubturma = new javax.swing.JComboBox<>();
+        botaoAddAno = new javax.swing.JButton();
+        labelCurso = new javax.swing.JLabel();
         comboBoxCurso = new javax.swing.JComboBox<>();
+        botaoAddCurso = new javax.swing.JButton();
+        labelTurma = new javax.swing.JLabel();
         comboBoxTurma = new javax.swing.JComboBox<>();
-
-        jButton3.setText("+");
+        botaoAddTurma = new javax.swing.JButton();
+        labelSubturma = new javax.swing.JLabel();
+        comboBoxSubturma = new javax.swing.JComboBox<>();
+        botaoAddSubturma = new javax.swing.JButton();
+        botaoSalvar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         gapAno.setBackground(new java.awt.Color(19, 112, 178));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 50)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Adicionar Turma");
+        titulo.setFont(new java.awt.Font("Segoe UI", 1, 50)); // NOI18N
+        titulo.setForeground(new java.awt.Color(255, 255, 255));
+        titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titulo.setText("Adicionar Turma");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Semestre");
+        labelSemestre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelSemestre.setForeground(new java.awt.Color(255, 255, 255));
+        labelSemestre.setText("Semestre");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Ano");
+        comboBoxSemestre.setModel(getModelSemestre());
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Curso");
+        labelProfessor.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelProfessor.setForeground(new java.awt.Color(255, 255, 255));
+        labelProfessor.setText("Professor");
 
-        botaoSalvar.setLabel("Salvar");
-        botaoSalvar.addActionListener(this::botaoSalvarActionPerformed);
+        comboBoxProfessor.setModel(new DefaultComboBoxModel<>(new Professor[]{new Professor("Carregando...")}));
 
+        labelAno.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelAno.setForeground(new java.awt.Color(255, 255, 255));
+        labelAno.setText("Ano");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Turma");
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Subturma");
+        comboBoxAno.setModel(new DefaultComboBoxModel(new Ano[]{new Ano(null)}));
 
         botaoAddAno.setText("+");
         botaoAddAno.addActionListener(this::botaoAddAnoActionPerformed);
 
-        botaoAddSubturma.setText("+");
-        botaoAddSubturma.addActionListener(this::botaoAddSubturmaActionPerformed);
+        labelCurso.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelCurso.setForeground(new java.awt.Color(255, 255, 255));
+        labelCurso.setText("Curso");
+
+        comboBoxCurso.setModel(new DefaultComboBoxModel(new Curso[]{new Curso("Carregando...")}));
 
         botaoAddCurso.setText("+");
         botaoAddCurso.addActionListener(this::botaoAddCursoActionPerformed);
 
+        labelTurma.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelTurma.setForeground(new java.awt.Color(255, 255, 255));
+        labelTurma.setText("Turma");
+
+        comboBoxTurma.setModel(new DefaultComboBoxModel(new Turma[]{new Turma("Carregando...")}));
+
         botaoAddTurma.setText("+");
         botaoAddTurma.addActionListener(this::botaoAddTurmaActionPerformed);
 
-        comboBoxSemestre.setModel(getModelSemestre());
+        labelSubturma.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelSubturma.setForeground(new java.awt.Color(255, 255, 255));
+        labelSubturma.setText("Subturma");
 
+        comboBoxSubturma.setModel(new DefaultComboBoxModel(new Subturma[]{new Subturma("Carregando...")}));
 
-        comboBoxAno.setModel(new DefaultComboBoxModel<>(new Ano[]{new Ano(null)}));
+        botaoAddSubturma.setText("+");
+        botaoAddSubturma.addActionListener(this::botaoAddSubturmaActionPerformed);
 
-
-        comboBoxSubturma.setModel(new DefaultComboBoxModel<>(new Subturma[]{new Subturma("Carregando...")}));
-
-        comboBoxCurso.setModel(new DefaultComboBoxModel<>(new Curso[]{new Curso("Carregando...")}));
-
-        comboBoxTurma.setModel(new DefaultComboBoxModel<>(new Turma[]{new Turma("Carregando...")}));
+        botaoSalvar.setLabel("Salvar");
+        botaoSalvar.addActionListener(this::botaoSalvarActionPerformed);
 
         javax.swing.GroupLayout gapAnoLayout = new javax.swing.GroupLayout(gapAno);
         gapAno.setLayout(gapAnoLayout);
         gapAnoLayout.setHorizontalGroup(
-                gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                .addGap(194, 194, 194)
+            gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gapAnoLayout.createSequentialGroup()
+                .addGap(194, 194, 194)
+                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(gapAnoLayout.createSequentialGroup()
+                        .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboBoxSemestre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gapAnoLayout.createSequentialGroup()
+                                .addComponent(comboBoxTurma, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(botaoAddTurma))
+                            .addGroup(gapAnoLayout.createSequentialGroup()
                                 .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                                .addComponent(jLabel2)
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(comboBoxSemestre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gapAnoLayout.createSequentialGroup()
-                                                                .addComponent(comboBoxTurma, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(botaoAddTurma))
-                                                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                                                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jLabel5)
-                                                                        .addComponent(jLabel4)
-                                                                        .addComponent(jLabel6)
-                                                                        .addComponent(jLabel7))
-                                                                .addGap(0, 0, Short.MAX_VALUE))
-                                                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                                                .addComponent(comboBoxSubturma, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(botaoAddSubturma))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gapAnoLayout.createSequentialGroup()
-                                                                .addComponent(comboBoxAno, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(botaoAddAno))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gapAnoLayout.createSequentialGroup()
-                                                                .addComponent(comboBoxCurso, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(botaoAddCurso)))
-                                                .addGap(205, 205, 205))))
-                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                .addGap(356, 356, 356)
-                                .addComponent(botaoSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(419, Short.MAX_VALUE))
-                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelCurso)
+                                    .addComponent(labelAno)
+                                    .addComponent(labelTurma)
+                                    .addComponent(labelSubturma))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(gapAnoLayout.createSequentialGroup()
+                                .addComponent(comboBoxSubturma, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(botaoAddSubturma))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gapAnoLayout.createSequentialGroup()
+                                .addComponent(comboBoxAno, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(botaoAddAno))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gapAnoLayout.createSequentialGroup()
+                                .addComponent(comboBoxCurso, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(botaoAddCurso))
+                            .addComponent(comboBoxProfessor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(205, 205, 205))
+                    .addGroup(gapAnoLayout.createSequentialGroup()
+                        .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelSemestre)
+                            .addComponent(labelProfessor))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(gapAnoLayout.createSequentialGroup()
+                .addGap(356, 356, 356)
+                .addComponent(botaoSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(419, Short.MAX_VALUE))
+            .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         gapAnoLayout.setVerticalGroup(
-                gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(gapAnoLayout.createSequentialGroup()
-                                .addGap(57, 57, 57)
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboBoxSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4)
-                                .addGap(7, 7, 7)
-                                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(comboBoxAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(botaoAddAno))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(botaoAddCurso)
-                                        .addComponent(comboBoxCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(botaoAddTurma)
-                                        .addComponent(comboBoxTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(botaoAddSubturma)
-                                        .addComponent(comboBoxSubturma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(59, 59, 59)
-                                .addComponent(botaoSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(91, Short.MAX_VALUE))
+            gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gapAnoLayout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(titulo)
+                .addGap(18, 18, 18)
+                .addComponent(labelSemestre)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboBoxSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(labelProfessor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboBoxProfessor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(labelAno)
+                .addGap(7, 7, 7)
+                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboBoxAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoAddAno))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelCurso)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoAddCurso)
+                    .addComponent(comboBoxCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelTurma)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoAddTurma)
+                    .addComponent(comboBoxTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelSubturma)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoAddSubturma)
+                    .addComponent(comboBoxSubturma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(59, 59, 59)
+                .addComponent(botaoSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(gapAno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(gapAno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(gapAno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(gapAno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -262,16 +273,21 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         try {
             TurmaSubturmaDAO.commit(
                     (SemestreEnum) Objects.requireNonNull(comboBoxSemestre.getSelectedItem(), "Selecione o Semestre"),
+                    (Professor) Objects.requireNonNull(comboBoxProfessor.getSelectedItem(), "Selecione o Professor"),
                     (Curso) Objects.requireNonNull(comboBoxCurso.getSelectedItem(), "Selecione o Curso"),
                     (Ano) Objects.requireNonNull(comboBoxAno.getSelectedItem(), "Selecione o Ano"),
                     (Turma) Objects.requireNonNull(comboBoxTurma.getSelectedItem(), "Selecione a Turma"),
-                    (Subturma) Objects.requireNonNull(comboBoxSubturma.getSelectedItem(), "Selecione a Subturma"));
+                    (Subturma) Objects.requireNonNull(comboBoxSubturma.getSelectedItem(), "Selecione a Subturma")
+        );
+            JOptionPane.showMessageDialog(null, "Turma Salvo com sucesso!");
+            dispose();
+            anterior.setVisible(true);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao salvar o turma");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void botaoAddAnoActionPerformed(java.awt.event.ActionEvent evt) {
+    private void botaoAddAnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAddAnoActionPerformed
         ModalAdicionarTurma modal = new ModalAdicionarTurma(
                 this,
                 "Adicionar Ano",
@@ -286,9 +302,10 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         if (modal.isSalvo()) {
             carregarComboAsync(comboBoxAno, AnoDAO::getAnos);
         }
-    }
+    }//GEN-LAST:event_botaoAddAnoActionPerformed
 
-    public void botaoAddCursoActionPerformed(java.awt.event.ActionEvent evt) {
+    private void botaoAddCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAddCursoActionPerformed
+        // TODO add your handling code here:
         ModalAdicionarTurma modal = new ModalAdicionarTurma(
                 this,
                 "Adicionar Curso",
@@ -304,9 +321,10 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         if (modal.isSalvo()) {
             carregarComboAsync(comboBoxCurso, CursoDAO::listarCursos);
         }
-    }
+    }//GEN-LAST:event_botaoAddCursoActionPerformed
 
-    public void botaoAddTurmaActionPerformed(java.awt.event.ActionEvent evt) {
+    private void botaoAddTurmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAddTurmaActionPerformed
+        // TODO add your handling code here:
         ModalAdicionarTurma modal = new ModalAdicionarTurma(
                 this,
                 "Adicionar Turma",
@@ -322,9 +340,10 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         if (modal.isSalvo()) {
             carregarComboAsync(comboBoxTurma, TurmaDAO::listarTurmas);
         }
-    }
+    }//GEN-LAST:event_botaoAddTurmaActionPerformed
 
-    public void botaoAddSubturmaActionPerformed(java.awt.event.ActionEvent evt) {
+    private void botaoAddSubturmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAddSubturmaActionPerformed
+        // TODO add your handling code here:
         ModalAdicionarTurma modal = new ModalAdicionarTurma(
                 this,
                 "Adicionar Subturma",
@@ -340,6 +359,22 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         if (modal.isSalvo()) {
             carregarComboAsync(comboBoxSubturma, SubturmaDAO::listarSubturmas);
         }
+    }//GEN-LAST:event_botaoAddSubturmaActionPerformed
+
+    public static void main(String[] args) {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        java.awt.EventQueue.invokeLater(() -> {
+            new TelaAdicionarTurma(new JFrame()).setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -347,19 +382,20 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
     private javax.swing.JButton botaoAddCurso;
     private javax.swing.JButton botaoAddSubturma;
     private javax.swing.JButton botaoAddTurma;
+    private javax.swing.JButton botaoSalvar;
     private javax.swing.JComboBox<Ano> comboBoxAno;
     private javax.swing.JComboBox<Curso> comboBoxCurso;
+    private javax.swing.JComboBox<Professor> comboBoxProfessor;
     private javax.swing.JComboBox<SemestreEnum> comboBoxSemestre;
     private javax.swing.JComboBox<Subturma> comboBoxSubturma;
     private javax.swing.JComboBox<Turma> comboBoxTurma;
     private javax.swing.JPanel gapAno;
-    private javax.swing.JButton botaoSalvar;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel labelAno;
+    private javax.swing.JLabel labelCurso;
+    private javax.swing.JLabel labelProfessor;
+    private javax.swing.JLabel labelSemestre;
+    private javax.swing.JLabel labelSubturma;
+    private javax.swing.JLabel labelTurma;
+    private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

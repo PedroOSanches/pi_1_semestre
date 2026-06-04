@@ -24,7 +24,7 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         this.professorLogado = professor;
         initComponents();
         if (this.professorLogado != null) {
-            nomeTitulo.setText("Bem vindo, " + this.professorLogado.getNomeCompleto() + "!");
+            nomeTitulo.setText("Bem vindo, " + this.professorLogado.toString() + "!");
         }
     }
 

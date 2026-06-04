@@ -56,7 +56,7 @@ public class Tentativa {
         this.concluida = concluida;
     }
     public void registraTentativa(){
-        String sql = "INSERT INTO tentativa (id_questionario, id_usuario, concluido) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO tentativa (id_tarefa, id_usuario, status_tentativa) VALUES (?, ?, ?)";
 
         try(
                 Connection cx = ConnectionFactory.obterConexao();
@@ -66,7 +66,7 @@ public class Tentativa {
 
                     ){
                 ps.setInt(1, tarefa.getIdTarefa());
-                ps.setInt(2, aluno.getIdAluno());
+                ps.setInt(2, aluno.getId());
                 ps.setBoolean(3, concluida);
                 ps.executeUpdate();
             }

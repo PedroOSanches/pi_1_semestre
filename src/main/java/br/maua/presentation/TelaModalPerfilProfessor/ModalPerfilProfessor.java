@@ -26,7 +26,7 @@ public class ModalPerfilProfessor extends javax.swing.JFrame {
         this.professor = professor;
         initComponents();
         if (this.professor != null) {
-            nomeProfessor.setText(this.professor.getNomeCompleto());
+            nomeProfessor.setText(this.professor.toString());
         }
     }
 

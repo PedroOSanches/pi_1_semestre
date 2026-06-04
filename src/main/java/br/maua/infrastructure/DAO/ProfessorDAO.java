@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.maua.domain.Professor;
 import br.maua.infrastructure.ConnectionFactory;
@@ -15,10 +17,10 @@ public class ProfessorDAO {
 
 	public boolean autenticar(String username, String senha) throws SQLException {
 
-		String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
+		String sql = "SELECT username_usuario, senha_usuario FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
-			 PreparedStatement comando = conexao.prepareStatement(sql)) {
+			PreparedStatement comando = conexao.prepareStatement(sql)) {
 
 			comando.setString(1, username);
 			comando.setString(2, senha);
@@ -33,7 +35,7 @@ public class ProfessorDAO {
 		String sql = "SELECT tipo_usuario FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
-			 PreparedStatement comando = conexao.prepareStatement(sql)) {
+			PreparedStatement comando = conexao.prepareStatement(sql)) {
 
 			comando.setString(1, username);
 			comando.setString(2, senha);
@@ -59,7 +61,7 @@ public class ProfessorDAO {
 		String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario, tipo_usuario) VALUES (?, ?, ?, ?, 'professor')";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
-			 PreparedStatement comando = conexao.prepareStatement(sql)) {
+			PreparedStatement comando = conexao.prepareStatement(sql)) {
 
 			comando.setString(1, professor.getNome());
 			comando.setString(2, professor.getSobrenome());
@@ -74,7 +76,7 @@ public class ProfessorDAO {
 		String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
-			 PreparedStatement comando = conexao.prepareStatement(sql)) {
+			PreparedStatement comando = conexao.prepareStatement(sql)) {
 
 			comando.setString(1, username);
 			comando.setString(2, senha);
@@ -90,6 +92,34 @@ public class ProfessorDAO {
 				}
 				return null;
 			}
+		}
+	}
+	public static List<Professor> listarProfessores() throws SQLException {
+		String sql = "SELECT id_usuario, nome_usuario, sobrenome_usuario FROM usuario WHERE tipo_usuario ='professor'";
+		try (
+				Connection conexao = ConnectionFactory.obterConexao();
+				PreparedStatement ps = conexao.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()
+				){
+			List<Professor> professores = new ArrayList<>();
+			while (rs.next()) {
+				int idProfessor = rs.getInt("id_usuario");
+				String nomeProfessor = rs.getString("nome_usuario");
+				String sobrenomeProfessor = rs.getString("sobrenome_usuario");
+				Professor professor = new Professor(idProfessor, nomeProfessor, sobrenomeProfessor);
+				professores.add(professor);
+			}
+			return professores;
+		}
+	}
+	public static void salvarNaTurma(Connection cx, Professor professor, int idTurmaSubturma) throws SQLException {
+		String sql = "INSERT INTO turma_usuario(id_usuario, id_turma_subturma) VALUES (?, ?)";
+		try(
+				PreparedStatement ps = cx.prepareStatement(sql)
+				){
+			ps.setInt(1, professor.getId());
+			ps.setInt(2, idTurmaSubturma);
+			ps.executeUpdate();
 		}
 	}
 }

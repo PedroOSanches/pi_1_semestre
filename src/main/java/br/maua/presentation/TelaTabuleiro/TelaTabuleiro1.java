@@ -468,7 +468,7 @@ private void montarTabuleiroDinamico() {
             try (Connection conexao = ConnectionFactory.obterConexao();
                 PreparedStatement comando = conexao.prepareStatement(sql)) {
                 
-                comando.setInt(1, this.alunoLogado.getIdAluno());
+                comando.setInt(1, this.alunoLogado.getId());
                 comando.setInt(2, idSecao);
                 
                 try (ResultSet resultado = comando.executeQuery()) {
@@ -725,13 +725,13 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
                     "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
                     "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
                     "FROM secao s " +
-                    "JOIN casa c ON c.id_secao = s.id_secao " +
-                    "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                    "JOIN casa c USING(id_secao) " +
+                    "LEFT JOIN tarefa t USING(id_tarefa) " +
                     "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
                     "    AND ten.id_usuario = ? " +
                     "    AND ten.status_tentativa = 'corrigida' " +
                     "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
-                    "GROUP BY s.ordem_secao, c.ordem_casa, c.id_casa " +
+                    "GROUP BY  c.id_casa " +
                     "HAVING total_tarefas > tarefas_completas " +
                     "ORDER BY s.id_secao, c.id_casa " +
                     "LIMIT 1";
@@ -739,7 +739,7 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
         try (Connection conexao = ConnectionFactory.obterConexao();
             PreparedStatement comando = conexao.prepareStatement(sql)) {
             
-            comando.setInt(1, this.alunoLogado.getIdAluno());
+            comando.setInt(1, this.alunoLogado.getId());
             
             try (ResultSet resultado = comando.executeQuery()) {
                 if (resultado.next()) {
@@ -806,7 +806,7 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
 
 private void abrirTelaTarefasAluno(int idCasa, String tituloCasa) {
    
-    Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getIdAluno() : null;
+    Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getId() : null;
     TelaTarefaAluno telaTarefas = new TelaTarefaAluno(idAluno, idCasa, tituloCasa);
 
     telaTarefas.addWindowListener(new java.awt.event.WindowAdapter() {

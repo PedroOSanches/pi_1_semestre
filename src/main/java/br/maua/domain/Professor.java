@@ -1,62 +1,32 @@
 package br.maua.domain;
 
-public class Professor {
-    private String nome;
-    private String sobrenome;
-    private String username;
-    private String senha;
+import java.util.regex.Pattern;
+
+public class Professor extends Usuario {
 
     public Professor() {
     }
 
+    public Professor(String nome) {
+        setNome(nome);
+        setSobrenome("");
+    }
+
+    public Professor(int idProfessor, String nome, String sobrenome) {
+        super(idProfessor, nome, sobrenome);
+    }
+
     public Professor(String nome, String sobrenome, String username, String senha) {
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.username = username;
-        this.senha = senha;
+        super(nome, sobrenome, username, senha);
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
+    @Override
     public void setUsername(String username) {
-        this.username = username;
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9._%+-]+@maua\\.br$");
+        if (!pattern.matcher(username).matches()) {
+            throw new IllegalArgumentException("Username Inválido!");
+        }
+        super.setUsername(username);
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getNomeCompleto() {
-        return nome + " " + sobrenome;
-    }
-
-    public void atribuirNota(double nota, Tentativa tentativa) {
-        tentativa.setNota(nota);
-    }
-
-    public void corrigirTarefa(Tentativa tentativa) {
-        atribuirNota(0.0, tentativa);
-    }
 }
