@@ -24,7 +24,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 --
 
 SET
-@@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-196,
+@@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-199,
 53843901-4d28-11f1-b1f4-76f7b9ecc862:1-31,
 ebee13f3-4dfb-11f1-a16b-c202e0cec888:1-39';
 
@@ -309,13 +309,13 @@ CREATE TABLE `turma_subturma` (
   `id_turma` int NOT NULL,
   `id_subturma` int NOT NULL,
   `id_curso` int NOT NULL,
-  `id_ano`                  int NOT NULL,
+  `id_ano` int NOT NULL,
   `semestre_turma_subturma` enum('primeiro','segundo') NOT NULL,
   PRIMARY KEY (`id_turma_subturma`),
   KEY `fk_turma_subturma_turma1_idx` (`id_turma`),
   KEY `fk_turma_subturma_subturma1_idx` (`id_subturma`),
   KEY `fk_turma_subturma_Curso1_idx` (`id_curso`),
-  KEY                       `fk_tuma_subturma_ano_idx` (`id_ano`),
+  KEY      `fk_tuma_subturma_ano_idx` (`id_ano`),
   CONSTRAINT `fk_tuma_subturma_ano` FOREIGN KEY (`id_ano`) REFERENCES `ano` (`id_ano`),
   CONSTRAINT `fk_turma_subturma_Curso1` FOREIGN KEY (`id_curso`) REFERENCES `curso` (`id_curso`),
   CONSTRAINT `fk_turma_subturma_subturma1` FOREIGN KEY (`id_subturma`) REFERENCES `subturma` (`id_subturma`),
@@ -334,10 +334,11 @@ CREATE TABLE `turma_usuario`
 (
     `id_usuario`        int NOT NULL,
     `id_turma_subturma` int NOT NULL,
-    PRIMARY KEY (`id_turma_subturma`),
-    KEY                 `usuario_turma_idx` (`id_usuario`),
-    CONSTRAINT `turma_subturma` FOREIGN KEY (`id_turma_subturma`) REFERENCES `turma_subturma` (`id_turma_subturma`) ON DELETE RESTRICT,
-    CONSTRAINT `usuario_turma` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
+    PRIMARY KEY (`id_usuario`, `id_turma_subturma`),
+    KEY                 `fk_usuario_turma_usuario_idx` (`id_usuario`),
+    KEY                 `fk_turma_subturma_turma_usuario_idx` (`id_turma_subturma`),
+    CONSTRAINT `fk_turma_subturma_turma_usuario` FOREIGN KEY (`id_turma_subturma`) REFERENCES `turma_subturma` (`id_turma_subturma`),
+    CONSTRAINT `fk_usuario_turma_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -393,4 +394,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-03 23:47:42
+-- Dump completed on 2026-06-04  0:17:37
