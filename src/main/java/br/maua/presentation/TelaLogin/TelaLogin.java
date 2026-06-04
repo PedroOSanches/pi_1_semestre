@@ -5,6 +5,7 @@
 package br.maua.presentation.TelaLogin;
 
 
+import br.maua.domain.Professor;
 import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.infrastructure.DAO.ProfessorDAO;
 
@@ -216,7 +217,7 @@ public class TelaLogin extends javax.swing.JFrame {
                     br.maua.domain.Aluno aluno = alunoDAO.obterAlunoCompleto(usuarioDigitado, senhaDigitada);
                     new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(aluno).setVisible(true);
                 } else if ("professor".equals(tipo_usuario)) {
-                    br.maua.domain.Professor professor = professorDAO.obterProfessorCompleto(usuarioDigitado, senhaDigitada);
+                    Professor professor = ProfessorDAO.obterProfessorCompleto(usuarioDigitado, senhaDigitada);
                     new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle(professor).setVisible(true);
                 } else {
                     new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);

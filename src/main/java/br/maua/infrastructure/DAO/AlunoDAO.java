@@ -51,7 +51,7 @@ public class AlunoDAO {
         return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
     }
 
-    public void salvarNoBanco(Aluno aluno) throws SQLException {
+    public static void salvarNoBanco(Aluno aluno) throws SQLException {
         String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario, tipo_usuario) VALUES (?, ?, ?, ?, 'aluno')";
 
         try (Connection conexao = ConnectionFactory.obterConexao();

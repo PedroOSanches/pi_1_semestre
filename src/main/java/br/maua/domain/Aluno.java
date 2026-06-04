@@ -11,16 +11,19 @@ public class Aluno {
     public Aluno() {
     }
 
-    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
-        this.idAluno = idAluno;
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.username = username;
-        this.curso = curso;
-        this.senha = senha;
-
+    public Aluno(String nome, String sobrenome, String username, String senha) {
+        setNome(nome);
+        setSobrenome(sobrenome);
+        setUsername(username);
+        setSenha(senha);
     }
-    
+
+    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
+        this(nome, sobrenome, username, senha);
+        setIdAluno(idAluno);
+        setCurso(curso);
+    }
+
 
     public int getIdAluno() {
         return idAluno;
