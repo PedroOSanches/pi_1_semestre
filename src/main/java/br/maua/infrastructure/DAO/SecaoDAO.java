@@ -21,12 +21,12 @@ public class SecaoDAO {
     }
 
     public static List<Secao> listarSecoes() throws SQLException {
-        String sql = "SELECT id_secao, titulo_secao FROM secao ORDER BY ordem_secao, id_secao";
+        String sql = "SELECT id_secao, titulo_secao FROM secao ORDER BY id_secao";
 
         try (
             Connection cx = ConnectionFactory.obterConexao();
             PreparedStatement ps = cx.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery()
         ) {
             List<Secao> secoes = new ArrayList<>();
             while (rs.next()) {

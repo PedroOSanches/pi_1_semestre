@@ -18,7 +18,7 @@ import br.maua.domain.QuestaoUpload;
 import br.maua.domain.RespostaAlternativa;
 import br.maua.domain.RespostaDissertativa;
 import br.maua.domain.RespostaUpload;
-import br.maua.infrastructure.ArquivoService;
+import br.maua.service.ArquivoService;
 import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
 import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
 import br.maua.infrastructure.DAO.RespostaUploadDAO;
@@ -268,7 +268,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                         "uploads/" + nomeArquivo
                     );
                 RespostaUploadDAO dao = new RespostaUploadDAO();
-                dao.salvar(respostaUpload);
+                RespostaUploadDAO.salvar(respostaUpload);
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(
@@ -287,7 +287,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

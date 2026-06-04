@@ -19,12 +19,12 @@ public class CasaDAO {
     }
 
     public static List<Casa> listarCasas() throws SQLException {
-        String sql = "SELECT titulo_casa, titulo_secao, id_casa  FROM casa INNER JOIN secao USING(id_secao) order by id_secao and id_casa";
+        String sql = "SELECT titulo_casa, titulo_secao, id_casa  FROM casa INNER JOIN secao USING(id_secao) order by id_secao, id_casa";
         Secao secao = new Secao();
         try(
                 Connection cx = ConnectionFactory.obterConexao();
                 PreparedStatement ps = cx.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery();
+                ResultSet rs = ps.executeQuery()
         ){
             List<Casa> casas = new ArrayList<>();
             while(rs.next()){

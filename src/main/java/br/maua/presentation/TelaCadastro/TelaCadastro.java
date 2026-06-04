@@ -3,19 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-package br.maua.presentation.TelaCadastroProfessor;
+package br.maua.presentation.TelaCadastro;
+
+import br.maua.domain.Aluno;
+import br.maua.domain.Professor;
+import br.maua.infrastructure.DAO.AlunoDAO;
+import br.maua.infrastructure.DAO.ProfessorDAO;
+
 import javax.swing.JOptionPane;
+import java.security.InvalidParameterException;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Braia dos Computer
  */
-public class TelaCadastroProfessor extends javax.swing.JFrame {
+public class TelaCadastro extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCadastroProfessor.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCadastro.class.getName());
 
     /** Creates new form TelaPerfilAluno */
-    public TelaCadastroProfessor() {
+    public TelaCadastro() {
         initComponents();
         campoUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         campoSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
@@ -274,15 +282,17 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         }
         
         try {
-            
-            br.maua.domain.Professor novoProfessor = new br.maua.domain.Professor(nome, sobrenome, username, senha);
+            if (Pattern.compile("^\\d{2}\\.\\d{5}-\\d@maua\\.br$").matcher(username).matches()) {
+                Aluno novoAluno = new Aluno(nome, sobrenome, username, senha);
+                AlunoDAO.salvarNoBanco(novoAluno);
+            } else if (Pattern.compile("^[a-zA-Z0-9._%+-]+@maua\\.br$").matcher(username).matches()) {
+                Professor novoProfessor = new Professor(nome, sobrenome, username, senha);
+                ProfessorDAO.salvarNoBanco(novoProfessor);
+            } else {
+                throw new InvalidParameterException("O campo de username não corresponde a nenhum padrão");
+            }
 
-            br.maua.infrastructure.DAO.ProfessorDAO dao = new br.maua.infrastructure.DAO.ProfessorDAO();
-            dao.salvarNoBanco(novoProfessor);
-            br.maua.domain.Aluno novoAluno = new br.maua.domain.Aluno(0, nome, sobrenome, username, "", senha);
-            
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
-            
             br.maua.presentation.TelaNavegacao.voltar(this);
             
         } catch (java.sql.SQLException ex) {
@@ -305,7 +315,7 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -324,7 +334,7 @@ public class TelaCadastroProfessor extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaCadastroProfessor().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaCadastro().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -55,7 +55,7 @@ public class ProfessorDAO {
 		return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
 	}
 
-	public void salvarNoBanco(Professor professor) throws SQLException {
+	public static void salvarNoBanco(Professor professor) throws SQLException {
 		String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario, tipo_usuario) VALUES (?, ?, ?, ?, 'professor')";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
@@ -70,7 +70,7 @@ public class ProfessorDAO {
 		}
 	}
 
-	public Professor obterProfessorCompleto(String username, String senha) throws SQLException {
+	public static Professor obterProfessorCompleto(String username, String senha) throws SQLException {
 		String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
 
 		try (Connection conexao = ConnectionFactory.obterConexao();
