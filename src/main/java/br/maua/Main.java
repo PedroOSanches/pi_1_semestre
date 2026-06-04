@@ -7,6 +7,8 @@ import br.maua.infrastructure.ConnectionFactory;
 
 public class Main {
     public static void main(String[] args) {
+
+
         try {
             Connection cx = ConnectionFactory.obterConexao();
         } catch (SQLException e) {

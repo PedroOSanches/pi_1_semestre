@@ -10,6 +10,7 @@ import br.maua.infrastructure.DAO.TarefaDAO;
 import br.maua.presentation.TelaCriarTarefa.Components.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -31,7 +32,6 @@ public class TelaCriarTarefa extends JFrame{
     private static final Logger logger = Logger.getLogger(TelaCriarTarefa.class.getName());
     private final JFrame telaAnterior;
     private final Tarefa tarefa;
-    private final List<Casa> casas;
     private final Map<JPanel, QuestaoUI> questoesUI = new HashMap<>();
     /**
      * Creates new form TelaCriarTarefa2
@@ -39,8 +39,8 @@ public class TelaCriarTarefa extends JFrame{
     public TelaCriarTarefa(JFrame telaAnterior) throws SQLException {
         this.telaAnterior = telaAnterior;
         this.tarefa = new Tarefa();
-        this.casas = CasaDAO.listarCasas();
         initComponents();
+        carregarCasas();
 
         painelConteudo.removeAll();
         painelConteudo.add(criarBarraTopo());
@@ -193,12 +193,7 @@ public class TelaCriarTarefa extends JFrame{
 
         jPanel3.setBackground(new java.awt.Color(19, 112, 178));
         jPanel3.setMaximumSize(new java.awt.Dimension(630, 200));
-
-        DefaultComboBoxModel<Casa> model = new DefaultComboBoxModel<>();
-        for(Casa c : casas){
-            model.addElement(c);
-        }
-        jComboBox2.setModel(model);
+        jComboBox2.setModel(new DefaultComboBoxModel<>(new Casa[]{new Casa("Carregando...")}));
         jComboBox2.addActionListener(this::jComboBox2ActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -591,6 +586,20 @@ public class TelaCriarTarefa extends JFrame{
         barraTopo.add(btnVoltar, BorderLayout.WEST);
 
         return barraTopo;
+    }
+
+    private void carregarCasas() {
+        DefaultComboBoxModel<Casa> model = new DefaultComboBoxModel<>();
+        try {
+            List<Casa> casas = CasaDAO.listarCasas();
+            for (Casa c : casas) {
+                model.addElement(c);
+            }
+            jComboBox2.setModel(model);
+        } catch (SQLException ex) {
+            jComboBox2.setModel(new DefaultComboBoxModel<>());
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Erro ao Carregar Casas", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

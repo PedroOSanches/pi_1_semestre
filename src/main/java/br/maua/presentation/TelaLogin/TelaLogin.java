@@ -5,7 +5,8 @@
 package br.maua.presentation.TelaLogin;
 
 import javax.swing.JOptionPane;
-import br.maua.infrastructure.AlunoDAO;
+
+import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor;
 
 /**
@@ -198,7 +199,7 @@ public class TelaLogin extends javax.swing.JFrame {
         }
 
         try {
-            br.maua.infrastructure.AlunoDAO alunoDAO = new br.maua.infrastructure.AlunoDAO();
+            AlunoDAO alunoDAO = new AlunoDAO();
             br.maua.infrastructure.ProfessorDAO professorDAO = new br.maua.infrastructure.ProfessorDAO();
             boolean usuarioValido = alunoDAO.autenticar(usuarioDigitado, senhaDigitada);
 
@@ -245,7 +246,7 @@ public class TelaLogin extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

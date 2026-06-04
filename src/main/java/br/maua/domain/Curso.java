@@ -4,6 +4,9 @@ public class Curso {
     private int idCurso;
     private String nome;
 
+    public Curso(String nome) {
+        setNome(nome);
+    }
     public Curso(int idCurso, String nome){
         sedIdCurso(idCurso);
         setNome(nome);
@@ -22,5 +25,10 @@ public class Curso {
     }
     public void setNome(String nome){
         this.nome = nome;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
     }
 }

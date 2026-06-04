@@ -6,7 +6,9 @@ public class Casa {
     private int ordemCasa;
     private Secao secao;
 
-
+    public Casa(String titulo) {
+        setTitulo(titulo);
+    }
     public Casa(String titulo, int idCasa) {
         setTitulo(titulo);
         setIdCasa(idCasa);
