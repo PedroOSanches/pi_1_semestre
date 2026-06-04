@@ -14,10 +14,9 @@ public class Usuario {
         setSobrenome(sobrenome);
 
     }
-    public Usuario(String nome, String sobrenome, String username, String senha){
+    public Usuario(String nome, String sobrenome, String senha) {
         setNome(nome);
         setSobrenome(sobrenome);
-        setUsername(username);
         setSenha(senha);
     }
 

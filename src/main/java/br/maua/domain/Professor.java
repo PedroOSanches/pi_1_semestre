@@ -1,9 +1,10 @@
 package br.maua.domain;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Professor extends Usuario {
-
+    private List<Turma> turmas;
     public Professor() {
     }
 
@@ -17,7 +18,8 @@ public class Professor extends Usuario {
     }
 
     public Professor(String nome, String sobrenome, String username, String senha) {
-        super(nome, sobrenome, username, senha);
+        super(nome, sobrenome, senha);
+        setUsername(username);
     }
 
     @Override

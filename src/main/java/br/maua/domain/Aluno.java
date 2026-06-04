@@ -4,16 +4,13 @@ import java.security.InvalidParameterException;
 import java.util.regex.Pattern;
 
 public class Aluno extends Usuario {
-    private int idAluno;
-    private String nome;
-    private String sobrenome;
-    private String username;
     private String curso;
-    private String senha;
+    private Turma turma;
 
     public Aluno(){}
     public Aluno(String nome, String sobrenome, String username, String senha) {
-        super(nome, sobrenome, username, senha);
+        super(nome, sobrenome, senha);
+        setUsername(username);
     }
 
     public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
@@ -27,7 +24,7 @@ public class Aluno extends Usuario {
         if (!pattern.matcher(username).matches()) {
             throw new InvalidParameterException("Username invalido");
         }
-        this.username = username;
+        super.setUsername(username);
     }
 
     public String getCurso() {
