@@ -4,10 +4,15 @@
  */
 package br.maua.presentation.TelaLogin;
 
+
+import br.maua.infrastructure.DAO.AlunoDAO;
+import br.maua.infrastructure.DAO.ProfessorDAO;
+
 import javax.swing.JOptionPane;
 
 import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.presentation.TelaCadastroProfessor.TelaCadastroProfessor;
+
 
 /**
  *

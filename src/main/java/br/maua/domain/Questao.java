@@ -1,9 +1,9 @@
 package br.maua.domain;
 
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Connection;
 
-public class Questao {
+public abstract class Questao {
 
     private int idQuestao;
     private String enunciado;
@@ -49,5 +49,5 @@ public class Questao {
         this.tarefa = tarefa;
     }
 
-    public void questaoCommit(Connection cx) throws SQLException {}
+    public abstract void questaoCommit(Connection cx) throws SQLException;
 }

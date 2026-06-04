@@ -1,10 +1,15 @@
-package br.maua.infrastructure;
+package br.maua.infrastructure.DAO;
+
 
 import br.maua.domain.Professor;
+import br.maua.infrastructure.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import br.maua.domain.Professor;
+import br.maua.infrastructure.ConnectionFactory;
 
 public class ProfessorDAO {
 

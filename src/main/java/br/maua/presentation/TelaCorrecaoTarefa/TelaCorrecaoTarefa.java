@@ -54,6 +54,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         jTextArea2 = new javax.swing.JTextArea();
         nota = new java.awt.Label();
         jTextField1 = new javax.swing.JTextField();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -204,19 +205,34 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
+        btnVoltar.setBackground(new java.awt.Color(240, 147, 32));
+        btnVoltar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
+        btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        btnVoltar.setText("Voltar");
+        btnVoltar.setBorder(null);
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
+
         javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
         painelAzul1.setLayout(painelAzul1Layout);
         painelAzul1Layout.setHorizontalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelAzul1Layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelAzul1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(12, 12, 12)
+                .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(55, Short.MAX_VALUE))
         );
@@ -269,6 +285,12 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextArea2FocusLost
 
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -295,6 +317,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVoltar;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton jRadioButton1;

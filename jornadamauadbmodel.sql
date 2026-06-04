@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS "jornadamauadb" /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `jornadamauadb`;
 -- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: pi-gameficacao-db-pedrohenriqueoliveirasanches3-0b27.i.aivencloud.com    Database: jornadamauadb

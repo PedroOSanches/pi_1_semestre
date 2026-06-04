@@ -26,6 +26,11 @@ public class Secao {
         return titulo;
     }
 
+    @Override
+    public String toString() {
+        return titulo;
+    }
+
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }

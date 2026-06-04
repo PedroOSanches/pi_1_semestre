@@ -4,7 +4,6 @@
  */
 
 package br.maua.presentation.TelaPainelDeControle;
-
 import br.maua.domain.Professor;
 
 /**
@@ -122,7 +121,7 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
         painelAzulLayout.setHorizontalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
+                .addContainerGap(78, Short.MAX_VALUE)
                 .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68))
         );
@@ -149,14 +148,12 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdminActionPerformed
-        new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1().setVisible(true);
-        this.dispose();
+        br.maua.presentation.TelaNavegacao.abrir(this, new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1());
     }//GEN-LAST:event_botaoAdminActionPerformed
 
     private void botaoTabuleiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTabuleiroActionPerformed
 
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(this.professorLogado, true).setVisible(true);
-        this.dispose();
+        br.maua.presentation.TelaNavegacao.abrir(this, new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(this.professorLogado, true));
     }//GEN-LAST:event_botaoTabuleiroActionPerformed
 
     /**
