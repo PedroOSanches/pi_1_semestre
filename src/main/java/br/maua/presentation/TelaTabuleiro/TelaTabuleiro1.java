@@ -25,10 +25,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -194,50 +197,79 @@ private void montarTabuleiroDinamico() {
     jPanel1.add(criarCabecalhoTabuleiro());
     jPanel1.add(Box.createRigidArea(new Dimension(0, 16)));
 
-    try {
+try {
         List<RegistroCasaTabuleiro> registros = temListasInformadas()
             ? carregarCasasDasListas()
             : carregarCasasDoBanco();
+
         registros.sort((r1, r2) -> {
             int secao1 = r1.idSecao;
             int secao2 = r2.idSecao;
-            if (secao1 != secao2) {
-                return Integer.compare(secao1, secao2);
-            }
-
+            if (secao1 != secao2) return Integer.compare(secao1, secao2);
             int casa1 = r1.idCasa != null ? r1.idCasa : Integer.MAX_VALUE;
             int casa2 = r2.idCasa != null ? r2.idCasa : Integer.MAX_VALUE;
             return Integer.compare(casa1, casa2);
         });
+
         if (registros.isEmpty()) {
             jPanel1.add(criarEstadoVazio());
         } else {
-            // 1. Descobre qual é a casa que está travando o avanço do aluno
-            Integer idCasaPendente = descobrirProximaCasaObrigatoria();
-            boolean bloquearProximas = false;
             int numeroCasaExibida = 0;
-
             Integer secaoAtual = null;
+            int contadorSecoes = 0;
+
+            // 1. Buscamos a lista de IDs das casas que o aluno já passou com nota boa
+            Set<Integer> casasConcluidasSucesso = obterIdsCasasConcluidasSucesso();
+
+            // Variáveis de controle do histórico da casa ANTERIOR
+            Integer idCasaAnterior = null;
+            Timestamp dataLimiteCasaAnterior = null;
+
             for (RegistroCasaTabuleiro registro : registros) {
                 if (!Objects.equals(secaoAtual, registro.idSecao)) {
                     if (secaoAtual != null) {
                         jPanel1.add(Box.createRigidArea(new Dimension(0, 20)));
                     }
+                    contadorSecoes++; 
+                    registro.ordemSecao = contadorSecoes;
                     jPanel1.add(criarCabecalhoSecao(registro));
                     jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
                     secaoAtual = registro.idSecao;
                 }
-
-                numeroCasaExibida++;
-
-                // 2. Passamos o status de bloqueio para a criação do cartão
-                jPanel1.add(criarCartaoCasa(registro, bloquearProximas, numeroCasaExibida));
                 
-                // 3. Se esta casa que acabamos de renderizar é a casa pendente, 
-                // ativamos o bloqueio para que as próximas venham trancadas!
-                if (idCasaPendente != null && idCasaPendente.equals(registro.idCasa)) {
-                    bloquearProximas = true;
+                numeroCasaExibida++;
+                registro.ordemSecao = contadorSecoes;
+
+                // LÓGICA MISTA (NOTA + PRAZO)
+                boolean casaBloqueada = false;
+
+                // Se existir uma casa anterior no fluxo
+                if (idCasaAnterior != null) {
+                    // Regra 1: O aluno concluiu a anterior com nota?
+                    boolean anteriorConcluidaComNota = casasConcluidasSucesso.contains(idCasaAnterior);
+
+                    // Regra 2: O prazo da anterior já expirou?
+                    boolean prazoAnteriorExpirou = false;
+                    if (dataLimiteCasaAnterior != null) {
+                        LocalDateTime agora = LocalDateTime.now();
+                        LocalDateTime prazoAnterior = dataLimiteCasaAnterior.toLocalDateTime();
+                        prazoAnteriorExpirou = agora.isAfter(prazoAnterior);
+                    }
+
+
+                    if (!anteriorConcluidaComNota && !prazoAnteriorExpirou) {
+                        casaBloqueada = true;
+                    }
                 }
+
+                if (this.alunoLogado == null) {
+                    casaBloqueada = false;
+                }
+
+                jPanel1.add(criarCartaoCasa(registro, casaBloqueada, numeroCasaExibida));
+
+                idCasaAnterior = registro.idCasa;
+                dataLimiteCasaAnterior = registro.dataLimiteCasa;
                 
                 jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
             }
@@ -257,60 +289,60 @@ private void montarTabuleiroDinamico() {
     }
 
     private List<RegistroCasaTabuleiro> carregarCasasDasListas() {
-        List<RegistroCasaTabuleiro> registros = new ArrayList<>();
-        List<Casa> casasBase = this.casasInformadas != null ? new ArrayList<>(this.casasInformadas) : new ArrayList<>();
-        List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas) : new ArrayList<>();
+    List<RegistroCasaTabuleiro> registros = new ArrayList<>();
+    List<Casa> casasBase = this.casasInformadas != null ? new ArrayList<>(this.casasInformadas) : new ArrayList<>();
+    List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas) : new ArrayList<>();
 
-        secoesBase.sort((s1, s2) -> Integer.compare(s1.getidSecao(), s2.getidSecao()));
-        casasBase.sort((c1, c2) -> {
-            int secao1 = c1.getSecao() != null ? c1.getSecao().getidSecao() : Integer.MAX_VALUE;
-            int secao2 = c2.getSecao() != null ? c2.getSecao().getidSecao() : Integer.MAX_VALUE;
-            if (secao1 != secao2) {
-                return Integer.compare(secao1, secao2);
-            }
-            return Integer.compare(c1.getIdCasa(), c2.getIdCasa());
-        });
+    // 1. Ordena seções e casas por suas IDs sequenciais
+    secoesBase.sort((s1, s2) -> Integer.compare(s1.getidSecao(), s2.getidSecao()));
+    casasBase.sort((c1, c2) -> {
+        int secao1 = c1.getSecao() != null ? c1.getSecao().getidSecao() : Integer.MAX_VALUE;
+        int secao2 = c2.getSecao() != null ? c2.getSecao().getidSecao() : Integer.MAX_VALUE;
+        if (secao1 != secao2) {
+            return Integer.compare(secao1, secao2);
+        }
+        return Integer.compare(c1.getIdCasa(), c2.getIdCasa());
+    });
 
-        if (!secoesBase.isEmpty()) {
-            for (Secao secao : secoesBase) {
-                int ordemSecao = secao.getidSecao();
-                for (Casa casa : casasBase) {
-                    if (casa.getSecao() != null && casa.getSecao().getidSecao() == secao.getidSecao()) {
-                        registros.add(new RegistroCasaTabuleiro(
-                            casa.getIdCasa(),
-                            secao.getidSecao(),
-                            casa.getOrdemCasa(),
-                            casa.getTitulo(),
-                            null,
-                            secao.getTitulo(),
-                            ordemSecao,
-                            null,
-                            new ArrayList<>()
-                        ));
-                    }
+    // 2. Primeiro cenário: Se houver seções informadas
+    if (!secoesBase.isEmpty()) {
+        for (Secao secao : secoesBase) {
+            for (Casa casa : casasBase) {
+                if (casa.getSecao() != null && casa.getSecao().getidSecao() == secao.getidSecao()) {
+                    // CORRIGIDO: Sintaxe limpa com 7 parâmetros
+                    registros.add(new RegistroCasaTabuleiro(
+                        casa.getIdCasa(),
+                        secao.getidSecao(),
+                        casa.getTitulo(),
+                        null,
+                        secao.getTitulo(),
+                        "", // Descrição vazia caso não use
+                        new ArrayList<>()
+                    ));
                 }
             }
-            return registros;
         }
-
-        for (Casa casa : casasBase) {
-            int idSecao = casa.getSecao() != null ? casa.getSecao().getidSecao() : 0;
-            String tituloSecao = casa.getSecao() != null ? casa.getSecao().getTitulo() : "Seção";
-            registros.add(new RegistroCasaTabuleiro(
-                casa.getIdCasa(),
-                idSecao,
-                casa.getOrdemCasa(),
-                casa.getTitulo(),
-                null,
-                tituloSecao,
-                idSecao,
-                null,
-                new ArrayList<>()
-            ));
-        }
-
         return registros;
     }
+
+    // 3. Segundo cenário: Se houver apenas casas informadas
+    for (Casa casa : casasBase) {
+        int idSecao = casa.getSecao() != null ? casa.getSecao().getidSecao() : 0;
+        String tituloSecao = casa.getSecao() != null ? casa.getSecao().getTitulo() : "Seção";
+        
+        registros.add(new RegistroCasaTabuleiro(
+            casa.getIdCasa(),
+            idSecao,
+            casa.getTitulo(),
+            null,
+            tituloSecao,
+            "", 
+            new ArrayList<>()
+        ));
+    }
+
+    return registros;
+}
     public void atualizarTabuleiro(Aluno aluno) {
         this.alunoLogado = aluno;
         montarTabuleiroDinamico(); 
@@ -346,7 +378,7 @@ private void montarTabuleiroDinamico() {
 
     private JPanel criarCabecalhoSecao(RegistroCasaTabuleiro registro) {
         JPanel painel = new JPanel(new BorderLayout());
-        boolean secaoPar = registro.ordemSecao % 2 == 0;
+        boolean secaoPar = registro.idSecao % 2 == 0;
         Color corPrincipal = secaoPar ? COR_AZUL : COR_LARANJA;
         Color corFundo = corPrincipal;
         Color corTexto = Color.WHITE;
@@ -448,116 +480,188 @@ private void montarTabuleiroDinamico() {
         return new ImageIcon(imagem);
     }
 
-        private boolean isSecaoConcluidaComSucesso(int idSecao) {
-        // Se não for aluno (ex: professor), exibe o ícone por padrão
-            if (this.alunoLogado == null) {
-                return true; 
-            }
+        /**
+     * 1. Verifica se uma SEÇÃO específica foi totalmente concluída com sucesso pelo aluno.
+     * Usado para liberar ou não o ícone visual da seção.
+     */
+    private boolean isSecaoConcluidaComSucesso(int idSecao) {
+        if (this.alunoLogado == null) {
+            return true; // Se não for aluno (ex: professor), exibe o ícone por padrão
+        }
 
-            String sql = "SELECT " +
-                        "  (SELECT COUNT(*) FROM tarefa t2 JOIN casa c2 ON t2.id_casa = c2.id_casa WHERE c2.id_secao = s.id_secao) AS total_tarefas, " +
-                        "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
-                        "FROM secao s " +
-                        "JOIN casa c ON c.id_secao = s.id_secao " +
-                        "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
-                        "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa AND ten.id_usuario = ? AND ten.status_tentativa = 'corrigida' " +
-                        "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
-                        "WHERE s.id_secao = ? " +
-                        "GROUP BY s.id_secao";
+        String sql = "SELECT " +
+                    "  (SELECT COUNT(*) FROM tarefa t2 JOIN casa c2 ON t2.id_casa = c2.id_casa WHERE c2.id_secao = s.id_secao) AS total_tarefas, " +
+                    "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
+                    "FROM secao s " +
+                    "JOIN casa c ON c.id_secao = s.id_secao " +
+                    "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                    "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa AND ten.id_usuario = ? AND ten.status_tentativa = 'corrigida' " +
+                    "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                    "WHERE s.id_secao = ? " +
+                    "GROUP BY s.id_secao";
 
-            try (Connection conexao = ConnectionFactory.obterConexao();
-                PreparedStatement comando = conexao.prepareStatement(sql)) {
-                
-                comando.setInt(1, this.alunoLogado.getId());
-                comando.setInt(2, idSecao);
-                
-                try (ResultSet resultado = comando.executeQuery()) {
-                    if (resultado.next()) {
-                        int total = resultado.getInt("total_tarefas");
-                        int completas = resultado.getInt("tarefas_completas");
-                        // Só retorna true se houver tarefas e todas passarem de 6.0
-                        return total > 0 && total == completas;
-                    }
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            
+            comando.setInt(1, this.alunoLogado.getId());
+            comando.setInt(2, idSecao);
+            
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    int total = resultado.getInt("total_tarefas");
+                    int completas = resultado.getInt("tarefas_completas");
+                    return total > 0 && total == completas;
                 }
-            } catch (SQLException e) {
-                logger.log(java.util.logging.Level.SEVERE, "Erro ao verificar conclusão da seção", e);
             }
-            return false;
+        } catch (SQLException e) {
+            logger.log(java.util.logging.Level.SEVERE, "Erro ao verificar conclusão da seção", e);
+        }
+        return false;
     }
 
-private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqueada, int numeroCasaExibida) {
-    JPanel painel = new JPanel(new BorderLayout(18, 10));
-    boolean secaoPar = registro.ordemSecao % 2 == 0;
-    Color corBase = secaoPar ? COR_AZUL : COR_LARANJA;
-    
-    // Se a casa estiver bloqueada, vamos deixar a borda cinza para dar o feedback visual
-    Color corBorda = casaBloqueada ? Color.LIGHT_GRAY : corBase;
+    private Integer descobrirProximaCasaObrigatoria() {
+        if (this.alunoLogado == null) {
+            return null; // Professores ou admin não têm travas de avanço
+        }
 
-    painel.setBackground(Color.WHITE);
-    painel.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(corBorda, 2),
-        BorderFactory.createEmptyBorder(16, 18, 16, 18)));
-    painel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
-    painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
-    painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+        String sql = "SELECT c.id_casa, " +
+                "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
+                "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
+                "FROM secao s " +
+                "JOIN casa c ON c.id_secao = s.id_secao " +
+                "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
+                "    AND ten.id_usuario = ? " +
+                "    AND ten.status_tentativa = 'corrigida' " +
+                "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                "GROUP BY s.id_secao, c.id_casa " +
+                "HAVING total_tarefas > tarefas_completas " +
+                "ORDER BY s.id_secao, c.id_casa " +
+                "LIMIT 1";
 
-    JLabel badgeCasa = new JLabel(String.valueOf(numeroCasaExibida));
-    badgeCasa.setHorizontalAlignment(SwingConstants.CENTER);
-    badgeCasa.setPreferredSize(new Dimension(60, 60));
-    badgeCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
-    // Número da casa também fica cinza se estiver bloqueada
-    badgeCasa.setForeground(corBorda);
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            
+            comando.setInt(1, this.alunoLogado.getId());
+            
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    return resultado.getInt("id_casa");
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(java.util.logging.Level.SEVERE, "Erro ao descobrir próxima casa obrigatória", e);
+        }
+        return null;
+    }
+    private Set<Integer> obterIdsCasasConcluidasSucesso() {
+    Set<Integer> concluidas = new HashSet<>();
+    if (this.alunoLogado == null) {
+        return concluidas; 
+    }
 
-    JLabel tituloCasa = criarLabelFormatado(registro.tituloCasa, new Font("Segoe UI", Font.BOLD, 22), corBorda, 310);
-    tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
+    String sql = "SELECT c.id_casa " +
+                "FROM secao s " +
+                "JOIN casa c ON c.id_secao = s.id_secao " +
+                "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
+                "    AND ten.id_usuario = ? " +
+                "    AND ten.status_tentativa = 'corrigida' " +
+                "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                "GROUP BY c.id_casa " +
+                "HAVING COUNT(DISTINCT t.id_tarefa) > 0 " +
+                "   AND COUNT(DISTINCT t.id_tarefa) = COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END)";
 
-    JLabel info = criarLabelFormatado(
-        "Casa " + numeroCasaExibida + " | Data limite: " + formatoData(registro.dataLimiteCasa),
-        new Font("Segoe UI", Font.PLAIN, 15),
-        new Color(130, 130, 130),
-        310);
-    info.setHorizontalAlignment(SwingConstants.LEFT);
-
-    // Configuração do botão de ação
-    JButton linkPagina = new JButton();
-    linkPagina.setFocusPainted(false);
-
-    if (casaBloqueada) {
-        // Estilo de botão desativado/bloqueado
-        linkPagina.setText("Bloqueado");
-        linkPagina.setBackground(Color.GRAY);
-        linkPagina.setForeground(Color.LIGHT_GRAY);
+    try (Connection conexao = ConnectionFactory.obterConexao();
+         PreparedStatement comando = conexao.prepareStatement(sql)) {
         
-        // Se tentar clicar, toma o aviso na tela e não sai daqui
-        linkPagina.addActionListener(evt -> {
-            JOptionPane.showMessageDialog(
-                this, 
-                "Acesso Bloqueado!\nVocê precisa concluir a casa anterior com nota igual ou maior que 6.0 antes de poder abrir esta.", 
-                "Aviso", 
-                JOptionPane.WARNING_MESSAGE
-            );
-        });
-    } else {
-        // Estilo normal de botão liberado
-        linkPagina.setText("Tarefas");
-        linkPagina.setBackground(COR_LARANJA);
-        linkPagina.setForeground(Color.WHITE);
-        linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(registro.idCasa, registro.tituloCasa));
+        comando.setInt(1, this.alunoLogado.getId());
+        
+        try (ResultSet resultado = comando.executeQuery()) {
+            while (resultado.next()) {
+                concluidas.add(resultado.getInt("id_casa"));
+            }
+        }
+    } catch (SQLException e) {
+        logger.log(java.util.logging.Level.SEVERE, "Erro ao buscar casas concluídas com sucesso", e);
     }
+    return concluidas;
+}
 
-    JPanel textos = new JPanel();
-    textos.setOpaque(false);
-    textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
-    textos.add(tituloCasa);
-    textos.add(Box.createRigidArea(new Dimension(0, 6)));
-    textos.add(info);
-    textos.add(Box.createRigidArea(new Dimension(0, 12)));
-    textos.add(linkPagina);
+    private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqueada, int numeroCasaExibida) {
+        JPanel painel = new JPanel(new BorderLayout(18, 10));
+        boolean secaoPar = registro.idSecao % 2 == 0;
+        Color corBase = secaoPar ? COR_AZUL : COR_LARANJA;
 
-    painel.add(badgeCasa, BorderLayout.WEST);
-    painel.add(textos, BorderLayout.CENTER);
-    return painel;
+        Color corBorda = casaBloqueada ? Color.LIGHT_GRAY : corBase;
+
+        painel.setBackground(Color.WHITE);
+        painel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(corBorda, 2),
+            BorderFactory.createEmptyBorder(16, 18, 16, 18)));
+        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+        painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+        painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+
+        JLabel badgeCasa = new JLabel(String.valueOf(numeroCasaExibida));
+        badgeCasa.setHorizontalAlignment(SwingConstants.CENTER);
+        badgeCasa.setPreferredSize(new Dimension(60, 60));
+        badgeCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
+
+        badgeCasa.setForeground(corBorda);
+
+        JLabel tituloCasa = criarLabelFormatado(registro.tituloCasa, new Font("Segoe UI", Font.BOLD, 22), corBorda, 310);
+        tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
+
+        JLabel info = criarLabelFormatado(
+            "Casa " + numeroCasaExibida + " | Data limite: " + formatoData(registro.dataLimiteCasa),
+            new Font("Segoe UI", Font.PLAIN, 15),
+            new Color(130, 130, 130),
+            310);
+        info.setHorizontalAlignment(SwingConstants.LEFT);
+
+        JButton linkPagina = new JButton();
+        linkPagina.setFocusPainted(false);
+
+        if (casaBloqueada) {
+            // Estilo de botão desativado/bloqueado
+            linkPagina.setText("Bloqueado");
+            linkPagina.setBackground(Color.GRAY);
+            linkPagina.setForeground(Color.LIGHT_GRAY);
+            
+            // Se tentar clicar, toma o aviso na tela e não sai daqui
+            linkPagina.addActionListener(evt -> {
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "Acesso Bloqueado!\nPara liberar esta casa você precisa:\n" +
+                    "1. Concluir as tarefas da casa anterior com nota igual ou maior que 6.0\n" +
+                    "OU\n" +
+                    "2. Aguardar o prazo de entrega da casa anterior expirar.", 
+                    "Conteúdo Bloqueado",
+                    JOptionPane.WARNING_MESSAGE
+                );
+            });
+        } else {
+            // Estilo normal de botão liberado
+            linkPagina.setText("Tarefas");
+            linkPagina.setBackground(COR_LARANJA);
+            linkPagina.setForeground(Color.WHITE);
+            linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(registro.idCasa, registro.tituloCasa));
+        }
+
+        JPanel textos = new JPanel();
+        textos.setOpaque(false);
+        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+        textos.add(tituloCasa);
+        textos.add(Box.createRigidArea(new Dimension(0, 6)));
+        textos.add(info);
+        textos.add(Box.createRigidArea(new Dimension(0, 12)));
+        textos.add(linkPagina);
+
+        painel.add(badgeCasa, BorderLayout.WEST);
+        painel.add(textos, BorderLayout.CENTER);
+        return painel;
 }
 
     // private JPanel criarCartaoCasa(Casa casa) {
@@ -717,44 +821,10 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
 //     return false;
 // }
 
-    private Integer descobrirProximaCasaObrigatoria() {
-        if (this.alunoLogado == null) {
-            return null;
-        }
-        String sql = "SELECT c.id_casa, " +
-                    "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
-                    "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
-                    "FROM secao s " +
-                    "JOIN casa c USING(id_secao) " +
-                    "LEFT JOIN tarefa t USING(id_tarefa) " +
-                    "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
-                    "    AND ten.id_usuario = ? " +
-                    "    AND ten.status_tentativa = 'corrigida' " +
-                    "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
-                    "GROUP BY  c.id_casa " +
-                    "HAVING total_tarefas > tarefas_completas " +
-                    "ORDER BY s.id_secao, c.id_casa " +
-                    "LIMIT 1";
-
-        try (Connection conexao = ConnectionFactory.obterConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
-            
-            comando.setInt(1, this.alunoLogado.getId());
-            
-            try (ResultSet resultado = comando.executeQuery()) {
-                if (resultado.next()) {
-                    return resultado.getInt("id_casa");
-                }
-            }
-        } catch (SQLException e) {
-            logger.log(java.util.logging.Level.SEVERE, "Erro ao buscar casa atual do aluno", e);
-        }
-        return null; // Se retornar null, todas as casas estão feitas com nota >= 6
-    }
-
+    
     private List<RegistroCasaTabuleiro> carregarCasasDoBanco() throws SQLException {
-        String sql = "SELECT c.id_casa, c.id_secao, c.ordem_casa, c.titulo_casa, c.data_limite_casa, "
-        + "s.titulo_secao, s.ordem_secao, s.descricao_secao, q.titulo_tarefa "
+        String sql = "SELECT c.id_casa, c.id_secao, c.titulo_casa, c.data_limite_casa, "
+        + "s.titulo_secao, s.descricao_secao, q.titulo_tarefa "
         + "FROM secao s "
         + "LEFT JOIN casa c ON c.id_secao = s.id_secao "
         + "LEFT JOIN tarefa q ON q.id_casa = c.id_casa "
@@ -762,13 +832,12 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
         Map<Integer, RegistroCasaTabuleiro> registrosPorCasa = new LinkedHashMap<>();
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-             PreparedStatement comando = conexao.prepareStatement(sql);
-             ResultSet resultado = comando.executeQuery()) {
+            PreparedStatement comando = conexao.prepareStatement(sql);
+            ResultSet resultado = comando.executeQuery()) {
 
             while (resultado.next()) {
                 Integer idCasa = resultado.getObject("id_casa") != null ? resultado.getInt("id_casa") : null;
                 Integer idSecao = resultado.getInt("id_secao");
-                Integer ordemCasa = resultado.getObject("ordem_casa") != null ? resultado.getInt("ordem_casa") : null;
                 String tituloTarefa = resultado.getString("titulo_tarefa");
 
                 if (idCasa == null) {
@@ -780,11 +849,9 @@ private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqu
                     registro = new RegistroCasaTabuleiro(
                         idCasa,
                         idSecao,
-                        ordemCasa,
                         resultado.getString("titulo_casa"),
                         resultado.getTimestamp("data_limite_casa"),
                         resultado.getString("titulo_secao"),
-                        resultado.getInt("ordem_secao"),
                         resultado.getString("descricao_secao"),
                         new ArrayList<>()
                     );
@@ -823,24 +890,24 @@ private void abrirTelaTarefasAluno(int idCasa, String tituloCasa) {
     private static final class RegistroCasaTabuleiro {
         private final Integer idCasa;
         private final int idSecao;
-        private final Integer ordemCasa;
+        
         private final String tituloCasa;
         private final Timestamp dataLimiteCasa;
         private final String tituloSecao;
-        private final int ordemSecao;
         private final String descricaoSecao;
         private final List<String> titulosQuestionario;
 
-        private RegistroCasaTabuleiro(Integer idCasa, int idSecao, Integer ordemCasa, String tituloCasa,
-                                    Timestamp dataLimiteCasa, String tituloSecao, int ordemSecao,
-                                                              String descricaoSecao, List<String> titulosQuestionario) {
+        public int ordemSecao;
+
+        private RegistroCasaTabuleiro(Integer idCasa, int idSecao, String tituloCasa,
+                                    Timestamp dataLimiteCasa, String tituloSecao,
+                                                            String descricaoSecao, List<String> titulosQuestionario) {
             this.idCasa = idCasa;
             this.idSecao = idSecao;
-            this.ordemCasa = ordemCasa;
+            
             this.tituloCasa = tituloCasa;
             this.dataLimiteCasa = dataLimiteCasa;
             this.tituloSecao = tituloSecao;
-            this.ordemSecao = ordemSecao;
                                     this.descricaoSecao = descricaoSecao;
                                     this.titulosQuestionario = titulosQuestionario;
         }
