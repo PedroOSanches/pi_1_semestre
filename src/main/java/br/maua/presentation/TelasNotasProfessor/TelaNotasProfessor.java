@@ -4,19 +4,36 @@
  */
 package br.maua.presentation.TelasNotasProfessor;
 
+import br.maua.infrastructure.TentativaDAO;
+
+import java.awt.*;
+import java.util.List;
+
 /**
  *
  * @author Luiza
  */
 public class TelaNotasProfessor extends javax.swing.JFrame {
-    
+
+    private TentativaDAO tentativaDAO;
+    private int idTurma;
+    private int idSubturma;
+    private int idCurso;
+    private int idSemestre;
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaNotasProfessor.class.getName());
 
     /**
      * Creates new form TelaNotasProfessor
      */
-    public TelaNotasProfessor() {
+    public TelaNotasProfessor(int idTurma, int idSubturma, int idCurso, int idSemestre) {
         initComponents();
+        this.idTurma = idTurma;
+        this.idSubturma = idSubturma;
+        this.idCurso = idCurso;
+        this.idSemestre = idSemestre;
+        this.tentativaDAO = new TentativaDAO();
+        consultarBanco();
     }
 
     /**
@@ -106,6 +123,17 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void consultarBanco(){
+
+        List <String[]> lista = tentativaDAO.buscarNotasAlunosPorTurma(idTurma, idSubturma, idCurso, idSemestre);
+        popularTela(lista);
+
+    }
+
+    private void popularTela(List <String[]> lista){
+        
+    }
 
     private void btnCorrigirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrigirTarefaActionPerformed
         // TODO add your handling code here:

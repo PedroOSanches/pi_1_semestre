@@ -1,6 +1,7 @@
 package br.maua.domain;
 
 import br.maua.infrastructure.ConnectionFactory;
+import br.maua.infrastructure.TentativaDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ public class Tentativa {
     private Aluno aluno;
     private Tarefa tarefa;
     private int idTentativa;
+    private TentativaDAO tentativaDAO;
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
         this.setNota(nota);
@@ -26,6 +28,7 @@ public class Tentativa {
 
     public Tentativa(int idTentativa){
         this.idTentativa = idTentativa;
+        this.tentativaDAO = new TentativaDAO();
     }
 
     public Double getNota() {
@@ -82,28 +85,6 @@ public class Tentativa {
     }
 
     public boolean commitCorrecao(){
-
-        String sql = "UPDATE tentativa" +
-                "SET nota = ?, status = ?" +
-                "WHERE id_tentativa = ?";
-
-        try(
-                Connection cx = ConnectionFactory.obterConexao();
-        ) {
-            assert cx != null;
-            try(PreparedStatement ps = cx.prepareStatement(sql);
-
-            ){
-                ps.setDouble(1, this.nota);
-                ps.setString(2, "corrigida");
-                ps.setInt(3, this.idTentativa);
-                ps.executeUpdate();
-            }
-            return true;
-
-        } catch (SQLException e) {
-            return false;
-        }
-
+        return tentativaDAO.atualizarNota(this);
     }
 }
