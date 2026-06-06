@@ -7,6 +7,9 @@ package br.maua.presentation.TelaTarefasCriadas;
 import br.maua.infrastructure.ConnectionFactory;
 import br.maua.infrastructure.DAO.TarefaDAO;
 import br.maua.presentation.ModeloAtividade.Atividade;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -48,7 +51,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         titulo = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         painelAtividades = new javax.swing.JPanel();
-        painelCinza = new javax.swing.JPanel();
+        JPanel painelCinza = new JPanel();
         Atividade = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         botaoVoltar = new javax.swing.JButton();
@@ -177,6 +180,9 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(ActionEvent actionEvent) {
+    }
 
     private void filtroSecaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroSecaoActionPerformed
         // TODO add your handling code here:

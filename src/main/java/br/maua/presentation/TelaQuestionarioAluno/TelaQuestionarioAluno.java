@@ -18,7 +18,7 @@ import br.maua.domain.QuestaoUpload;
 import br.maua.domain.RespostaAlternativa;
 import br.maua.domain.RespostaDissertativa;
 import br.maua.domain.RespostaUpload;
-import br.maua.infrastructure.ArquivoService;
+import br.maua.service.ArquivoService;
 import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
 import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
 import br.maua.infrastructure.DAO.RespostaUploadDAO;
