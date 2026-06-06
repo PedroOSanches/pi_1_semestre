@@ -13,8 +13,14 @@ public class Aluno extends Usuario {
         setUsername(username);
     }
 
+    public Aluno(int id, String nome, String sobrenome, String username, String curso){
+        super(id, nome, sobrenome);
+        setCurso(curso);
+        setUsername(username);
+    }
     public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
         this(nome, sobrenome, username, senha);
+        setId(idAluno);
         setCurso(curso);
     }
 
