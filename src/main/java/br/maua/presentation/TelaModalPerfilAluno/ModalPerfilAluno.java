@@ -30,8 +30,9 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         if (this.aluno != null) {
-            nomeAluno.setText(this.aluno.getNome());
-            raAluno.setText(this.aluno.getUsername());       
+            nomeAluno.setText(aluno.getNome());
+            raAluno.setText(aluno.getUsername());
+            cursoAluno.setText(aluno.getTurma().getCurso().toString());
         }
     }
 

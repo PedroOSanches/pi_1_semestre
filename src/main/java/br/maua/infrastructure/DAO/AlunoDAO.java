@@ -1,6 +1,7 @@
 package br.maua.infrastructure.DAO;
 
-import br.maua.domain.Aluno;
+import br.maua.domain.*;
+import br.maua.enums.SemestreEnum;
 import br.maua.infrastructure.ConnectionFactory;
 
 import java.sql.Connection;
@@ -53,8 +54,7 @@ public class AlunoDAO {
     }
 
     public static void obterTurma(Aluno aluno) throws SQLException {
-        String sql =
-                "SELECT nome_curso FROM turma_usuario JOIN usuario USING(id_usuario) JOIN turma_subturma USING(id_turma_subturma) JOIN turma USING(id_turma) JOIN subturma USING(id_subturma) JOIN curso USING(id_curso) JOIN ano USING(id_ano) WHERE id_usuario = ? ORDER BY id_turma_subturma DESC;";
+        String sql = "SELECT id_turma_subturma, cod_turma, cod_subturma, nome_curso, ano, semestre_turma_subturma FROM turma_usuario JOIN usuario USING(id_usuario) JOIN turma_subturma USING(id_turma_subturma) JOIN turma USING(id_turma) JOIN subturma USING(id_subturma) JOIN curso USING(id_curso) JOIN ano USING(id_ano) WHERE id_usuario = ? ORDER BY id_turma_subturma DESC LIMIT 1";
 
         try (
                 Connection cx = ConnectionFactory.obterConexao();
@@ -62,9 +62,19 @@ public class AlunoDAO {
         ) {
             ps.setInt(1, aluno.getId());
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String nomeCurso = rs.getString("nome_curso");
-                aluno.setCurso(nomeCurso);
+            while (rs.next()) {
+                SemestreEnum semestre;
+                if (rs.getString("semestre_turma_subturma").equals(SemestreEnum.PRIMEIRO.getSemestreLower())) {
+                    semestre = SemestreEnum.PRIMEIRO;
+                } else {
+                    semestre = SemestreEnum.SEGUNDO;
+                }
+                int idTurma = rs.getInt("id_turma_subturma");
+                String codTurma = rs.getString("cod_turma");
+                Subturma sub = new Subturma(rs.getString("cod_subturma"));
+                Curso curso = new Curso(rs.getString("nome_curso"));
+                Ano ano = new Ano(rs.getInt("ano"));
+                aluno.setTurma(new Turma(idTurma, codTurma, curso, semestre, sub, ano));
             }
         }
     }
