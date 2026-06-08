@@ -37,7 +37,7 @@ public class TurmaDAO {
         try (
                 PreparedStatement ps = ConnectionFactory.obterConexao().prepareStatement(sql)
         ) {
-            ps.setString(1, turma.getCodTurma());
+            ps.setString(1, turma.getNomeTurma());
             ps.executeUpdate();
         }
     }

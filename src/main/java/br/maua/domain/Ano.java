@@ -6,12 +6,12 @@ public class Ano {
     private int idAno;
     private Year ano;
 
-    public Ano(int idAno, Year ano) {
+    public Ano(int idAno, int ano) {
         setIdAno(idAno);
         setAno(ano);
     }
 
-    public Ano(Year ano) {
+    public Ano(int ano) {
         setAno(ano);
     }
 
@@ -27,8 +27,8 @@ public class Ano {
         return ano;
     }
 
-    public void setAno(Year ano) {
-        this.ano = ano;
+    public void setAno(int ano) {
+        this.ano = Year.of(ano);
     }
 
     @Override

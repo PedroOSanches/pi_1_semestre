@@ -1,10 +1,14 @@
 package br.maua.domain;
 
+import br.maua.infrastructure.DAO.ProfessorDAO;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class Professor extends Usuario {
-    private List<Turma> turmas;
+    private final List<Turma> turmas = new ArrayList<>();
     public Professor() {
     }
 
@@ -17,9 +21,22 @@ public class Professor extends Usuario {
         super(idProfessor, nome, sobrenome);
     }
 
+    public Professor(int idProfessor, String nome, String sobrenome, String username) {
+        this(idProfessor, nome, sobrenome);
+        setUsername(username);
+    }
+
     public Professor(String nome, String sobrenome, String username, String senha) {
         super(nome, sobrenome, senha);
         setUsername(username);
+    }
+
+    public void addTurma(Turma turma) {
+        turmas.add(turma);
+    }
+
+    public List<Turma> getTurmas() {
+        return turmas;
     }
 
     @Override
@@ -29,6 +46,11 @@ public class Professor extends Usuario {
             throw new IllegalArgumentException("Username Inválido!");
         }
         super.setUsername(username);
+    }
+
+    @Override
+    public void preencheAtributos() throws SQLException {
+        ProfessorDAO.obterTurmas(this);
     }
 
 }

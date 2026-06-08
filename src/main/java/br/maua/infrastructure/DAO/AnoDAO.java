@@ -4,7 +4,6 @@ import br.maua.domain.Ano;
 import br.maua.infrastructure.ConnectionFactory;
 
 import java.sql.*;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class AnoDAO {
         ) {
             while (rs.next()) {
                 int idAno = rs.getInt("id_ano");
-                Year ano = Year.of(rs.getInt("ano"));
+                int ano = rs.getInt("ano");
                 Ano a = new Ano(idAno, ano);
                 anos.add(a);
             }

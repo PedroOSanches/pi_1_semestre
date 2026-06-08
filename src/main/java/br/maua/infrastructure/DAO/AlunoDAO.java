@@ -7,53 +7,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AlunoDAO {
-    public boolean autenticar(String username, String senha) throws SQLException {
 
-        String sql = "SELECT * FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
-
-        try (Connection conexao = ConnectionFactory.obterConexao();
-                PreparedStatement comando = conexao.prepareStatement(sql)) {
-
-            comando.setString(1, username);
-            comando.setString(2, senha);
-
-            try (ResultSet resultado = comando.executeQuery()) {
-                return resultado.next();
-            }
-        }
-    }
-
-    public String obterTipoUsuario(String username, String senha) throws SQLException {
-        String sql = "SELECT tipo_usuario FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
-
-        try (Connection conexao = ConnectionFactory.obterConexao();
-                PreparedStatement comando = conexao.prepareStatement(sql)) {
-
-            comando.setString(1, username);
-            comando.setString(2, senha);
-
-            try (ResultSet resultado = comando.executeQuery()) {
-                if (resultado.next()) {
-                    return resultado.getString("tipo_usuario");
-                }
-                return null;
-            }
-        }
-    }
-
-    public boolean usernameEhSomenteNumeros(String username) {
-        return username != null && !username.isBlank() && username.matches("\\d+");
-    }
-
-    public String determinarTipoUsuario(String username) {
-        return usernameEhSomenteNumeros(username) ? "aluno" : "professor";
-    }
 
     public static void salvarNoBanco(Aluno aluno) throws SQLException {
         String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario, tipo_usuario) VALUES (?, ?, ?, ?, 'aluno')";
@@ -69,29 +27,7 @@ public class AlunoDAO {
             comando.executeUpdate();
         }
     }
-
-    public Aluno obterAlunoCompleto(String username, String senha) throws SQLException {
-        String sql = "SELECT id_usuario, nome_usuario, sobrenome_usuario, username_usuario FROM usuario WHERE username_usuario = ? AND senha_usuario = ?";
-
-        try (Connection conexao = ConnectionFactory.obterConexao();
-                PreparedStatement comando = conexao.prepareStatement(sql)) {
-
-            comando.setString(1, username);
-            comando.setString(2, senha);
-
-            try (ResultSet resultado = comando.executeQuery()) {
-                if (resultado.next()) {
-                    Aluno aluno = new Aluno();
-                    aluno.setId(resultado.getInt("id_usuario"));
-                    aluno.setNome(resultado.getString("nome_usuario"));
-                    aluno.setSobrenome(resultado.getString("sobrenome_usuario"));
-                    aluno.setUsername(resultado.getString("username_usuario"));
-                    return aluno;
-                }
-                return null;
-            }
-        }
-    }
+    
 
     public static Map<String, Integer> obterProgressoAluno(Aluno aluno) throws SQLException {
         String sql = "SELECT tarefas_concluidas, total_tarefas, ROUND(tarefas_concluidas * 100 / total_tarefas, 0) as progresso_aluno FROM ("
@@ -99,7 +35,7 @@ public class AlunoDAO {
                 "SELECT COUNT(DISTINCT id_tarefa) as tarefas_concluidas, (SELECT COUNT(*) FROM tarefa) as total_tarefas FROM tentativa WHERE id_usuario = ?) as resultado; ";
         try (
                 Connection conexao = ConnectionFactory.obterConexao();
-                PreparedStatement ps = conexao.prepareStatement(sql);) {
+                PreparedStatement ps = conexao.prepareStatement(sql)) {
             Map<String, Integer> progresso = new HashMap<>();
             ps.setInt(1, aluno.getId());
             ResultSet rs = ps.executeQuery();
@@ -113,6 +49,23 @@ public class AlunoDAO {
                 progresso.put("porcentagemProgresso", porcentagemProgresso);
             }
             return progresso;
+        }
+    }
+
+    public static void obterTurma(Aluno aluno) throws SQLException {
+        String sql =
+                "SELECT nome_curso FROM turma_usuario JOIN usuario USING(id_usuario) JOIN turma_subturma USING(id_turma_subturma) JOIN turma USING(id_turma) JOIN subturma USING(id_subturma) JOIN curso USING(id_curso) JOIN ano USING(id_ano) WHERE id_usuario = ? ORDER BY id_turma_subturma DESC;";
+
+        try (
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql)
+        ) {
+            ps.setInt(1, aluno.getId());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String nomeCurso = rs.getString("nome_curso");
+                aluno.setCurso(nomeCurso);
+            }
         }
     }
 }

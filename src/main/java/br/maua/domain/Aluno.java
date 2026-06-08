@@ -1,7 +1,10 @@
 package br.maua.domain;
 
 import java.security.InvalidParameterException;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
+
+import br.maua.infrastructure.DAO.AlunoDAO;
 
 public class Aluno extends Usuario {
     private String curso;
@@ -13,15 +16,19 @@ public class Aluno extends Usuario {
         setUsername(username);
     }
 
-    public Aluno(int id, String nome, String sobrenome, String username, String curso){
+    public Aluno(int id, String nome, String sobrenome, String username) {
         super(id, nome, sobrenome);
-        setCurso(curso);
         setUsername(username);
     }
     public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
         this(nome, sobrenome, username, senha);
         setId(idAluno);
         setCurso(curso);
+    }
+
+    @Override
+    public int getId() {
+        return super.getId();
     }
 
     @Override
@@ -41,11 +48,19 @@ public class Aluno extends Usuario {
         this.curso = curso;
     }
 
-    public void realizarTentativa(Tarefa tarefa) {
-        entregarTentativa(tarefa);
+
+    public void setTurma(Turma turma) {
+        this.turma = turma;
     }
 
-    public Tentativa entregarTentativa(Tarefa tarefa) {
-        return new Tentativa(this, tarefa);
+    public Turma getTurma() {
+        return turma;
+    }
+
+
+    @Override
+    public void preencheAtributos() throws SQLException {
+        AlunoDAO.obterTurma(this);
+
     }
 }

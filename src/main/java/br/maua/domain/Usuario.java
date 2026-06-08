@@ -1,6 +1,8 @@
 package br.maua.domain;
 
-public class Usuario {
+import java.sql.SQLException;
+
+public abstract class Usuario {
     private int id;
     private String nome;
     private String sobrenome;
@@ -12,8 +14,8 @@ public class Usuario {
         setId(id);
         setNome(nome);
         setSobrenome(sobrenome);
-
     }
+
     public Usuario(String nome, String sobrenome, String senha) {
         setNome(nome);
         setSobrenome(sobrenome);
@@ -48,7 +50,7 @@ public class Usuario {
 
     public void setUsername(String username){
         this.username = username;
-    };
+    }
 
     public String getSenha() {
         return senha;
@@ -58,8 +60,11 @@ public class Usuario {
         this.senha = senha;
     }
 
+    public abstract void preencheAtributos() throws SQLException;
+
     @Override
     public String toString() {
         return nome + " " + sobrenome;
     }
+
 }

@@ -5,10 +5,18 @@
 package br.maua.presentation.TelaLogin;
 
 
+import java.security.InvalidParameterException;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
+import br.maua.controller.ControladorCredenciais;
+import br.maua.domain.Aluno;
 import br.maua.domain.Professor;
-import br.maua.infrastructure.DAO.AlunoDAO;
-import br.maua.infrastructure.DAO.ProfessorDAO;
+import br.maua.domain.Usuario;
 import br.maua.presentation.TelaCadastro.TelaCadastro;
+import br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle;
+import br.maua.presentation.TelaTabuleiro.TelaTabuleiro1;
 
 
 /**
@@ -190,46 +198,22 @@ public class TelaLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String usuarioDigitado = campoUsername.getText().trim();
         String senhaDigitada = campoSenha.getText();
-
-        if (usuarioDigitado.isEmpty() || senhaDigitada.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Por favor, preencha o Nome e a Senha para entrar!",
-                "Campos Vazios",
-                javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         try {
-            AlunoDAO alunoDAO = new AlunoDAO();
-            ProfessorDAO professorDAO = new ProfessorDAO();
-            boolean usuarioValido = alunoDAO.autenticar(usuarioDigitado, senhaDigitada);
-
-            if (usuarioValido) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
-                
-                String tipo_usuario = alunoDAO.obterTipoUsuario(usuarioDigitado, senhaDigitada);
-                if ("aluno".equals(tipo_usuario)) {
-                    br.maua.domain.Aluno aluno = alunoDAO.obterAlunoCompleto(usuarioDigitado, senhaDigitada);
-                    new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(aluno).setVisible(true);
-                } else if ("professor".equals(tipo_usuario)) {
-                    Professor professor = ProfessorDAO.obterProfessorCompleto(usuarioDigitado, senhaDigitada);
-                    new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle(professor).setVisible(true);
-                } else {
-                    new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-                }
-                this.dispose(); 
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "Usuário não encontrado ou senha incorreta!",
-                    "Erro de Autenticação",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            Usuario user = ControladorCredenciais.login(usuarioDigitado, senhaDigitada);
+            if (user instanceof Aluno) {
+                TelaTabuleiro1 tabuleiro1 = new TelaTabuleiro1((Aluno) user);
+                tabuleiro1.setVisible(true);
+                dispose();
+            } else if (user instanceof Professor) {
+                TelaPainelDeControle tpa = new TelaPainelDeControle((Professor) user);
+                tpa.setVisible(true);
+                dispose();
             }
-        } catch (java.sql.SQLException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Erro ao conectar com o banco de dados: " + ex.getMessage(),
-                "Erro de Conexão",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao se comunicar com o Banco", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (InvalidParameterException e) {
+            JOptionPane.showMessageDialog(this, e, "Campos Inválidos", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_entrarBotao10ActionPerformed
 
