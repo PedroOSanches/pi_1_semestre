@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import br.maua.infrastructure.DAO.AlunoDAO;
 
 public class Aluno extends Usuario {
-    private String curso;
     private Turma turma;
 
     public Aluno(){}
@@ -20,10 +19,10 @@ public class Aluno extends Usuario {
         super(id, nome, sobrenome);
         setUsername(username);
     }
-    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
+
+    public Aluno(int idAluno, String nome, String sobrenome, String username, String senha) {
         this(nome, sobrenome, username, senha);
         setId(idAluno);
-        setCurso(curso);
     }
 
     @Override
@@ -38,14 +37,6 @@ public class Aluno extends Usuario {
             throw new InvalidParameterException("Username invalido");
         }
         super.setUsername(username);
-    }
-
-    public String getCurso() {
-        return curso;
-    }
-
-    public void setCurso(String curso) {
-        this.curso = curso;
     }
 
 
