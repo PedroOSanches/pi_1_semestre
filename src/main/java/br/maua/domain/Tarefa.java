@@ -3,6 +3,7 @@ package br.maua.domain;
 import java.util.List;
 
 public class Tarefa {
+
     private int idTarefa;
     private String prazo;
     private Casa casa;
@@ -15,10 +16,15 @@ public class Tarefa {
       this.prazo = prazo;
       this.casa = casa;
 
-
     }
 
     public Tarefa(){}
+
+    public Tarefa(int idTarefa) {
+
+        this.idTarefa = idTarefa;
+
+    }
 
     public int getIdTarefa() {
         return idTarefa;

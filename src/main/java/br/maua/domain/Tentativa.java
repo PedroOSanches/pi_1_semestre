@@ -6,6 +6,8 @@ import br.maua.infrastructure.TentativaDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tentativa {
 
@@ -13,6 +15,7 @@ public class Tentativa {
     private Aluno aluno;
     private Tarefa tarefa;
     private int idTentativa;
+    private List <Resposta> respostas = new ArrayList<>();
     private TentativaDAO tentativaDAO;
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
@@ -35,7 +38,7 @@ public class Tentativa {
         return nota;
     }
 
-    public void setNota(double nota) {
+    public void setNota(Double nota) {
         this.nota = nota;
     }
 
@@ -61,6 +64,14 @@ public class Tentativa {
 
     public void setIdTentativa(int idTentativa) {
         this.idTentativa = idTentativa;
+    }
+
+    public List<Resposta> getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(List<Resposta> respostas) {
+        this.respostas = respostas;
     }
 
     public void registraTentativa(){
