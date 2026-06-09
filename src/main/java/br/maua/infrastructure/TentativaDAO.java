@@ -140,7 +140,7 @@ public class TentativaDAO {
 
     public boolean atualizarNota(Tentativa tentativa){
 
-        String sql = "UPDATE resposta" +
+        String sql = "UPDATE resposta " +
                 "SET nota_resposta = ? " +
                 "WHERE id_resposta = ?";
 

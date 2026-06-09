@@ -17,20 +17,19 @@ import java.util.List;
  */
 public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
-    private int idTentativa;
     private Tentativa tentativa;
-    private TentativaDAO tentativaDAO;
-    private List <JFormattedTextField> campoNotaUI = new ArrayList<>();
+    private final TentativaDAO tentativaDAO;
+    private final List <JFormattedTextField> campoNotaUI = new ArrayList<>();
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCorrecaoTarefa.class.getName());
 
     /**
      * Creates new form TelaCorrecaoTarefa
      */
-    public TelaCorrecaoTarefa(int idTentativa) {
+    public TelaCorrecaoTarefa(Tentativa tentativa) {
+        this.tentativa = tentativa;
         initComponents();
 
-        this.idTentativa = idTentativa;
         this.tentativaDAO = new TentativaDAO();
         carregarTentativa();
 
@@ -167,7 +166,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
     private void carregarTentativa(){
 
-        this.tentativa = tentativaDAO.buscarTentativa(idTentativa);
+        this.tentativa = tentativaDAO.buscarTentativa(tentativa.getIdTentativa());
         popularTela();
 
     }
@@ -245,7 +244,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -262,6 +261,8 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa(new Tentativa(104));
+        tct.setVisible(true);
 
         /* Create and display the form */
     }
