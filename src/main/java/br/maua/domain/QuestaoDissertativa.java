@@ -12,6 +12,11 @@ public class QuestaoDissertativa extends Questao {
     public QuestaoDissertativa(String enunciado, String repostaModelo, Tarefa tarefa) {
         super(enunciado, tarefa);
         setRepostaModelo(repostaModelo);
+
+    }
+
+    public QuestaoDissertativa(int idQuestao, String enunciado, Tarefa tarefa){
+        super(idQuestao, enunciado, tarefa);
     }
 
     public String getRepostaModelo() {

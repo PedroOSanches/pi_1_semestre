@@ -6,6 +6,7 @@ package br.maua.presentation.TelaQuestionarioAluno;
 
 import java.awt.Component;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -18,10 +19,12 @@ import br.maua.domain.QuestaoUpload;
 import br.maua.domain.RespostaAlternativa;
 import br.maua.domain.RespostaDissertativa;
 import br.maua.domain.RespostaUpload;
-import br.maua.infrastructure.ArquivoService;
+import br.maua.domain.Tarefa;
+import br.maua.infrastructure.DAO.QuestaoDAO;
 import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
 import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
 import br.maua.infrastructure.DAO.RespostaUploadDAO;
+import br.maua.service.ArquivoService;
 
 /**
  *
@@ -30,13 +33,24 @@ import br.maua.infrastructure.DAO.RespostaUploadDAO;
 public class TelaQuestionarioAluno extends javax.swing.JFrame {
 
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger
+    (TelaQuestionarioAluno.class.getName());
+    private final Tarefa tarefa;
 
     /**
      * Creates new form TelaQuestionarioAluno
      */
-    public TelaQuestionarioAluno() {
+    public TelaQuestionarioAluno(Tarefa tarefa) {
+        this.tarefa = tarefa;
         initComponents();
+        try{
+            QuestaoDAO.buscarPorTarefa(tarefa);
+        }catch(SQLException e ){
+            JOptionPane.showMessageDialog(rootPane, "Erro ao se comunicar com o banco!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        titulo3.setText(tarefa.getTitulo());
+
         PainelQuestoes.setLayout(
             new BoxLayout(
                 PainelQuestoes,
@@ -50,12 +64,15 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         jScrollPane6.getVerticalScrollBar().setUnitIncrement(25);
         configurarScroll();
         
+        try {
+        carregarQuestoes(tarefa.getQuestoes());
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
         
     }
-    public TelaQuestionarioAluno(List<Questao> questoes) {
-        this(); 
-        carregarQuestoes(questoes);
-    }
+    
 
     private void carregarQuestoes(List<Questao>questoes){
         for (Questao q : questoes){
@@ -306,7 +323,11 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaQuestionarioAluno().setVisible(true));
+        Tarefa tarefa = new Tarefa();
+        tarefa.setIdTarefa(20);
+        tarefa.setTitulo("Teste Geral");
+        TelaQuestionarioAluno tqa = new TelaQuestionarioAluno(tarefa);
+        tqa.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

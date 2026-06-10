@@ -1,63 +1,26 @@
 package br.maua.infrastructure.DAO;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+
 import br.maua.domain.QuestaoUpload;
 import br.maua.exception.UpdateException;
+import br.maua.infrastructure.ConnectionFactory;
 import br.maua.service.ArquivoService;
 
-import java.io.File;
-import java.nio.file.StandardCopyOption;
-import java.sql.*;
 
 public class QuestaoUploadDAO {
 
-    public static File gerarArquivoDestino(QuestaoUpload qu) {
-        File arquivo = qu.getArquivo();
-        String titulo = qu.getTitulo();
-
-        if (arquivo == null) return null;
-
-        try {
-            String novoTitulo = titulo.trim()
-                    .replaceAll("\\s+", "_")
-                    .replaceAll("[^a-zA-Z0-9_]", "");
-
-            if (novoTitulo.isBlank()) {
-                throw new UpdateException("Título com nome vazio.");
-            }
-
-            String tituloOriginal = arquivo.getName();
-            int i = tituloOriginal.lastIndexOf(".");
-            String extensao = (i > 0) ? tituloOriginal.substring(i) : "";
-
-            String prefix = "TTT0001_";
-            String nomeBase = prefix + novoTitulo;
-
-            File pasta = new File("assets/QuestoesUpload");
-
-            File novoArquivo = new File(pasta, nomeBase + extensao);
-
-            int contador = 1;
-            while (novoArquivo.exists()) {
-                String nomeComContador = nomeBase + "_" + contador + extensao;
-                novoArquivo = new File(pasta, nomeComContador);
-                contador++;
-            }
-
-            java.nio.file.Files.copy(arquivo.toPath(), novoArquivo.toPath(),  StandardCopyOption.REPLACE_EXISTING);
-            return novoArquivo;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return arquivo;
-        }
-    }
     public static void commit(QuestaoUpload qu, Connection cx) throws SQLException, UpdateException {
         QuestaoDAO.commit(qu, cx, "upload");
         String sql;
         sql = "INSERT INTO upload(titulo_upload, arquivo_modelo_upload, id_questao) VALUES (?, ?, ?)";
 
-        try(PreparedStatement ps = cx.prepareStatement(sql)){
-            File arquivo = qu.gerarArquivoDestino("src/main/resources/assets/professor");
+        try (PreparedStatement ps = cx.prepareStatement(sql)) {
+            File arquivo = ArquivoService.gerarArquivoDestino(qu, "src/main/resources/assets/professor");
 
             ps.setString(1, qu.getTitulo());
             ps.setString(2, arquivo.getName());
@@ -65,6 +28,22 @@ public class QuestaoUploadDAO {
 
             ps.executeUpdate();
             ArquivoService.salvarArquivo(qu.getArquivo(), arquivo);
+        }
+    }
+
+    public static void consultarArquivo(QuestaoUpload qu) throws SQLException {
+        String sql = "SELECT titulo_upload, arquivo_modelo_upload FROM upload WHERE id_questao = ?";
+        try(
+            Connection cx = ConnectionFactory.obterConexao();
+            PreparedStatement ps = cx.prepareStatement(sql)) {
+            ps.setInt(1, qu.getIdQuestao());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String tituloUpload = rs.getString("titulo_upload");
+                String arquivoModeloUpload = rs.getString("arquivo_modelo_upload");
+                qu.setTitulo(tituloUpload);
+                qu.setArquivo(new File("src/main/resources/assets/professor/" + arquivoModeloUpload));
+            }
         }
     }
 }

@@ -5,10 +5,10 @@
 package br.maua.presentation.TelaAcoesTarefa;
 
 
-import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
-import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+import javax.swing.JOptionPane;
 
-import javax.swing.*;
+import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
 
 /**
  *
@@ -77,7 +77,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
         botaoVoltar.setText("Voltar");
         botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+        //botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
 
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
