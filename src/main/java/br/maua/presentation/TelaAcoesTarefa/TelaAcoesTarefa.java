@@ -9,6 +9,10 @@ import javax.swing.JOptionPane;
 
 import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
 import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
+import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -128,6 +132,9 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoVoltarActionPerformed(ActionEvent actionEvent) {
+    }
 
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
