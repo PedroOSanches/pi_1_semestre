@@ -179,43 +179,98 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
         int numeroQuestao = 1;
 
-        for (Resposta resp : tentativa.getRespostas()) {
+        for (Resposta resposta : tentativa.getRespostas()) {
 
             javax.swing.JPanel painelIndividual = new javax.swing.JPanel();
             painelIndividual.setLayout(new javax.swing.BoxLayout(painelIndividual, javax.swing.BoxLayout.Y_AXIS));
             painelIndividual.setBorder(javax.swing.BorderFactory.createTitledBorder("Questão " + numeroQuestao));
-            javax.swing.JLabel labelEnunciado = new javax.swing.JLabel("Enunciado: " + resp.getEnunciado());
+            javax.swing.JLabel labelEnunciado = new javax.swing.JLabel("Enunciado: " + resposta.getEnunciado());
             painelIndividual.add(labelEnunciado);
             painelIndividual.add(javax.swing.Box.createVerticalStrut(5));
             
-            if (resp instanceof RespostaDissertativa) {
-                String respostaAluno = ((RespostaDissertativa) resp).getRespostaAluno();
+            if (resposta instanceof RespostaDissertativa) {
 
+                String respostaAluno = ((RespostaDissertativa) resposta).getRespostaAluno();
                 javax.swing.JTextArea txtArea = new javax.swing.JTextArea(3, 40);
                 txtArea.setText(respostaAluno != null ? respostaAluno : "O aluno não respondeu.");
                 txtArea.setEditable(false);
                 txtArea.setLineWrap(true);
                 txtArea.setWrapStyleWord(true);
-
                 painelIndividual.add(new javax.swing.JScrollPane(txtArea));
 
-            } 
-            
-            else if (resp instanceof RespostaAlternativa) {
-                
-                int idAltAssinalada = ((RespostaAlternativa) resp).getIdAlternativaAssinalada();
-                
-                javax.swing.JLabel labelAlternativa = new javax.swing.JLabel("Alternativa assinalada: " + idAltAssinalada);
-                painelIndividual.add(labelAlternativa);
+            }
 
-            } 
-            
-            else if (resp instanceof RespostaUpload) {
-                
-                String caminho = ((RespostaUpload) resp).getPathArquivo();
-                javax.swing.JLabel labelUpload = new javax.swing.JLabel("Arquivo enviado pelo aluno: " + (caminho != null ? caminho : "Nenhum arquivo submetido."));
-                painelIndividual.add(labelUpload);
-                
+            else if (resposta instanceof RespostaAlternativa) {
+
+                RespostaAlternativa respostaAlternativa = (RespostaAlternativa) resposta;
+                int idAlternativaAssinalada = respostaAlternativa.getIdAlternativaAssinalada();
+
+                javax.swing.JPanel painelAlternativas = new javax.swing.JPanel();
+                painelAlternativas.setLayout(new javax.swing.BoxLayout(painelAlternativas, javax.swing.BoxLayout.Y_AXIS));
+                javax.swing.ButtonGroup alternativas = new javax.swing.ButtonGroup();
+
+                if (respostaAlternativa.getQuestao() != null && respostaAlternativa.getQuestao().getAlternativas() != null) {
+                    for (Alternativa alt : respostaAlternativa.getQuestao().getAlternativas()) {
+
+                        javax.swing.JRadioButton radioBtn = new javax.swing.JRadioButton(alt.getEnunciado());
+                        radioBtn.setEnabled(false);
+
+                        if (alt.getIdAlternativa() == idAlternativaAssinalada) {
+                            radioBtn.setSelected(true);
+                        }
+
+                        alternativas.add(radioBtn);
+                        painelAlternativas.add(radioBtn);
+                    }
+                }
+                painelIndividual.add(painelAlternativas);
+            }
+
+            else if (resposta instanceof RespostaUpload) {
+
+                RespostaUpload respostaUpload = (RespostaUpload) resposta;
+                String pathArquivo = respostaUpload.getPathArquivo();
+
+                if (pathArquivo != null && !pathArquivo.trim().isEmpty()) {
+
+                    javax.swing.JLabel labelUpload = new javax.swing.JLabel("Arquivo anexado: " + pathArquivo);
+                    painelIndividual.add(labelUpload);
+                    painelIndividual.add(javax.swing.Box.createVerticalStrut(5));
+
+                    javax.swing.JButton buttonDownload = new javax.swing.JButton("Baixar Arquivo Submetido");
+                    buttonDownload.addActionListener(new java.awt.event.ActionListener() {
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent e) {
+                            try {
+
+                                java.io.File arquivo = new java.io.File(pathArquivo);
+
+                                if (arquivo.exists()) {
+                                    java.awt.Desktop.getDesktop().open(arquivo);
+                                }
+
+                                else {
+                                    javax.swing.JOptionPane.showMessageDialog(TelaCorrecaoTarefa.this,
+                                            "Arquivo não localizado em: " + pathArquivo,
+                                            "Arquivo não encontrado",
+                                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                            catch (Exception ex) {
+                                javax.swing.JOptionPane.showMessageDialog(TelaCorrecaoTarefa.this,
+                                        "Erro ao tentar abrir o arquivo: " + ex.getMessage(),
+                                        "Erro do Sistema",
+                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    });
+                    painelIndividual.add(buttonDownload);
+                }
+
+                else {
+                    javax.swing.JLabel labelUpload = new javax.swing.JLabel("Nenhum arquivo foi anexado.");
+                    painelIndividual.add(labelUpload);
+                }
             }
 
             painelIndividual.add(javax.swing.Box.createVerticalStrut(8));
@@ -226,7 +281,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
             javax.swing.JFormattedTextField campoNotaQuestao = new javax.swing.JFormattedTextField(formatoDecimal);
             campoNotaQuestao.setColumns(5);
-            campoNotaQuestao.setValue(resp.getNota());
+            campoNotaQuestao.setValue(resposta.getNota());
 
             painelNota.add(campoNotaQuestao);
             painelIndividual.add(painelNota);

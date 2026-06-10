@@ -47,7 +47,7 @@ public class TentativaDAO {
                         String tipoQuestao = rsRespostas.getString("tipo_questao");
 
                         Resposta resposta = null;
-                        
+
                         if ("alternativa".equalsIgnoreCase(tipoQuestao)) {
                             String sqlAlternativa = "SELECT id_alternativa FROM resposta_alternativa WHERE id_resposta = ?";
                             try (PreparedStatement psAlternativa = cx.prepareStatement(sqlAlternativa)) {
@@ -56,12 +56,34 @@ public class TentativaDAO {
                                     if (rsAlternativa.next()) {
                                         RespostaAlternativa respostaAlternativa = new RespostaAlternativa();
                                         respostaAlternativa.setIdAlternativaAssinalada(rsAlternativa.getInt("id_alternativa"));
+
+                                        QuestaoAlternativa questaoAlternativa = new QuestaoAlternativa();
+                                        java.util.List<Alternativa> listaAlternativas = new java.util.ArrayList<>();
+
+                                        String sqlAlternativas = "SELECT id_alternativa, texto_alternativa FROM alternativa " +
+                                                "WHERE id_questao = (SELECT id_questao FROM resposta WHERE id_resposta = ?)";
+
+                                        try (PreparedStatement psAlternativas = cx.prepareStatement(sqlAlternativas)) {
+                                            psAlternativas.setInt(1, idResposta);
+                                            try (ResultSet rsAlternativas = psAlternativas.executeQuery()) {
+                                                while (rsAlternativas.next()) {
+                                                    
+                                                    Alternativa alternativa = new Alternativa();
+                                                    alternativa.setIdAlternativa(rsAlternativas.getInt("id_alternativa"));
+                                                    alternativa.setEnunciado(rsAlternativas.getString ("texto_alternativa"));
+                                                    listaAlternativas.add(alternativa);
+                                                }
+                                            }
+                                        }
+                                        questaoAlternativa.setAlternativas(listaAlternativas);
+                                        respostaAlternativa.setQuestao(questaoAlternativa);
                                         resposta = respostaAlternativa;
                                     }
                                 }
                             }
+                        }
 
-                        } else if ("dissertativa".equalsIgnoreCase(tipoQuestao)) {
+                        else if ("dissertativa".equalsIgnoreCase(tipoQuestao)) {
                             String sqlDissertativa = "SELECT resposta FROM resposta_dissertativa WHERE id_resposta = ?";
                             try (PreparedStatement psDissertativa = cx.prepareStatement(sqlDissertativa)) {
                                 psDissertativa.setInt(1, idResposta);
@@ -73,8 +95,9 @@ public class TentativaDAO {
                                     }
                                 }
                             }
+                        }
 
-                        } else if ("upload".equalsIgnoreCase(tipoQuestao)) {
+                        else if ("upload".equalsIgnoreCase(tipoQuestao)) {
                             String sqlUpload = "SELECT arquivo_resposta FROM resposta_upload WHERE id_resposta = ?";
                             try (PreparedStatement psUpload = cx.prepareStatement(sqlUpload)) {
                                 psUpload.setInt(1, idResposta);
@@ -98,7 +121,8 @@ public class TentativaDAO {
                     }
                 }
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return tentativa;
