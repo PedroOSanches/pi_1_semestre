@@ -110,14 +110,6 @@ public class TentativaDAO {
                                 }
                             }
                         }
-
-                        if (resposta != null) {
-                            resposta.setIdResposta(idResposta);
-                            resposta.setIdQuestao(idQuestao);
-                            resposta.setEnunciado(enunciado);
-                            resposta.setNota(notaResposta);
-                            tentativa.getRespostas().add(resposta);
-                        }
                     }
                 }
             }

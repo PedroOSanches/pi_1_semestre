@@ -1,3340 +1,919 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package br.maua.presentation.TelaTabuleiro;
 
+import br.maua.domain.Aluno;
+import br.maua.domain.Casa;
+import br.maua.domain.Professor;
+import br.maua.domain.Secao;
+import br.maua.infrastructure.ConnectionFactory;
+import br.maua.presentation.TelaAdicionarCasa.TelaAdicionarCasa;
+import br.maua.presentation.TelaAdicionarSecao.TelaAdicionarSecao;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
+import br.maua.presentation.TelaModalPerfilProfessor.ModalPerfilProfessor;
+import br.maua.presentation.TelaTarefasAluno.TelaTarefaAluno;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-/**
- *
- * @author Lenovo
- */
-public class TelaTabuleiro1 extends javax.swing.JFrame {
-    
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
+public class TelaTabuleiro1 extends JFrame {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTabuleiro1.class.getName());
-    private br.maua.domain.Aluno alunoLogado;
 
-    /**
-     * Creates new form TelaTabuleiro1
-     */
-    public TelaTabuleiro1(br.maua.domain.Aluno aluno) {
-        this.alunoLogado = aluno;
-        initComponents();
-        configurarScroll();
-    }
+    private Aluno alunoLogado;
+    private Professor professorLogado;
+    private boolean mostrarVoltarParaAdmin;
+    private List<Casa> casasInformadas;
+    private List<Secao> secoesInformadas;
     
-    private void abrirModalPerfilAluno() {
-        // Passa apenas o aluno logado, que é o que o construtor do modal espera
-        ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado); 
 
-        // Centraliza e exibe
-        modal.setLocationRelativeTo(this);
-        modal.setVisible(true);
+    private JScrollPane jScrollPane1;
+    private JPanel jPanel1;
+    private JButton jButton1;
+    private JButton jButton2;
+    private JButton jButton3;
+    private JButton jButton4;
+
+    private static final Color COR_AZUL = new Color(19, 112, 178);
+    private static final Color COR_LARANJA = new Color(240, 147, 32);
+    private static final Color COR_FUNDO = new Color(234, 242, 248);
+    private static final int LARGURA_SECAO = 420;
+    private static final int ALTURA_SECAO = 230;
+    private static final int LARGURA_CASA = 450;
+    private static final int ALTURA_CASA = 168;
+
+    public TelaTabuleiro1(Aluno aluno) {
+        this(aluno, null, false, null, null);
+    }
+
+    public TelaTabuleiro1(Aluno aluno, List<Casa> casas, List<Secao> secoes) {
+        this(aluno, null, false, casas, secoes);
+    }
+
+    public TelaTabuleiro1(boolean mostrarVoltarParaAdmin) {
+        this(null, null, mostrarVoltarParaAdmin, null, null);
+    }
+
+    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
+        this(null, professor, mostrarVoltarParaAdmin, null, null);
+    }
+
+    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
+        this(null, professor, mostrarVoltarParaAdmin, casas, secoes);
     }
 
     public TelaTabuleiro1() {
-        this(null);
+        this((Aluno) null);
     }
 
-    
-    private void configurarScroll() {
-        // 1. Remove os tamanhos travados que o NetBeans colocou e deixa o layout livre
-        jPanel1.setPreferredSize(null);
-        jPanel1.setMinimumSize(null);
-        jPanel1.setMaximumSize(null);
-
-        // 2. Força a barra vertical a estar sempre visível
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        // 3. Pede para o Swing recalcular os tamanhos reais com base nos componentes internos
-        jPanel1.revalidate();
-        jPanel1.repaint();
-
-        // 4. Pega o tamanho real combinado de tudo e aplica de forma definitiva
-        java.awt.Dimension tamanhoReal = jPanel1.getLayout().preferredLayoutSize(jPanel1);
-        jPanel1.setPreferredSize(tamanhoReal);
-
-        // 5. Atualiza o viewport do scroll
-        jScrollPane1.setViewportView(jPanel1);
+    private TelaTabuleiro1(Aluno aluno, Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
+        this.alunoLogado = aluno;
+        this.professorLogado = professor;
+        this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
+        this.casasInformadas = casas;
+        this.secoesInformadas = secoes;
+        initComponents();
+        montarTabuleiroDinamico();
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        Casa15 = new javax.swing.JPanel();
-        jLabel79 = new javax.swing.JLabel();
-        jLabel77 = new javax.swing.JLabel();
-        jPanel21 = new javax.swing.JPanel();
-        jCheckBox27 = new javax.swing.JCheckBox();
-        jCheckBox28 = new javax.swing.JCheckBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        Inicio = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        Secao1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        Casa1 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        Casa2 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        Casa3 = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        Secao2 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        Casa4 = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jPanel12 = new javax.swing.JPanel();
-        jCheckBox6 = new javax.swing.JCheckBox();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        Casa5 = new javax.swing.JPanel();
-        jLabel25 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        Casa6 = new javax.swing.JPanel();
-        jLabel31 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jPanel10 = new javax.swing.JPanel();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        Casa7 = new javax.swing.JPanel();
-        jLabel34 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
-        jLabel36 = new javax.swing.JLabel();
-        jPanel11 = new javax.swing.JPanel();
-        jCheckBox5 = new javax.swing.JCheckBox();
-        jLabel37 = new javax.swing.JLabel();
-        jLabel38 = new javax.swing.JLabel();
-        Casa8 = new javax.swing.JPanel();
-        jLabel39 = new javax.swing.JLabel();
-        jLabel40 = new javax.swing.JLabel();
-        jLabel41 = new javax.swing.JLabel();
-        jPanel13 = new javax.swing.JPanel();
-        jCheckBox7 = new javax.swing.JCheckBox();
-        jLabel42 = new javax.swing.JLabel();
-        jLabel43 = new javax.swing.JLabel();
-        Secao3 = new javax.swing.JPanel();
-        jLabel44 = new javax.swing.JLabel();
-        jLabel45 = new javax.swing.JLabel();
-        jLabel46 = new javax.swing.JLabel();
-        jLabel47 = new javax.swing.JLabel();
-        jLabel48 = new javax.swing.JLabel();
-        Casa9 = new javax.swing.JPanel();
-        jLabel49 = new javax.swing.JLabel();
-        jLabel50 = new javax.swing.JLabel();
-        jLabel51 = new javax.swing.JLabel();
-        jPanel15 = new javax.swing.JPanel();
-        jCheckBox9 = new javax.swing.JCheckBox();
-        jCheckBox8 = new javax.swing.JCheckBox();
-        Casa10 = new javax.swing.JPanel();
-        jLabel52 = new javax.swing.JLabel();
-        jLabel54 = new javax.swing.JLabel();
-        jPanel17 = new javax.swing.JPanel();
-        jCheckBox12 = new javax.swing.JCheckBox();
-        jCheckBox13 = new javax.swing.JCheckBox();
-        jLabel53 = new javax.swing.JLabel();
-        Casa11 = new javax.swing.JPanel();
-        jLabel55 = new javax.swing.JLabel();
-        jLabel56 = new javax.swing.JLabel();
-        jPanel18 = new javax.swing.JPanel();
-        jCheckBox14 = new javax.swing.JCheckBox();
-        jCheckBox15 = new javax.swing.JCheckBox();
-        jCheckBox16 = new javax.swing.JCheckBox();
-        jLabel57 = new javax.swing.JLabel();
-        Secao4 = new javax.swing.JPanel();
-        jLabel58 = new javax.swing.JLabel();
-        jLabel59 = new javax.swing.JLabel();
-        jLabel60 = new javax.swing.JLabel();
-        jLabel61 = new javax.swing.JLabel();
-        jLabel62 = new javax.swing.JLabel();
-        Casa12 = new javax.swing.JPanel();
-        jLabel63 = new javax.swing.JLabel();
-        jLabel64 = new javax.swing.JLabel();
-        jLabel65 = new javax.swing.JLabel();
-        jPanel19 = new javax.swing.JPanel();
-        jCheckBox17 = new javax.swing.JCheckBox();
-        jCheckBox18 = new javax.swing.JCheckBox();
-        jLabel66 = new javax.swing.JLabel();
-        jCheckBox19 = new javax.swing.JCheckBox();
-        jCheckBox20 = new javax.swing.JCheckBox();
-        Casa13 = new javax.swing.JPanel();
-        jLabel67 = new javax.swing.JLabel();
-        jLabel69 = new javax.swing.JLabel();
-        jLabel68 = new javax.swing.JLabel();
-        jPanel20 = new javax.swing.JPanel();
-        jCheckBox21 = new javax.swing.JCheckBox();
-        jCheckBox22 = new javax.swing.JCheckBox();
-        jLabel70 = new javax.swing.JLabel();
-        jCheckBox23 = new javax.swing.JCheckBox();
-        Secao5 = new javax.swing.JPanel();
-        jLabel71 = new javax.swing.JLabel();
-        jLabel72 = new javax.swing.JLabel();
-        jLabel73 = new javax.swing.JLabel();
-        jLabel74 = new javax.swing.JLabel();
-        jLabel75 = new javax.swing.JLabel();
-        Casa14 = new javax.swing.JPanel();
-        jLabel78 = new javax.swing.JLabel();
-        jLabel76 = new javax.swing.JLabel();
-        jPanel14 = new javax.swing.JPanel();
-        jCheckBox24 = new javax.swing.JCheckBox();
-        jCheckBox25 = new javax.swing.JCheckBox();
-        jCheckBox26 = new javax.swing.JCheckBox();
-        Casa16 = new javax.swing.JPanel();
-        jLabel80 = new javax.swing.JLabel();
-        jLabel81 = new javax.swing.JLabel();
-        jPanel22 = new javax.swing.JPanel();
-        jCheckBox29 = new javax.swing.JCheckBox();
-        jCheckBox30 = new javax.swing.JCheckBox();
-        Casa17 = new javax.swing.JPanel();
-        jLabel82 = new javax.swing.JLabel();
-        jLabel83 = new javax.swing.JLabel();
-        jPanel23 = new javax.swing.JPanel();
-        jCheckBox31 = new javax.swing.JCheckBox();
-        jCheckBox32 = new javax.swing.JCheckBox();
-        jCheckBox33 = new javax.swing.JCheckBox();
-        Casa18 = new javax.swing.JPanel();
-        jLabel84 = new javax.swing.JLabel();
-        jLabel85 = new javax.swing.JLabel();
-        jPanel24 = new javax.swing.JPanel();
-        jCheckBox34 = new javax.swing.JCheckBox();
-        jCheckBox35 = new javax.swing.JCheckBox();
-        jCheckBox36 = new javax.swing.JCheckBox();
-        Secao6 = new javax.swing.JPanel();
-        jLabel86 = new javax.swing.JLabel();
-        jLabel87 = new javax.swing.JLabel();
-        jLabel88 = new javax.swing.JLabel();
-        jLabel89 = new javax.swing.JLabel();
-        jLabel90 = new javax.swing.JLabel();
-        Casa51 = new javax.swing.JPanel();
-        jLabel91 = new javax.swing.JLabel();
-        jLabel92 = new javax.swing.JLabel();
-        jLabel93 = new javax.swing.JLabel();
-        jPanel25 = new javax.swing.JPanel();
-        jCheckBox37 = new javax.swing.JCheckBox();
-        jCheckBox38 = new javax.swing.JCheckBox();
-        jCheckBox39 = new javax.swing.JCheckBox();
-        Casa52 = new javax.swing.JPanel();
-        jLabel94 = new javax.swing.JLabel();
-        jLabel95 = new javax.swing.JLabel();
-        jPanel26 = new javax.swing.JPanel();
-        jCheckBox40 = new javax.swing.JCheckBox();
-        jLabel96 = new javax.swing.JLabel();
-        Casa53 = new javax.swing.JPanel();
-        jLabel97 = new javax.swing.JLabel();
-        jLabel98 = new javax.swing.JLabel();
-        jLabel99 = new javax.swing.JLabel();
-        jPanel27 = new javax.swing.JPanel();
-        jCheckBox41 = new javax.swing.JCheckBox();
-        jCheckBox42 = new javax.swing.JCheckBox();
-        Casa54 = new javax.swing.JPanel();
-        jLabel100 = new javax.swing.JLabel();
-        jLabel101 = new javax.swing.JLabel();
-        jPanel28 = new javax.swing.JPanel();
-        jCheckBox43 = new javax.swing.JCheckBox();
-        jCheckBox44 = new javax.swing.JCheckBox();
-        jLabel102 = new javax.swing.JLabel();
-        Casa55 = new javax.swing.JPanel();
-        jLabel103 = new javax.swing.JLabel();
-        jLabel104 = new javax.swing.JLabel();
-        jLabel105 = new javax.swing.JLabel();
-        jPanel29 = new javax.swing.JPanel();
-        jCheckBox45 = new javax.swing.JCheckBox();
-        Casa56 = new javax.swing.JPanel();
-        jLabel106 = new javax.swing.JLabel();
-        jLabel107 = new javax.swing.JLabel();
-        jPanel30 = new javax.swing.JPanel();
-        jCheckBox46 = new javax.swing.JCheckBox();
-        jLabel108 = new javax.swing.JLabel();
-        Casa57 = new javax.swing.JPanel();
-        jLabel109 = new javax.swing.JLabel();
-        jLabel110 = new javax.swing.JLabel();
-        jLabel111 = new javax.swing.JLabel();
-        jPanel31 = new javax.swing.JPanel();
-        jCheckBox47 = new javax.swing.JCheckBox();
-        Inicio1 = new javax.swing.JPanel();
-        jLabel112 = new javax.swing.JLabel();
-        jLabel113 = new javax.swing.JLabel();
-        jLabel114 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-
-        Casa15.setBackground(new java.awt.Color(19, 112, 178));
-        Casa15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa15.setMaximumSize(new java.awt.Dimension(450, 168));
-
-        jLabel79.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel79.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel79.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel79.setText("15");
-
-        jLabel77.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel77.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel77.setText("Indo além do papel");
-
-        jPanel21.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox27.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox27.setText("Tarefas a fazer para tirar o projeto do papel");
-        jCheckBox27.addActionListener(this::jCheckBox27ActionPerformed);
-
-        jCheckBox28.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox28.setText("O que está por trás do seu projeto?");
-        jCheckBox28.addActionListener(this::jCheckBox28ActionPerformed);
-
-        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
-        jPanel21.setLayout(jPanel21Layout);
-        jPanel21Layout.setHorizontalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
-                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox27)
-                    .addComponent(jCheckBox28))
-                .addGap(0, 18, Short.MAX_VALUE))
-        );
-        jPanel21Layout.setVerticalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox27)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox28)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa15Layout = new javax.swing.GroupLayout(Casa15);
-        Casa15.setLayout(Casa15Layout);
-        Casa15Layout.setHorizontalGroup(
-            Casa15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa15Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa15Layout.createSequentialGroup()
-                        .addComponent(jLabel77)
-                        .addContainerGap(216, Short.MAX_VALUE))
-                    .addGroup(Casa15Layout.createSequentialGroup()
-                        .addComponent(jLabel79)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31))))
-        );
-        Casa15Layout.setVerticalGroup(
-            Casa15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa15Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa15Layout.createSequentialGroup()
-                        .addComponent(jLabel79)
-                        .addGap(0, 20, Short.MAX_VALUE))
-                    .addComponent(jPanel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel77)
-                .addGap(14, 14, 14))
-        );
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
+        setTitle("Tabuleiro");
 
-        jPanel1.setBackground(new java.awt.Color(234, 242, 248));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1024, 6000));
+        JPanel root = new JPanel(new BorderLayout());
+        root.setBackground(COR_FUNDO);
 
-        Inicio.setBackground(new java.awt.Color(19, 112, 178));
-        Inicio.setPreferredSize(new java.awt.Dimension(185, 90));
+        JPanel acoes = new JPanel();
+        acoes.setBackground(COR_FUNDO);
+        acoes.setBorder(BorderFactory.createEmptyBorder(12, 16, 8, 16));
+        acoes.setLayout(new BoxLayout(acoes, BoxLayout.X_AXIS));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Início");
+        jButton1 = new JButton("Perfil");
+        jButton1.setBackground(COR_LARANJA);
+        jButton1.setForeground(Color.WHITE);
+        jButton1.addActionListener(evt -> abrirPerfil());
 
-        javax.swing.GroupLayout InicioLayout = new javax.swing.GroupLayout(Inicio);
-        Inicio.setLayout(InicioLayout);
-        InicioLayout.setHorizontalGroup(
-            InicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(InicioLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jLabel1)
-                .addContainerGap(65, Short.MAX_VALUE))
-        );
-        InicioLayout.setVerticalGroup(
-            InicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(InicioLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel1)
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
+        jButton2 = new JButton("Voltar");
+        jButton2.setBackground(COR_LARANJA);
+        jButton2.setForeground(Color.WHITE);
+        jButton2.addActionListener(evt -> voltarParaPainel());
 
-        Secao1.setBackground(new java.awt.Color(19, 112, 178));
-        Secao1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Secao1.setMaximumSize(new java.awt.Dimension(316, 230));
-
-        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        // Tentar carregar ícone; se falhar, exibir placeholder
-        java.io.File iconFile = new java.io.File("C:\\Users\\Lenovo\\Downloads\\b7a03d0f-ffaf-4634-9812-dda5823ec8ee_resized.png");
-        if (iconFile.exists()) {
-            jLabel2.setIcon(new javax.swing.ImageIcon(iconFile.getAbsolutePath()));
-        } else {
-            jLabel2.setText("👤");
-            jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 32));
-        }
-        jLabel2.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                abrirModalPerfilAluno();
-            }
+        jButton3 = new JButton("Adicionar Casa");
+        jButton3.setBackground(COR_AZUL);
+        jButton3.setForeground(Color.WHITE);
+        jButton3.addActionListener(evt -> {
+            br.maua.presentation.TelaNavegacao.abrir(this, new TelaAdicionarCasa());
         });
 
-        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("1");
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Explorador");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Conhecer o entorno em que está");
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("inserido[Casa/Universidade]");
-
-        javax.swing.GroupLayout Secao1Layout = new javax.swing.GroupLayout(Secao1);
-        Secao1.setLayout(Secao1Layout);
-        Secao1Layout.setHorizontalGroup(
-            Secao1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Secao1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
-                .addContainerGap(13, Short.MAX_VALUE))
-            .addGroup(Secao1Layout.createSequentialGroup()
-                .addGroup(Secao1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel4))
-                    .addGroup(Secao1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17))
-        );
-        Secao1Layout.setVerticalGroup(
-            Secao1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao1Layout.createSequentialGroup()
-                .addGroup(Secao1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(Secao1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel4)))
-                .addGap(24, 24, 24)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
-        Casa1.setBackground(new java.awt.Color(19, 112, 178));
-        Casa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa1.setMaximumSize(new java.awt.Dimension(286, 168));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Conhecendo");
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("o IMT");
-
-        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("1");
-
-        javax.swing.GroupLayout Casa1Layout = new javax.swing.GroupLayout(Casa1);
-        Casa1.setLayout(Casa1Layout);
-        Casa1Layout.setHorizontalGroup(
-            Casa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
-                .addContainerGap(124, Short.MAX_VALUE))
-        );
-        Casa1Layout.setVerticalGroup(
-            Casa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel8)
-                .addGap(4, 4, 4))
-        );
-
-        Casa2.setBackground(new java.awt.Color(19, 112, 178));
-        Casa2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa2.setMaximumSize(new java.awt.Dimension(286, 168));
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Conhecendo");
-
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText("a Disciplina");
-
-        jLabel12.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("2");
-
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox1.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox1.setText("Apresentação da Disciplina");
-        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.TRAILING)
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox1)
-                .addContainerGap(32, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa2Layout = new javax.swing.GroupLayout(Casa2);
-        Casa2.setLayout(Casa2Layout);
-        Casa2Layout.setHorizontalGroup(
-            Casa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa2Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa2Layout.createSequentialGroup()
-                        .addGroup(Casa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel10))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa2Layout.setVerticalGroup(
-            Casa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel12)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel11)
-                .addGap(4, 4, 4))
-        );
-
-        Casa3.setBackground(new java.awt.Color(19, 112, 178));
-        Casa3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa3.setMaximumSize(new java.awt.Dimension(286, 168));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Ética");
-
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText("Acadêmica");
-
-        jLabel15.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("3");
-
-        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox2.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox2.setText("Questionário de Perfil");
-        jCheckBox2.addActionListener(this::jCheckBox2ActionPerformed);
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jCheckBox2)
-                .addGap(0, 15, Short.MAX_VALUE))
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox2)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa3Layout = new javax.swing.GroupLayout(Casa3);
-        Casa3.setLayout(Casa3Layout);
-        Casa3Layout.setHorizontalGroup(
-            Casa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa3Layout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa3Layout.createSequentialGroup()
-                        .addGroup(Casa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel13))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa3Layout.setVerticalGroup(
-            Casa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel15)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jLabel13)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel14)
-                .addGap(4, 4, 4))
-        );
-
-        Secao2.setBackground(new java.awt.Color(255, 255, 255));
-        Secao2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Secao2.setMaximumSize(new java.awt.Dimension(314, 230));
-
-        jLabel16.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel16.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\Captura de tela 2026-05-16 101304_resized (1).png")); // NOI18N
-
-        jLabel17.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel17.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel17.setText("2");
-
-        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel18.setText("Conector");
-
-        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel19.setText("Conectar com seu \"Eu Interior\"");
-
-        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel26.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel26.setText("Autoconhecimento");
-
-        javax.swing.GroupLayout Secao2Layout = new javax.swing.GroupLayout(Secao2);
-        Secao2.setLayout(Secao2Layout);
-        Secao2Layout.setHorizontalGroup(
-            Secao2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Secao2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel19)
-                    .addComponent(jLabel26))
-                .addContainerGap(24, Short.MAX_VALUE))
-            .addGroup(Secao2Layout.createSequentialGroup()
-                .addGroup(Secao2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel18))
-                    .addGroup(Secao2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel17)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel16)
-                .addGap(17, 17, 17))
-        );
-        Secao2Layout.setVerticalGroup(
-            Secao2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao2Layout.createSequentialGroup()
-                .addGroup(Secao2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao2Layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Secao2Layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel26)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
-        Casa4.setBackground(new java.awt.Color(255, 255, 255));
-        Casa4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa4.setMaximumSize(new java.awt.Dimension(284, 165));
-
-        jLabel20.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel21.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel21.setText("O que sabemos");
-
-        jLabel22.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel22.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel22.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel22.setText("4");
-
-        jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox6.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox6.setText("Matriz CSD");
-        jCheckBox6.addActionListener(this::jCheckBox6ActionPerformed);
-
-        jLabel23.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel23.setText("Certezas.");
-
-        jLabel24.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel24.setText("Suposições e Dúvidas");
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox6)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel23))))
-                .addGap(0, 23, Short.MAX_VALUE))
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel23)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel24)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa4Layout = new javax.swing.GroupLayout(Casa4);
-        Casa4.setLayout(Casa4Layout);
-        Casa4Layout.setHorizontalGroup(
-            Casa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa4Layout.createSequentialGroup()
-                        .addComponent(jLabel22)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa4Layout.createSequentialGroup()
-                        .addGroup(Casa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel20))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa4Layout.setVerticalGroup(
-            Casa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel22)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jLabel20)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel21)
-                .addGap(4, 4, 4))
-        );
-
-        Casa5.setBackground(new java.awt.Color(255, 255, 255));
-        Casa5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa5.setMaximumSize(new java.awt.Dimension(284, 165));
-        Casa5.setMinimumSize(new java.awt.Dimension(284, 165));
-
-        jLabel25.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel25.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel28.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel28.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel28.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel28.setText("5");
-
-        jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel27.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel27.setText("Propósito");
-
-        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox3.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox3.setText("Encontre seu Propósito");
-        jCheckBox3.addActionListener(this::jCheckBox3ActionPerformed);
-
-        jLabel29.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel29.setText("Descubra o que faz de melhor");
-
-        jLabel30.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel30.setText("Registre suas preocupações");
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox3)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel30)
-                            .addComponent(jLabel29))))
-                .addGap(0, 9, Short.MAX_VALUE))
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel29)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel30)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa5Layout = new javax.swing.GroupLayout(Casa5);
-        Casa5.setLayout(Casa5Layout);
-        Casa5Layout.setHorizontalGroup(
-            Casa5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa5Layout.createSequentialGroup()
-                        .addComponent(jLabel28)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa5Layout.createSequentialGroup()
-                        .addComponent(jLabel25)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel27)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa5Layout.setVerticalGroup(
-            Casa5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel28)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(Casa5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa5Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel25)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa5Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel27)
-                        .addContainerGap(12, Short.MAX_VALUE))))
-        );
-
-        Casa6.setBackground(new java.awt.Color(255, 255, 255));
-        Casa6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa6.setMaximumSize(new java.awt.Dimension(284, 165));
-        Casa6.setMinimumSize(new java.awt.Dimension(284, 165));
-
-        jLabel31.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel31.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel32.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel32.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel32.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel32.setText("6");
-
-        jLabel33.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel33.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel33.setText("O que te inspira?");
-
-        jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox4.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox4.setText("O que te inspira?");
-        jCheckBox4.addActionListener(this::jCheckBox4ActionPerformed);
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addComponent(jCheckBox4)
-                .addGap(0, 12, Short.MAX_VALUE))
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox4)
-                .addContainerGap(32, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa6Layout = new javax.swing.GroupLayout(Casa6);
-        Casa6.setLayout(Casa6Layout);
-        Casa6Layout.setHorizontalGroup(
-            Casa6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa6Layout.createSequentialGroup()
-                        .addComponent(jLabel32)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa6Layout.createSequentialGroup()
-                        .addGroup(Casa6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel31)
-                            .addComponent(jLabel33))
-                        .addGap(0, 70, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa6Layout.setVerticalGroup(
-            Casa6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel32)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jLabel31)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel33)
-                .addGap(20, 20, 20))
-        );
-
-        Casa7.setBackground(new java.awt.Color(255, 255, 255));
-        Casa7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa7.setMaximumSize(new java.awt.Dimension(284, 165));
-        Casa7.setMinimumSize(new java.awt.Dimension(284, 165));
-
-        jLabel34.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel34.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel35.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel35.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel35.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel35.setText("7");
-
-        jLabel36.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel36.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel36.setText("Desapegue!");
-
-        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox5.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox5.setText("Livre-se das distrações");
-        jCheckBox5.addActionListener(this::jCheckBox5ActionPerformed);
-
-        jLabel37.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel37.setText("Onde você está? O que");
-
-        jLabel38.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel38.setText("precisa para mudar de lugar?");
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jCheckBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel11Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel38)
-                            .addComponent(jLabel37))))
-                .addGap(0, 9, Short.MAX_VALUE))
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel37)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel38)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa7Layout = new javax.swing.GroupLayout(Casa7);
-        Casa7.setLayout(Casa7Layout);
-        Casa7Layout.setHorizontalGroup(
-            Casa7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa7Layout.createSequentialGroup()
-                        .addComponent(jLabel36)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(Casa7Layout.createSequentialGroup()
-                        .addGroup(Casa7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel35)
-                            .addComponent(jLabel34))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        Casa7Layout.setVerticalGroup(
-            Casa7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa7Layout.createSequentialGroup()
-                        .addComponent(jLabel35)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel34))
-                    .addGroup(Casa7Layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel36)
-                .addGap(8, 8, 8))
-        );
-
-        Casa8.setBackground(new java.awt.Color(255, 255, 255));
-        Casa8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa8.setMaximumSize(new java.awt.Dimension(320, 165));
-        Casa8.setMinimumSize(new java.awt.Dimension(320, 165));
-
-        jLabel39.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel39.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel40.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel40.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel40.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel40.setText("8");
-
-        jLabel41.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel41.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel41.setText("O que eu admiro?");
-
-        jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox7.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox7.setText("Quais são os projetos que mais admira");
-        jCheckBox7.addActionListener(this::jCheckBox7ActionPerformed);
-
-        jLabel42.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel42.setText("Que história quer contar aos 80 anos?");
-
-        jLabel43.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel43.setText("Matriz de risco e Planos de Ação");
-
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox7)
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel43)
-                            .addComponent(jLabel42))))
-                .addGap(0, 8, Short.MAX_VALUE))
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel42)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel43)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout Casa8Layout = new javax.swing.GroupLayout(Casa8);
-        Casa8.setLayout(Casa8Layout);
-        Casa8Layout.setHorizontalGroup(
-            Casa8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa8Layout.createSequentialGroup()
-                        .addComponent(jLabel40)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa8Layout.createSequentialGroup()
-                        .addGroup(Casa8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel39)
-                            .addComponent(jLabel41))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa8Layout.setVerticalGroup(
-            Casa8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel40)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel39)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel41)
-                .addGap(20, 20, 20))
-        );
-
-        Secao3.setBackground(new java.awt.Color(240, 147, 32));
-        Secao3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Secao3.setMaximumSize(new java.awt.Dimension(320, 233));
-        Secao3.setMinimumSize(new java.awt.Dimension(320, 233));
-
-        jLabel44.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel44.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\f7746baf-d389-4611-a956-3a814e943c64_resized.png")); // NOI18N
-
-        jLabel45.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel45.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
-        jLabel45.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel45.setText("3");
-
-        jLabel46.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel46.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel46.setText("Transformador");
-
-        jLabel47.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel47.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel47.setText("Trabalhar a");
-
-        jLabel48.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel48.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel48.setText("mudança");
-
-        javax.swing.GroupLayout Secao3Layout = new javax.swing.GroupLayout(Secao3);
-        Secao3.setLayout(Secao3Layout);
-        Secao3Layout.setHorizontalGroup(
-            Secao3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Secao3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel47)
-                    .addComponent(jLabel48))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(Secao3Layout.createSequentialGroup()
-                .addGroup(Secao3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao3Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel46))
-                    .addGroup(Secao3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel45)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel44)
-                .addGap(17, 17, 17))
-        );
-        Secao3Layout.setVerticalGroup(
-            Secao3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao3Layout.createSequentialGroup()
-                .addGroup(Secao3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao3Layout.createSequentialGroup()
-                        .addComponent(jLabel45)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel46))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Secao3Layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addComponent(jLabel47)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel48)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-
-        Casa9.setBackground(new java.awt.Color(240, 147, 32));
-        Casa9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa9.setMaximumSize(new java.awt.Dimension(354, 180));
-        Casa9.setPreferredSize(new java.awt.Dimension(354, 180));
-
-        jLabel49.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel49.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel50.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel50.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel50.setText("Saindo da Zona de Conforto");
-
-        jLabel51.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel51.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel51.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel51.setText("9");
-
-        jPanel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox9.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox9.setText("Faça algo que nunca fez");
-        jCheckBox9.addActionListener(this::jCheckBox9ActionPerformed);
-
-        jCheckBox8.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox8.setText("Business Model You");
-        jCheckBox8.addActionListener(this::jCheckBox8ActionPerformed);
-
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox9)
-                    .addComponent(jCheckBox8))
-                .addGap(0, 18, Short.MAX_VALUE))
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox8)
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa9Layout = new javax.swing.GroupLayout(Casa9);
-        Casa9.setLayout(Casa9Layout);
-        Casa9Layout.setHorizontalGroup(
-            Casa9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa9Layout.createSequentialGroup()
-                        .addComponent(jLabel51)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa9Layout.createSequentialGroup()
-                        .addComponent(jLabel49)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel50)
-                        .addGap(0, 13, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa9Layout.setVerticalGroup(
-            Casa9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel51)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(Casa9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa9Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel49)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa9Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel50)
-                        .addContainerGap(24, Short.MAX_VALUE))))
-        );
-
-        Casa10.setBackground(new java.awt.Color(240, 147, 32));
-        Casa10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa10.setMaximumSize(new java.awt.Dimension(354, 180));
-        Casa10.setPreferredSize(new java.awt.Dimension(354, 180));
-
-        jLabel52.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel52.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel54.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel54.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel54.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel54.setText("10");
-
-        jPanel17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox12.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox12.setText("Janela de Johari");
-        jCheckBox12.addActionListener(this::jCheckBox12ActionPerformed);
-
-        jCheckBox13.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox13.setText("Análise Transacional");
-        jCheckBox13.addActionListener(this::jCheckBox13ActionPerformed);
-
-        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
-        jPanel17.setLayout(jPanel17Layout);
-        jPanel17Layout.setHorizontalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel17Layout.createSequentialGroup()
-                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox12)
-                    .addComponent(jCheckBox13))
-                .addGap(0, 18, Short.MAX_VALUE))
-        );
-        jPanel17Layout.setVerticalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel17Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox13)
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
-
-        jLabel53.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel53.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel53.setText("Relação com o mundo");
-
-        javax.swing.GroupLayout Casa10Layout = new javax.swing.GroupLayout(Casa10);
-        Casa10.setLayout(Casa10Layout);
-        Casa10Layout.setHorizontalGroup(
-            Casa10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa10Layout.createSequentialGroup()
-                        .addComponent(jLabel54)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa10Layout.createSequentialGroup()
-                        .addComponent(jLabel52)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel53)
-                        .addGap(0, 76, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa10Layout.setVerticalGroup(
-            Casa10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel54)
-                    .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(Casa10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa10Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel52)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa10Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel53)
-                        .addContainerGap(18, Short.MAX_VALUE))))
-        );
-
-        Casa11.setBackground(new java.awt.Color(240, 147, 32));
-        Casa11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa11.setMaximumSize(new java.awt.Dimension(354, 180));
-        Casa11.setPreferredSize(new java.awt.Dimension(354, 180));
-
-        jLabel55.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel55.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel56.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel56.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel56.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel56.setText("11");
-
-        jPanel18.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox14.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox14.setText("Missão, Visão e Valores");
-        jCheckBox14.addActionListener(this::jCheckBox14ActionPerformed);
-
-        jCheckBox15.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox15.setText("SWOT");
-        jCheckBox15.addActionListener(this::jCheckBox15ActionPerformed);
-
-        jCheckBox16.setForeground(new java.awt.Color(240, 147, 32));
-        jCheckBox16.setText("BSC");
-        jCheckBox16.addActionListener(this::jCheckBox16ActionPerformed);
-
-        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
-        jPanel18.setLayout(jPanel18Layout);
-        jPanel18Layout.setHorizontalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox14)
-                    .addComponent(jCheckBox15)
-                    .addComponent(jCheckBox16))
-                .addGap(0, 37, Short.MAX_VALUE))
-        );
-        jPanel18Layout.setVerticalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jCheckBox16)
-                .addContainerGap())
-        );
-
-        jLabel57.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel57.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel57.setText("Planeje sua vida");
-
-        javax.swing.GroupLayout Casa11Layout = new javax.swing.GroupLayout(Casa11);
-        Casa11.setLayout(Casa11Layout);
-        Casa11Layout.setHorizontalGroup(
-            Casa11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa11Layout.createSequentialGroup()
-                        .addComponent(jLabel56)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
-                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa11Layout.createSequentialGroup()
-                        .addComponent(jLabel55)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel57)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa11Layout.setVerticalGroup(
-            Casa11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel56)
-                    .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(Casa11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa11Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel55)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa11Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel57)
-                        .addContainerGap(22, Short.MAX_VALUE))))
-        );
-
-        Secao4.setBackground(new java.awt.Color(255, 255, 255));
-        Secao4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 147, 32), 10));
-        Secao4.setMaximumSize(new java.awt.Dimension(319, 233));
-
-        jLabel58.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel58.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\0046e417-7198-4ece-8ca7-de0b8f8f13df_resized.png")); // NOI18N
-
-        jLabel59.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel59.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
-        jLabel59.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel59.setText("4");
-
-        jLabel60.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel60.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel60.setText("Conhecedor");
-
-        jLabel61.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel61.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel61.setText("Conhecer o");
-
-        jLabel62.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel62.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel62.setText("mundo profissional");
-
-        javax.swing.GroupLayout Secao4Layout = new javax.swing.GroupLayout(Secao4);
-        Secao4.setLayout(Secao4Layout);
-        Secao4Layout.setHorizontalGroup(
-            Secao4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Secao4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel61)
-                    .addComponent(jLabel62))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(Secao4Layout.createSequentialGroup()
-                .addGroup(Secao4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao4Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel60))
-                    .addGroup(Secao4Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel59)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(jLabel58)
-                .addGap(17, 17, 17))
-        );
-        Secao4Layout.setVerticalGroup(
-            Secao4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao4Layout.createSequentialGroup()
-                .addGroup(Secao4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao4Layout.createSequentialGroup()
-                        .addComponent(jLabel59)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel60))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Secao4Layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jLabel58, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addComponent(jLabel61)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel62)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-
-        Casa12.setBackground(new java.awt.Color(255, 255, 255));
-        Casa12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 147, 32), 10));
-        Casa12.setMaximumSize(new java.awt.Dimension(460, 225));
-        Casa12.setPreferredSize(new java.awt.Dimension(400, 225));
-
-        jLabel63.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel63.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel64.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel64.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel64.setText("Crie uma rede de relacionamento");
-
-        jLabel65.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel65.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel65.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel65.setText("12");
-
-        jPanel19.setBackground(new java.awt.Color(240, 147, 32));
-        jPanel19.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox17.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox17.setText("Descubra quem pode te ajudar");
-        jCheckBox17.addActionListener(this::jCheckBox17ActionPerformed);
-
-        jCheckBox18.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox18.setText("Tome um café com quem tem");
-        jCheckBox18.addActionListener(this::jCheckBox18ActionPerformed);
-
-        jLabel66.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel66.setText("habilidades que você não tem");
-
-        jCheckBox19.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox19.setText("Guia de Observação");
-        jCheckBox19.addActionListener(this::jCheckBox19ActionPerformed);
-
-        jCheckBox20.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox20.setText("Currículo, Linkedin");
-
-        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
-        jPanel19.setLayout(jPanel19Layout);
-        jPanel19Layout.setHorizontalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel19Layout.createSequentialGroup()
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox17)
-                    .addComponent(jCheckBox18)
-                    .addComponent(jCheckBox19)
-                    .addGroup(jPanel19Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel66))
-                    .addComponent(jCheckBox20))
-                .addGap(0, 49, Short.MAX_VALUE))
-        );
-        jPanel19Layout.setVerticalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel19Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox17)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox18)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel66)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox20)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa12Layout = new javax.swing.GroupLayout(Casa12);
-        Casa12.setLayout(Casa12Layout);
-        Casa12Layout.setHorizontalGroup(
-            Casa12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa12Layout.createSequentialGroup()
-                        .addComponent(jLabel64)
-                        .addGap(92, 92, 92)
-                        .addComponent(jLabel63))
-                    .addGroup(Casa12Layout.createSequentialGroup()
-                        .addComponent(jLabel65)
-                        .addGap(45, 45, 45)
-                        .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        Casa12Layout.setVerticalGroup(
-            Casa12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa12Layout.createSequentialGroup()
-                        .addComponent(jLabel65)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(Casa12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa12Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel63))
-                    .addGroup(Casa12Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel64)))
-                .addGap(19, 19, 19))
-        );
-
-        Casa13.setBackground(new java.awt.Color(255, 255, 255));
-        Casa13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 147, 32), 10));
-        Casa13.setMaximumSize(new java.awt.Dimension(460, 225));
-
-        jLabel67.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel67.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel69.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel69.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel69.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel69.setText("13");
-
-        jLabel68.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel68.setForeground(new java.awt.Color(240, 147, 32));
-        jLabel68.setText("O que o mercado espera");
-
-        jPanel20.setBackground(new java.awt.Color(240, 147, 32));
-        jPanel20.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox21.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox21.setText("Carreira no Século XXI");
-        jCheckBox21.addActionListener(this::jCheckBox21ActionPerformed);
-
-        jCheckBox22.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox22.setText("Formação Acadêmica X");
-        jCheckBox22.addActionListener(this::jCheckBox22ActionPerformed);
-
-        jLabel70.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel70.setText("Mercado de Trabalho");
-
-        jCheckBox23.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox23.setText("Áreas gerais de atuação do curso");
-        jCheckBox23.addActionListener(this::jCheckBox23ActionPerformed);
-
-        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
-        jPanel20.setLayout(jPanel20Layout);
-        jPanel20Layout.setHorizontalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox21)
-                    .addComponent(jCheckBox23)
-                    .addGroup(jPanel20Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel70))
-                    .addComponent(jCheckBox22, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 52, Short.MAX_VALUE))
-        );
-        jPanel20Layout.setVerticalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox21)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox22)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel70)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox23)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa13Layout = new javax.swing.GroupLayout(Casa13);
-        Casa13.setLayout(Casa13Layout);
-        Casa13Layout.setHorizontalGroup(
-            Casa13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa13Layout.createSequentialGroup()
-                        .addComponent(jLabel69)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa13Layout.createSequentialGroup()
-                        .addComponent(jLabel67)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel68)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa13Layout.setVerticalGroup(
-            Casa13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel69)
-                    .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 30, Short.MAX_VALUE)
-                .addGroup(Casa13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa13Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel67))
-                    .addComponent(jLabel68))
-                .addGap(19, 19, 19))
-        );
-
-        Secao5.setBackground(new java.awt.Color(19, 112, 178));
-        Secao5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Secao5.setMaximumSize(new java.awt.Dimension(331, 233));
-
-        jLabel71.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel71.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\480bbad3-a4c4-4a20-a066-e269fc15679e_resized.png")); // NOI18N
-
-        jLabel72.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel72.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
-        jLabel72.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel72.setText("5");
-
-        jLabel73.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel73.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel73.setText("Planejador");
-
-        jLabel74.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel74.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel74.setText("Criar um caminho para ir do estado");
-
-        jLabel75.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel75.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel75.setText("atual para o estado futuro");
-
-        javax.swing.GroupLayout Secao5Layout = new javax.swing.GroupLayout(Secao5);
-        Secao5.setLayout(Secao5Layout);
-        Secao5Layout.setHorizontalGroup(
-            Secao5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao5Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel72)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel71)
-                .addGap(24, 24, 24))
-            .addGroup(Secao5Layout.createSequentialGroup()
-                .addGroup(Secao5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Secao5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(Secao5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel74)
-                            .addComponent(jLabel75)))
-                    .addGroup(Secao5Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel73)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        Secao5Layout.setVerticalGroup(
-            Secao5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao5Layout.createSequentialGroup()
-                .addGroup(Secao5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel72)
-                    .addGroup(Secao5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0)
-                .addComponent(jLabel73)
-                .addGap(24, 24, 24)
-                .addComponent(jLabel74)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel75)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-
-        Casa14.setBackground(new java.awt.Color(19, 112, 178));
-        Casa14.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa14.setMaximumSize(new java.awt.Dimension(450, 168));
-
-        jLabel78.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel78.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel78.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel78.setText("14");
-
-        jLabel76.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel76.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel76.setText("Vamos projetar!");
-
-        jPanel14.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox24.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox24.setText("Por quais projetos está disposto a passar perrengue?");
-        jCheckBox24.addActionListener(this::jCheckBox24ActionPerformed);
-
-        jCheckBox25.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox25.setText("O que o mundo precisa  que ninguém está fazendo?");
-
-        jCheckBox26.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox26.setText("Ficha de Ideação");
-
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel14Layout.createSequentialGroup()
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox24)
-                    .addComponent(jCheckBox25)
-                    .addComponent(jCheckBox26))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel14Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox24)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox25)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jCheckBox26)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout Casa14Layout = new javax.swing.GroupLayout(Casa14);
-        Casa14.setLayout(Casa14Layout);
-        Casa14Layout.setHorizontalGroup(
-            Casa14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa14Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa14Layout.createSequentialGroup()
-                        .addComponent(jLabel78)
-                        .addGap(32, 32, 32)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel76))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        Casa14Layout.setVerticalGroup(
-            Casa14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa14Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel78)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel76)
-                .addGap(174, 174, 174))
-        );
-
-        Casa16.setBackground(new java.awt.Color(19, 112, 178));
-        Casa16.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa16.setMaximumSize(new java.awt.Dimension(450, 168));
-
-        jLabel80.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel80.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel80.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel80.setText("15");
-
-        jLabel81.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel81.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel81.setText("Indo além do papel");
-
-        jPanel22.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox29.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox29.setText("Tarefas a fazer para tirar o projeto do papel");
-        jCheckBox29.addActionListener(this::jCheckBox29ActionPerformed);
-
-        jCheckBox30.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox30.setText("O que está por trás do seu projeto?");
-        jCheckBox30.addActionListener(this::jCheckBox30ActionPerformed);
-
-        javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
-        jPanel22.setLayout(jPanel22Layout);
-        jPanel22Layout.setHorizontalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel22Layout.createSequentialGroup()
-                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox29)
-                    .addComponent(jCheckBox30))
-                .addGap(0, 18, Short.MAX_VALUE))
-        );
-        jPanel22Layout.setVerticalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel22Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox29)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox30)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa16Layout = new javax.swing.GroupLayout(Casa16);
-        Casa16.setLayout(Casa16Layout);
-        Casa16Layout.setHorizontalGroup(
-            Casa16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa16Layout.createSequentialGroup()
-                .addComponent(jLabel80)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
-            .addGroup(Casa16Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel81)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        Casa16Layout.setVerticalGroup(
-            Casa16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa16Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa16Layout.createSequentialGroup()
-                        .addComponent(jLabel80)
-                        .addGap(0, 13, Short.MAX_VALUE))
-                    .addComponent(jPanel22, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel81)
-                .addGap(20, 20, 20))
-        );
-
-        Casa17.setBackground(new java.awt.Color(19, 112, 178));
-        Casa17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa17.setMaximumSize(new java.awt.Dimension(450, 168));
-
-        jLabel82.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel82.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel82.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel82.setText("16");
-
-        jLabel83.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel83.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel83.setText("Mapeando desafios");
-
-        jPanel23.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox31.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox31.setText("Problemas que seu projeto pode resolver");
-        jCheckBox31.addActionListener(this::jCheckBox31ActionPerformed);
-
-        jCheckBox32.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox32.setText("Escreva histórias em que esses problemas acontecem");
-        jCheckBox32.addActionListener(this::jCheckBox32ActionPerformed);
-
-        jCheckBox33.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox33.setText("Como você pode resolver esses problemas?");
-
-        javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
-        jPanel23.setLayout(jPanel23Layout);
-        jPanel23Layout.setHorizontalGroup(
-            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel23Layout.createSequentialGroup()
-                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox31)
-                    .addComponent(jCheckBox32)
-                    .addComponent(jCheckBox33))
-                .addGap(0, 13, Short.MAX_VALUE))
-        );
-        jPanel23Layout.setVerticalGroup(
-            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel23Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox31)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox32)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox33)
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa17Layout = new javax.swing.GroupLayout(Casa17);
-        Casa17.setLayout(Casa17Layout);
-        Casa17Layout.setHorizontalGroup(
-            Casa17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa17Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa17Layout.createSequentialGroup()
-                        .addComponent(jLabel83)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(Casa17Layout.createSequentialGroup()
-                        .addComponent(jLabel82)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                        .addComponent(jPanel23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        Casa17Layout.setVerticalGroup(
-            Casa17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa17Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel82)
-                    .addComponent(jPanel23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jLabel83)
-                .addGap(14, 14, 14))
-        );
-
-        Casa18.setBackground(new java.awt.Color(19, 112, 178));
-        Casa18.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 10));
-        Casa18.setMaximumSize(new java.awt.Dimension(450, 168));
-
-        jLabel84.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel84.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel84.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel84.setText("17");
-
-        jLabel85.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel85.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel85.setText("Vamos planejar!");
-
-        jPanel24.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-
-        jCheckBox34.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox34.setText("Kanban");
-        jCheckBox34.addActionListener(this::jCheckBox34ActionPerformed);
-
-        jCheckBox35.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox35.setText("Organizar por Importância e Urgência");
-        jCheckBox35.addActionListener(this::jCheckBox35ActionPerformed);
-
-        jCheckBox36.setForeground(new java.awt.Color(19, 112, 178));
-        jCheckBox36.setText("Seja o Guardião do seu tempo");
-
-        javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
-        jPanel24.setLayout(jPanel24Layout);
-        jPanel24Layout.setHorizontalGroup(
-            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel24Layout.createSequentialGroup()
-                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox34)
-                    .addComponent(jCheckBox35)
-                    .addComponent(jCheckBox36))
-                .addGap(0, 13, Short.MAX_VALUE))
-        );
-        jPanel24Layout.setVerticalGroup(
-            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel24Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox34)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox35)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox36)
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa18Layout = new javax.swing.GroupLayout(Casa18);
-        Casa18.setLayout(Casa18Layout);
-        Casa18Layout.setHorizontalGroup(
-            Casa18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa18Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa18Layout.createSequentialGroup()
-                        .addComponent(jLabel85)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(Casa18Layout.createSequentialGroup()
-                        .addComponent(jLabel84)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                        .addComponent(jPanel24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29))))
-        );
-        Casa18Layout.setVerticalGroup(
-            Casa18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa18Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel84)
-                    .addComponent(jPanel24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jLabel85)
-                .addGap(14, 14, 14))
-        );
-
-        Secao6.setBackground(new java.awt.Color(255, 255, 255));
-        Secao6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Secao6.setMaximumSize(new java.awt.Dimension(246, 219));
-
-        jLabel86.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel86.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\f7074d79-5fa1-4bcf-a908-0b795e5e62a5_resized.png")); // NOI18N
-
-        jLabel87.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel87.setFont(new java.awt.Font("Segoe UI", 3, 60)); // NOI18N
-        jLabel87.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel87.setText("6");
-
-        jLabel88.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel88.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel88.setText("Realizador");
-
-        jLabel89.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel89.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel89.setText("Colocar em ");
-
-        jLabel90.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel90.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel90.setText("Prática");
-
-        javax.swing.GroupLayout Secao6Layout = new javax.swing.GroupLayout(Secao6);
-        Secao6.setLayout(Secao6Layout);
-        Secao6Layout.setHorizontalGroup(
-            Secao6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Secao6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel89)
-                    .addComponent(jLabel90)
-                    .addComponent(jLabel87)
-                    .addComponent(jLabel88))
-                .addContainerGap(99, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Secao6Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel86)
-                .addGap(5, 5, 5))
-        );
-        Secao6Layout.setVerticalGroup(
-            Secao6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Secao6Layout.createSequentialGroup()
-                .addGroup(Secao6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel86, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(Secao6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel87)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel88)))
-                .addGap(12, 12, 12)
-                .addComponent(jLabel89)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel90)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        Casa51.setBackground(new java.awt.Color(255, 255, 255));
-        Casa51.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa51.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel91.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel91.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel92.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel92.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel92.setText("Resolvendo desafios");
-
-        jLabel93.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel93.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel93.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel93.setText("18");
-
-        jPanel25.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel25.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox37.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox37.setText("O que é o seu projeto?");
-        jCheckBox37.addActionListener(this::jCheckBox37ActionPerformed);
-
-        jCheckBox38.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox38.setText("Naming(Crie 10, selecione 5, escolha1)");
-
-        jCheckBox39.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox39.setText("Canvas do Projeto");
-
-        javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
-        jPanel25.setLayout(jPanel25Layout);
-        jPanel25Layout.setHorizontalGroup(
-            jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel25Layout.createSequentialGroup()
-                .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox37)
-                    .addComponent(jCheckBox38)
-                    .addComponent(jCheckBox39))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel25Layout.setVerticalGroup(
-            jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel25Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox37)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox38)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox39)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa51Layout = new javax.swing.GroupLayout(Casa51);
-        Casa51.setLayout(Casa51Layout);
-        Casa51Layout.setHorizontalGroup(
-            Casa51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa51Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa51Layout.createSequentialGroup()
-                        .addComponent(jLabel93)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                        .addComponent(jPanel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Casa51Layout.createSequentialGroup()
-                        .addComponent(jLabel91)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel92)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        Casa51Layout.setVerticalGroup(
-            Casa51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa51Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(Casa51Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jLabel93)))
-                .addGroup(Casa51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa51Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel91)
-                        .addGap(36, 36, 36))
-                    .addComponent(jLabel92)))
-        );
-
-        Casa52.setBackground(new java.awt.Color(255, 255, 255));
-        Casa52.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa52.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel94.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel94.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel95.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel95.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel95.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel95.setText("19");
-
-        jPanel26.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel26.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox40.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jCheckBox40.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox40.setText("Plano B!");
-        jCheckBox40.addActionListener(this::jCheckBox40ActionPerformed);
-
-        javax.swing.GroupLayout jPanel26Layout = new javax.swing.GroupLayout(jPanel26);
-        jPanel26.setLayout(jPanel26Layout);
-        jPanel26Layout.setHorizontalGroup(
-            jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel26Layout.createSequentialGroup()
-                .addComponent(jCheckBox40, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel26Layout.setVerticalGroup(
-            jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel26Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox40, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-
-        jLabel96.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel96.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel96.setText("Preparado para o imprevisto");
-
-        javax.swing.GroupLayout Casa52Layout = new javax.swing.GroupLayout(Casa52);
-        Casa52.setLayout(Casa52Layout);
-        Casa52Layout.setHorizontalGroup(
-            Casa52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa52Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa52Layout.createSequentialGroup()
-                        .addComponent(jLabel94)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel96)
-                        .addContainerGap(50, Short.MAX_VALUE))
-                    .addGroup(Casa52Layout.createSequentialGroup()
-                        .addComponent(jLabel95)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14))))
-        );
-        Casa52Layout.setVerticalGroup(
-            Casa52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa52Layout.createSequentialGroup()
-                .addGroup(Casa52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa52Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel95))
-                    .addGroup(Casa52Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(Casa52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa52Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel94)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa52Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel96)
-                        .addContainerGap(12, Short.MAX_VALUE))))
-        );
-
-        Casa53.setBackground(new java.awt.Color(255, 255, 255));
-        Casa53.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa53.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel97.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel97.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel98.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel98.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel98.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel98.setText("20");
-
-        jLabel99.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel99.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel99.setText("Vamos comunicar");
-
-        jPanel27.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel27.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox41.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox41.setText("Como você explicaria seu projeto para...");
-        jCheckBox41.addActionListener(this::jCheckBox41ActionPerformed);
-
-        jCheckBox42.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox42.setText("Defina o seu projeto(140 caracteres)");
-        jCheckBox42.addActionListener(this::jCheckBox42ActionPerformed);
-
-        javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
-        jPanel27.setLayout(jPanel27Layout);
-        jPanel27Layout.setHorizontalGroup(
-            jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel27Layout.createSequentialGroup()
-                .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox41)
-                    .addComponent(jCheckBox42))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel27Layout.setVerticalGroup(
-            jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel27Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox41)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox42)
-                .addGap(0, 10, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa53Layout = new javax.swing.GroupLayout(Casa53);
-        Casa53.setLayout(Casa53Layout);
-        Casa53Layout.setHorizontalGroup(
-            Casa53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa53Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa53Layout.createSequentialGroup()
-                        .addComponent(jLabel97)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel99)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(Casa53Layout.createSequentialGroup()
-                        .addComponent(jLabel98)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                        .addComponent(jPanel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        Casa53Layout.setVerticalGroup(
-            Casa53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa53Layout.createSequentialGroup()
-                .addGroup(Casa53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa53Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel98))
-                    .addGroup(Casa53Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(Casa53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa53Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel97)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa53Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel99)
-                        .addContainerGap(12, Short.MAX_VALUE))))
-        );
-
-        Casa54.setBackground(new java.awt.Color(255, 255, 255));
-        Casa54.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa54.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel100.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel100.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel101.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel101.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel101.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel101.setText("21");
-
-        jPanel28.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel28.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox43.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox43.setText("Qual valor quer entregar com seu projeto?");
-        jCheckBox43.addActionListener(this::jCheckBox43ActionPerformed);
-
-        jCheckBox44.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox44.setText("Por que alguém investiria no seu Projeto?");
-        jCheckBox44.addActionListener(this::jCheckBox44ActionPerformed);
-
-        javax.swing.GroupLayout jPanel28Layout = new javax.swing.GroupLayout(jPanel28);
-        jPanel28.setLayout(jPanel28Layout);
-        jPanel28Layout.setHorizontalGroup(
-            jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel28Layout.createSequentialGroup()
-                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox43)
-                    .addComponent(jCheckBox44))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel28Layout.setVerticalGroup(
-            jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel28Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox43)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox44)
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-
-        jLabel102.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel102.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel102.setText("Agregando valor");
-
-        javax.swing.GroupLayout Casa54Layout = new javax.swing.GroupLayout(Casa54);
-        Casa54.setLayout(Casa54Layout);
-        Casa54Layout.setHorizontalGroup(
-            Casa54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa54Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa54Layout.createSequentialGroup()
-                        .addComponent(jLabel100)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel102)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(Casa54Layout.createSequentialGroup()
-                        .addComponent(jLabel101)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                        .addComponent(jPanel28, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        Casa54Layout.setVerticalGroup(
-            Casa54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa54Layout.createSequentialGroup()
-                .addGroup(Casa54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa54Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel101))
-                    .addGroup(Casa54Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel28, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(Casa54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa54Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel100)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa54Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel102)
-                        .addContainerGap(12, Short.MAX_VALUE))))
-        );
-
-        Casa55.setBackground(new java.awt.Color(255, 255, 255));
-        Casa55.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa55.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel103.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel103.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel104.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel104.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel104.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel104.setText("22");
-
-        jLabel105.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel105.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel105.setText("Mão na massa!");
-
-        jPanel29.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel29.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox45.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox45.setText("Faça um Porcótipo!");
-        jCheckBox45.addActionListener(this::jCheckBox45ActionPerformed);
-
-        javax.swing.GroupLayout jPanel29Layout = new javax.swing.GroupLayout(jPanel29);
-        jPanel29.setLayout(jPanel29Layout);
-        jPanel29Layout.setHorizontalGroup(
-            jPanel29Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel29Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox45)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel29Layout.setVerticalGroup(
-            jPanel29Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel29Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jCheckBox45)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa55Layout = new javax.swing.GroupLayout(Casa55);
-        Casa55.setLayout(Casa55Layout);
-        Casa55Layout.setHorizontalGroup(
-            Casa55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa55Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa55Layout.createSequentialGroup()
-                        .addComponent(jLabel103)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel105)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(Casa55Layout.createSequentialGroup()
-                        .addComponent(jLabel104)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
-                        .addComponent(jPanel29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(16, 16, 16))))
-        );
-        Casa55Layout.setVerticalGroup(
-            Casa55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa55Layout.createSequentialGroup()
-                .addGroup(Casa55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa55Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel104))
-                    .addGroup(Casa55Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(Casa55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa55Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel103)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa55Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel105)
-                        .addContainerGap(12, Short.MAX_VALUE))))
-        );
-
-        Casa56.setBackground(new java.awt.Color(255, 255, 255));
-        Casa56.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa56.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel106.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel106.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel107.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel107.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel107.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel107.setText("23");
-
-        jPanel30.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel30.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox46.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox46.setText("Faça um Porcótipo!");
-        jCheckBox46.addActionListener(this::jCheckBox46ActionPerformed);
-
-        javax.swing.GroupLayout jPanel30Layout = new javax.swing.GroupLayout(jPanel30);
-        jPanel30.setLayout(jPanel30Layout);
-        jPanel30Layout.setHorizontalGroup(
-            jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel30Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox46)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel30Layout.setVerticalGroup(
-            jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel30Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jCheckBox46)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
-        jLabel108.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel108.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel108.setText("Vendendo soluções");
-
-        javax.swing.GroupLayout Casa56Layout = new javax.swing.GroupLayout(Casa56);
-        Casa56.setLayout(Casa56Layout);
-        Casa56Layout.setHorizontalGroup(
-            Casa56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa56Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa56Layout.createSequentialGroup()
-                        .addComponent(jLabel106)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel108)
-                        .addContainerGap(141, Short.MAX_VALUE))
-                    .addGroup(Casa56Layout.createSequentialGroup()
-                        .addComponent(jLabel107)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(16, 16, 16))))
-        );
-        Casa56Layout.setVerticalGroup(
-            Casa56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa56Layout.createSequentialGroup()
-                .addGroup(Casa56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa56Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel107))
-                    .addGroup(Casa56Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(Casa56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa56Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel106)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa56Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel108)
-                        .addContainerGap(18, Short.MAX_VALUE))))
-        );
-
-        Casa57.setBackground(new java.awt.Color(255, 255, 255));
-        Casa57.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 10));
-        Casa57.setMaximumSize(new java.awt.Dimension(383, 162));
-
-        jLabel109.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel109.setForeground(new java.awt.Color(19, 112, 178));
-
-        jLabel110.setBackground(new java.awt.Color(19, 112, 178));
-        jLabel110.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel110.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel110.setText("24");
-
-        jLabel111.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel111.setForeground(new java.awt.Color(19, 112, 178));
-        jLabel111.setText("Capsula do Tempo");
-
-        jPanel31.setBackground(new java.awt.Color(19, 112, 178));
-        jPanel31.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jCheckBox47.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox47.setText("O que eu aprendi que não devo fazer?");
-        jCheckBox47.addActionListener(this::jCheckBox47ActionPerformed);
-
-        javax.swing.GroupLayout jPanel31Layout = new javax.swing.GroupLayout(jPanel31);
-        jPanel31.setLayout(jPanel31Layout);
-        jPanel31Layout.setHorizontalGroup(
-            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel31Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox47)
-                .addContainerGap(8, Short.MAX_VALUE))
-        );
-        jPanel31Layout.setVerticalGroup(
-            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel31Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox47)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout Casa57Layout = new javax.swing.GroupLayout(Casa57);
-        Casa57.setLayout(Casa57Layout);
-        Casa57Layout.setHorizontalGroup(
-            Casa57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Casa57Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(Casa57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa57Layout.createSequentialGroup()
-                        .addComponent(jLabel109)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel111)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(Casa57Layout.createSequentialGroup()
-                        .addComponent(jLabel110)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
-                        .addComponent(jPanel31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        Casa57Layout.setVerticalGroup(
-            Casa57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Casa57Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(Casa57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel110)
-                    .addComponent(jPanel31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(Casa57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Casa57Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel109)
-                        .addGap(36, 36, 36))
-                    .addGroup(Casa57Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel111)
-                        .addContainerGap(18, Short.MAX_VALUE))))
-        );
-
-        Inicio1.setBackground(new java.awt.Color(19, 112, 178));
-        Inicio1.setMaximumSize(new java.awt.Dimension(185, 100));
-
-        jLabel112.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel112.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel112.setText("FIM!");
-
-        jLabel113.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel113.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel113.setText("(ou será só");
-
-        jLabel114.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel114.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel114.setText("o começo?)");
-
-        javax.swing.GroupLayout Inicio1Layout = new javax.swing.GroupLayout(Inicio1);
-        Inicio1.setLayout(Inicio1Layout);
-        Inicio1Layout.setHorizontalGroup(
-            Inicio1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Inicio1Layout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addGroup(Inicio1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel112)
-                    .addComponent(jLabel114)
-                    .addComponent(jLabel113))
-                .addContainerGap(51, Short.MAX_VALUE))
-        );
-        Inicio1Layout.setVerticalGroup(
-            Inicio1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Inicio1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel112)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel113)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel114)
-                .addGap(25, 25, 25))
-        );
-
-        jButton1.setBackground(new java.awt.Color(19, 112, 178));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\Downloads\\—Pngtree—minimal white person icon on_23099197 (1).png")); // NOI18N
-        jButton1.setText("Perfil");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(311, 311, 311)
-                        .addComponent(Secao6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(325, 325, 325)
-                        .addComponent(Inicio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Casa17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Casa16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Casa14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Secao3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGap(371, 371, 371)
-                                            .addComponent(Inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGap(312, 312, 312)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(Secao1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addGap(6, 6, 6)
-                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(Casa2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(Casa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(Casa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                                    .addComponent(Secao2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(333, 333, 333)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(Casa5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Casa4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Casa6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Casa7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(317, 317, 317)
-                                    .addComponent(Casa8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(307, 307, 307)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(Casa10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Casa9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Casa11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(322, 322, 322)
-                            .addComponent(Secao4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(253, 253, 253)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(Casa12, javax.swing.GroupLayout.PREFERRED_SIZE, 408, Short.MAX_VALUE)
-                                .addComponent(Casa13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(34, 34, 34)
-                                    .addComponent(Secao5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE)))))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(Casa51, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa52, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa53, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa54, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa55, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Casa57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 238, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(Secao1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Casa2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Secao2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Casa5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(Casa7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Casa8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Secao3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Secao4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Secao5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa14, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Casa16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Secao6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa51, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa52, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa53, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa54, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa55, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Casa57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(Inicio1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        jScrollPane1.setViewportView(jPanel1);
-
-        getContentPane().add(jScrollPane1);
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
-
-    private void jCheckBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox6ActionPerformed
-
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
-
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
-
-    private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox5ActionPerformed
-
-    private void jCheckBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox7ActionPerformed
-
-    private void jCheckBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox9ActionPerformed
-
-    private void jCheckBox8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox8ActionPerformed
-
-    private void jCheckBox12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox12ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox12ActionPerformed
-
-    private void jCheckBox13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox13ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox13ActionPerformed
-
-    private void jCheckBox14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox14ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox14ActionPerformed
-
-    private void jCheckBox15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox15ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox15ActionPerformed
-
-    private void jCheckBox16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox16ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox16ActionPerformed
-
-    private void jCheckBox17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox17ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox17ActionPerformed
-
-    private void jCheckBox18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox18ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox18ActionPerformed
-
-    private void jCheckBox19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox19ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox19ActionPerformed
-
-    private void jCheckBox21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox21ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox21ActionPerformed
-
-    private void jCheckBox22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox22ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox22ActionPerformed
-
-    private void jCheckBox23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox23ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox23ActionPerformed
-
-    private void jCheckBox24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox24ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox24ActionPerformed
-
-    private void jCheckBox27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox27ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox27ActionPerformed
-
-    private void jCheckBox28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox28ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox28ActionPerformed
-
-    private void jCheckBox29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox29ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox29ActionPerformed
-
-    private void jCheckBox30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox30ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox30ActionPerformed
-
-    private void jCheckBox31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox31ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox31ActionPerformed
-
-    private void jCheckBox32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox32ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox32ActionPerformed
-
-    private void jCheckBox34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox34ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox34ActionPerformed
-
-    private void jCheckBox35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox35ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox35ActionPerformed
-
-    private void jCheckBox37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox37ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox37ActionPerformed
-
-    private void jCheckBox40ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox40ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox40ActionPerformed
-
-    private void jCheckBox41ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox41ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox41ActionPerformed
-
-    private void jCheckBox42ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox42ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox42ActionPerformed
-
-    private void jCheckBox43ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox43ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox43ActionPerformed
-
-    private void jCheckBox44ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox44ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox44ActionPerformed
-
-    private void jCheckBox45ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox45ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox45ActionPerformed
-
-    private void jCheckBox46ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox46ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox46ActionPerformed
-
-    private void jCheckBox47ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox47ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox47ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-/**
-    private void abrirModalPerfilAluno() {;
-        try {
-            if (alunoLogado != null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Abrindo modal para: " + alunoLogado.getNome());
-                ModalPerfilAluno modal = new ModalPerfilAluno(alunoLogado);
-                modal.setLocationRelativeTo(this);
-                modal.setVisible(true);
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Usuário não carregado.", "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao abrir modal: " + ex.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
+        jButton4 = new JButton("Adicionar Seção");
+        jButton4.setBackground(COR_AZUL);
+        jButton4.setForeground(Color.WHITE);
+        jButton4.addActionListener(evt -> {
+            br.maua.presentation.TelaNavegacao.abrir(this, new TelaAdicionarSecao());
+        });
+
+        acoes.add(jButton1);
+        acoes.add(Box.createRigidArea(new Dimension(8, 0)));
+        acoes.add(jButton2);
+        acoes.add(Box.createHorizontalGlue());
+        acoes.add(jButton3);
+        acoes.add(Box.createRigidArea(new Dimension(8, 0)));
+        acoes.add(jButton4);
+
+        jPanel1 = new JPanel();
+        jPanel1.setBackground(COR_FUNDO);
+        jPanel1.setLayout(new BoxLayout(jPanel1, BoxLayout.Y_AXIS));
+
+        jScrollPane1 = new JScrollPane(jPanel1);
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        root.add(acoes, BorderLayout.NORTH);
+        root.add(jScrollPane1, BorderLayout.CENTER);
+        setContentPane(root);
+
+        boolean usuarioProfessor = this.professorLogado != null;
+        jButton2.setVisible(mostrarVoltarParaAdmin);
+        jButton3.setVisible(usuarioProfessor);
+        jButton4.setVisible(usuarioProfessor);
+
+        setSize(1140, 760);
+        setLocationRelativeTo(null);
     }
-*/
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+
+    private void abrirPerfil() {
+        if (mostrarVoltarParaAdmin) {
+            ModalPerfilProfessor modal = new ModalPerfilProfessor(this.professorLogado);
+            br.maua.presentation.TelaNavegacao.abrir(this, modal);
+            return;
+        }
+
+        if (this.alunoLogado != null) {
+            ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado);
+            br.maua.presentation.TelaNavegacao.abrir(this, modal);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Perfil indisponível nesta tela.");
+    }
+
+    private void voltarParaPainel() {
+        br.maua.presentation.TelaNavegacao.voltar(this);
+    }
+
+private void montarTabuleiroDinamico() {
+    jPanel1.removeAll();
+
+    jPanel1.add(criarCabecalhoTabuleiro());
+    jPanel1.add(Box.createRigidArea(new Dimension(0, 16)));
+
+try {
+        List<RegistroCasaTabuleiro> registros = temListasInformadas()
+            ? carregarCasasDasListas()
+            : carregarCasasDoBanco();
+
+        registros.sort((r1, r2) -> {
+            int secao1 = r1.idSecao;
+            int secao2 = r2.idSecao;
+            if (secao1 != secao2) return Integer.compare(secao1, secao2);
+            int casa1 = r1.idCasa != null ? r1.idCasa : Integer.MAX_VALUE;
+            int casa2 = r2.idCasa != null ? r2.idCasa : Integer.MAX_VALUE;
+            return Integer.compare(casa1, casa2);
+        });
+
+        if (registros.isEmpty()) {
+            jPanel1.add(criarEstadoVazio());
+        } else {
+            int numeroCasaExibida = 0;
+            Integer secaoAtual = null;
+            int contadorSecoes = 0;
+
+            // 1. Buscamos a lista de IDs das casas que o aluno já passou com nota boa
+            Set<Integer> casasConcluidasSucesso = obterIdsCasasConcluidasSucesso();
+
+            // Variáveis de controle do histórico da casa ANTERIOR
+            Integer idCasaAnterior = null;
+            Timestamp dataLimiteCasaAnterior = null;
+
+            for (RegistroCasaTabuleiro registro : registros) {
+                if (!Objects.equals(secaoAtual, registro.idSecao)) {
+                    if (secaoAtual != null) {
+                        jPanel1.add(Box.createRigidArea(new Dimension(0, 20)));
+                    }
+                    contadorSecoes++; 
+                    registro.ordemSecao = contadorSecoes;
+                    jPanel1.add(criarCabecalhoSecao(registro));
+                    jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
+                    secaoAtual = registro.idSecao;
+                }
+                
+                numeroCasaExibida++;
+                registro.ordemSecao = contadorSecoes;
+
+                // LÓGICA MISTA (NOTA + PRAZO)
+                boolean casaBloqueada = false;
+
+                // Se existir uma casa anterior no fluxo
+                if (idCasaAnterior != null) {
+                    // Regra 1: O aluno concluiu a anterior com nota?
+                    boolean anteriorConcluidaComNota = casasConcluidasSucesso.contains(idCasaAnterior);
+
+                    // Regra 2: O prazo da anterior já expirou?
+                    boolean prazoAnteriorExpirou = false;
+                    if (dataLimiteCasaAnterior != null) {
+                        LocalDateTime agora = LocalDateTime.now();
+                        LocalDateTime prazoAnterior = dataLimiteCasaAnterior.toLocalDateTime();
+                        prazoAnteriorExpirou = agora.isAfter(prazoAnterior);
+                    }
+
+
+                    if (!anteriorConcluidaComNota && !prazoAnteriorExpirou) {
+                        casaBloqueada = true;
+                    }
+                }
+
+                if (this.alunoLogado == null) {
+                    casaBloqueada = false;
+                }
+
+                jPanel1.add(criarCartaoCasa(registro, casaBloqueada, numeroCasaExibida));
+
+                idCasaAnterior = registro.idCasa;
+                dataLimiteCasaAnterior = registro.dataLimiteCasa;
+                
+                jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
+            }
+        }
+    } catch (SQLException e) {
+        jPanel1.add(criarEstadoErro(e.getMessage()));
+    }
+
+    jPanel1.add(Box.createVerticalGlue());
+    jPanel1.revalidate();
+    jPanel1.repaint();
+}
+
+    private boolean temListasInformadas() {
+        return (this.casasInformadas != null && !this.casasInformadas.isEmpty())
+            || (this.secoesInformadas != null && !this.secoesInformadas.isEmpty());
+    }
+
+    private List<RegistroCasaTabuleiro> carregarCasasDasListas() {
+    List<RegistroCasaTabuleiro> registros = new ArrayList<>();
+    List<Casa> casasBase = this.casasInformadas != null ? new ArrayList<>(this.casasInformadas) : new ArrayList<>();
+    List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas) : new ArrayList<>();
+
+    // 1. Ordena seções e casas por suas IDs sequenciais
+    secoesBase.sort((s1, s2) -> Integer.compare(s1.getidSecao(), s2.getidSecao()));
+    casasBase.sort((c1, c2) -> {
+        int secao1 = c1.getSecao() != null ? c1.getSecao().getidSecao() : Integer.MAX_VALUE;
+        int secao2 = c2.getSecao() != null ? c2.getSecao().getidSecao() : Integer.MAX_VALUE;
+        if (secao1 != secao2) {
+            return Integer.compare(secao1, secao2);
+        }
+        return Integer.compare(c1.getIdCasa(), c2.getIdCasa());
+    });
+
+    // 2. Primeiro cenário: Se houver seções informadas
+    if (!secoesBase.isEmpty()) {
+        for (Secao secao : secoesBase) {
+            for (Casa casa : casasBase) {
+                if (casa.getSecao() != null && casa.getSecao().getidSecao() == secao.getidSecao()) {
+                    // CORRIGIDO: Sintaxe limpa com 7 parâmetros
+                    registros.add(new RegistroCasaTabuleiro(
+                        casa.getIdCasa(),
+                        secao.getidSecao(),
+                        casa.getTitulo(),
+                        null,
+                        secao.getTitulo(),
+                        "", // Descrição vazia caso não use
+                        new ArrayList<>()
+                    ));
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaTabuleiro1().setVisible(true));
+        return registros;
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel Casa1;
-    private javax.swing.JPanel Casa10;
-    private javax.swing.JPanel Casa11;
-    private javax.swing.JPanel Casa12;
-    private javax.swing.JPanel Casa13;
-    private javax.swing.JPanel Casa14;
-    private javax.swing.JPanel Casa15;
-    private javax.swing.JPanel Casa16;
-    private javax.swing.JPanel Casa17;
-    private javax.swing.JPanel Casa18;
-    private javax.swing.JPanel Casa2;
-    private javax.swing.JPanel Casa3;
-    private javax.swing.JPanel Casa4;
-    private javax.swing.JPanel Casa5;
-    private javax.swing.JPanel Casa51;
-    private javax.swing.JPanel Casa52;
-    private javax.swing.JPanel Casa53;
-    private javax.swing.JPanel Casa54;
-    private javax.swing.JPanel Casa55;
-    private javax.swing.JPanel Casa56;
-    private javax.swing.JPanel Casa57;
-    private javax.swing.JPanel Casa6;
-    private javax.swing.JPanel Casa7;
-    private javax.swing.JPanel Casa8;
-    private javax.swing.JPanel Casa9;
-    private javax.swing.JPanel Inicio;
-    private javax.swing.JPanel Inicio1;
-    private javax.swing.JPanel Secao1;
-    private javax.swing.JPanel Secao2;
-    private javax.swing.JPanel Secao3;
-    private javax.swing.JPanel Secao4;
-    private javax.swing.JPanel Secao5;
-    private javax.swing.JPanel Secao6;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox12;
-    private javax.swing.JCheckBox jCheckBox13;
-    private javax.swing.JCheckBox jCheckBox14;
-    private javax.swing.JCheckBox jCheckBox15;
-    private javax.swing.JCheckBox jCheckBox16;
-    private javax.swing.JCheckBox jCheckBox17;
-    private javax.swing.JCheckBox jCheckBox18;
-    private javax.swing.JCheckBox jCheckBox19;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox20;
-    private javax.swing.JCheckBox jCheckBox21;
-    private javax.swing.JCheckBox jCheckBox22;
-    private javax.swing.JCheckBox jCheckBox23;
-    private javax.swing.JCheckBox jCheckBox24;
-    private javax.swing.JCheckBox jCheckBox25;
-    private javax.swing.JCheckBox jCheckBox26;
-    private javax.swing.JCheckBox jCheckBox27;
-    private javax.swing.JCheckBox jCheckBox28;
-    private javax.swing.JCheckBox jCheckBox29;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox30;
-    private javax.swing.JCheckBox jCheckBox31;
-    private javax.swing.JCheckBox jCheckBox32;
-    private javax.swing.JCheckBox jCheckBox33;
-    private javax.swing.JCheckBox jCheckBox34;
-    private javax.swing.JCheckBox jCheckBox35;
-    private javax.swing.JCheckBox jCheckBox36;
-    private javax.swing.JCheckBox jCheckBox37;
-    private javax.swing.JCheckBox jCheckBox38;
-    private javax.swing.JCheckBox jCheckBox39;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox40;
-    private javax.swing.JCheckBox jCheckBox41;
-    private javax.swing.JCheckBox jCheckBox42;
-    private javax.swing.JCheckBox jCheckBox43;
-    private javax.swing.JCheckBox jCheckBox44;
-    private javax.swing.JCheckBox jCheckBox45;
-    private javax.swing.JCheckBox jCheckBox46;
-    private javax.swing.JCheckBox jCheckBox47;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JCheckBox jCheckBox6;
-    private javax.swing.JCheckBox jCheckBox7;
-    private javax.swing.JCheckBox jCheckBox8;
-    private javax.swing.JCheckBox jCheckBox9;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel100;
-    private javax.swing.JLabel jLabel101;
-    private javax.swing.JLabel jLabel102;
-    private javax.swing.JLabel jLabel103;
-    private javax.swing.JLabel jLabel104;
-    private javax.swing.JLabel jLabel105;
-    private javax.swing.JLabel jLabel106;
-    private javax.swing.JLabel jLabel107;
-    private javax.swing.JLabel jLabel108;
-    private javax.swing.JLabel jLabel109;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel110;
-    private javax.swing.JLabel jLabel111;
-    private javax.swing.JLabel jLabel112;
-    private javax.swing.JLabel jLabel113;
-    private javax.swing.JLabel jLabel114;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
-    private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel50;
-    private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel55;
-    private javax.swing.JLabel jLabel56;
-    private javax.swing.JLabel jLabel57;
-    private javax.swing.JLabel jLabel58;
-    private javax.swing.JLabel jLabel59;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel60;
-    private javax.swing.JLabel jLabel61;
-    private javax.swing.JLabel jLabel62;
-    private javax.swing.JLabel jLabel63;
-    private javax.swing.JLabel jLabel64;
-    private javax.swing.JLabel jLabel65;
-    private javax.swing.JLabel jLabel66;
-    private javax.swing.JLabel jLabel67;
-    private javax.swing.JLabel jLabel68;
-    private javax.swing.JLabel jLabel69;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel70;
-    private javax.swing.JLabel jLabel71;
-    private javax.swing.JLabel jLabel72;
-    private javax.swing.JLabel jLabel73;
-    private javax.swing.JLabel jLabel74;
-    private javax.swing.JLabel jLabel75;
-    private javax.swing.JLabel jLabel76;
-    private javax.swing.JLabel jLabel77;
-    private javax.swing.JLabel jLabel78;
-    private javax.swing.JLabel jLabel79;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel80;
-    private javax.swing.JLabel jLabel81;
-    private javax.swing.JLabel jLabel82;
-    private javax.swing.JLabel jLabel83;
-    private javax.swing.JLabel jLabel84;
-    private javax.swing.JLabel jLabel85;
-    private javax.swing.JLabel jLabel86;
-    private javax.swing.JLabel jLabel87;
-    private javax.swing.JLabel jLabel88;
-    private javax.swing.JLabel jLabel89;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabel90;
-    private javax.swing.JLabel jLabel91;
-    private javax.swing.JLabel jLabel92;
-    private javax.swing.JLabel jLabel93;
-    private javax.swing.JLabel jLabel94;
-    private javax.swing.JLabel jLabel95;
-    private javax.swing.JLabel jLabel96;
-    private javax.swing.JLabel jLabel97;
-    private javax.swing.JLabel jLabel98;
-    private javax.swing.JLabel jLabel99;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
-    private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel21;
-    private javax.swing.JPanel jPanel22;
-    private javax.swing.JPanel jPanel23;
-    private javax.swing.JPanel jPanel24;
-    private javax.swing.JPanel jPanel25;
-    private javax.swing.JPanel jPanel26;
-    private javax.swing.JPanel jPanel27;
-    private javax.swing.JPanel jPanel28;
-    private javax.swing.JPanel jPanel29;
-    private javax.swing.JPanel jPanel30;
-    private javax.swing.JPanel jPanel31;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    // End of variables declaration//GEN-END:variables
+    // 3. Segundo cenário: Se houver apenas casas informadas
+    for (Casa casa : casasBase) {
+        int idSecao = casa.getSecao() != null ? casa.getSecao().getidSecao() : 0;
+        String tituloSecao = casa.getSecao() != null ? casa.getSecao().getTitulo() : "Seção";
+        
+        registros.add(new RegistroCasaTabuleiro(
+            casa.getIdCasa(),
+            idSecao,
+            casa.getTitulo(),
+            null,
+            tituloSecao,
+            "", 
+            new ArrayList<>()
+        ));
+    }
+
+    return registros;
+}
+    public void atualizarTabuleiro(Aluno aluno) {
+        this.alunoLogado = aluno;
+        montarTabuleiroDinamico(); 
+    }
+
+    private JPanel criarCabecalhoTabuleiro() {
+        JPanel painel = new JPanel(new BorderLayout());
+        painel.setBackground(COR_AZUL);
+        painel.setBorder(BorderFactory.createEmptyBorder(24, 28, 24, 28));
+        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painel.setPreferredSize(new Dimension(LARGURA_CASA, 96));
+        painel.setMinimumSize(new Dimension(LARGURA_CASA, 96));
+        painel.setMaximumSize(new Dimension(LARGURA_CASA, 96));
+
+        JLabel titulo = new JLabel("Início");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 34));
+        titulo.setForeground(Color.WHITE);
+
+        JLabel subtitulo = new JLabel("Casas e seções carregadas do banco");
+        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        subtitulo.setForeground(Color.WHITE);
+
+        JPanel textos = new JPanel();
+        textos.setOpaque(false);
+        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+        textos.add(titulo);
+        textos.add(Box.createRigidArea(new Dimension(0, 6)));
+        textos.add(subtitulo);
+
+        painel.add(textos, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private JPanel criarCabecalhoSecao(RegistroCasaTabuleiro registro) {
+        JPanel painel = new JPanel(new BorderLayout());
+        boolean secaoPar = registro.idSecao % 2 == 0;
+        Color corPrincipal = secaoPar ? COR_AZUL : COR_LARANJA;
+        Color corFundo = corPrincipal;
+        Color corTexto = Color.WHITE;
+
+        painel.setBackground(corFundo);
+        // usar borda contrastante (branca) para ficar visível sobre a cor da seção
+        painel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.WHITE, 8),
+            BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painel.setPreferredSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+        painel.setMinimumSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+        painel.setMaximumSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+
+        JLabel numero = new JLabel(String.valueOf(registro.ordemSecao));
+        numero.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 54));
+        numero.setForeground(corTexto);
+
+        JLabel titulo = criarLabelFormatado(registro.tituloSecao, new Font("Segoe UI", Font.BOLD, 18), corTexto, 280);
+        titulo.setHorizontalAlignment(SwingConstants.LEFT);
+
+        boolean liberarIcone = isSecaoConcluidaComSucesso(registro.idSecao);
+        
+        JLabel icone = new JLabel();
+        if (liberarIcone) {
+            icone.setIcon(carregarIconeSecao(registro.ordemSecao, corPrincipal));
+        }
+        icone.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel descricao = criarLabelFormatado(registro.descricaoSecao, new Font("Segoe UI", Font.PLAIN, 13), corTexto, 280);
+        descricao.setHorizontalAlignment(SwingConstants.LEFT);
+
+        JPanel textos = new JPanel();
+        textos.setOpaque(false);
+        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+
+        JPanel topo = new JPanel(new BorderLayout());
+        topo.setOpaque(false);
+        topo.add(numero, BorderLayout.WEST);
+        topo.add(icone, BorderLayout.EAST);
+
+        textos.add(topo);
+        textos.add(Box.createRigidArea(new Dimension(0, 10)));
+        textos.add(titulo);
+        textos.add(Box.createRigidArea(new Dimension(0, 6)));
+        textos.add(descricao);
+
+        painel.add(textos, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private JLabel criarLabelFormatado(String texto, Font fonte, Color cor, int largura) {
+        String safe = texto == null ? "" : texto.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+        int fs = fonte.getSize();
+        String html = "<html><div style='width:" + largura + "px; text-align:left; word-wrap: break-word; line-height:1.2; font-family: Segoe UI, Arial; font-size: " + fs + "px;'>" + safe + "</div></html>";
+        JLabel label = new JLabel(html);
+        label.setFont(fonte);
+        label.setForeground(cor);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return label;
+    }
+
+    private ImageIcon carregarIconeSecao(int ordemSecao, Color corPrincipal) {
+        int tamanho = 90;
+        String recurso = "/assets/icone_secao_" + ordemSecao + ".png";
+
+        try {
+            var url = TelaTabuleiro1.class.getResource(recurso);
+            if (url != null) {
+                Image imagem = ImageIO.read(url).getScaledInstance(tamanho, tamanho, Image.SCALE_SMOOTH);
+                return new ImageIcon(imagem);
+            }
+        } catch (IOException e) {
+            // fallback abaixo
+        }
+
+        return criarIconeFallback(ordemSecao, corPrincipal, tamanho);
+    }
+
+    private ImageIcon criarIconeFallback(int ordemSecao, Color corPrincipal, int tamanho) {
+        java.awt.image.BufferedImage imagem = new java.awt.image.BufferedImage(tamanho, tamanho, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        java.awt.Graphics2D g2 = imagem.createGraphics();
+        try {
+            g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(corPrincipal);
+            g2.fillOval(0, 0, tamanho - 1, tamanho - 1);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            String numero = String.valueOf(ordemSecao);
+            int larguraTexto = g2.getFontMetrics().stringWidth(numero);
+            int x = (tamanho - larguraTexto) / 2;
+            int y = ((tamanho - g2.getFontMetrics().getHeight()) / 2) + g2.getFontMetrics().getAscent();
+            g2.drawString(numero, x, y);
+        } finally {
+            g2.dispose();
+        }
+
+        return new ImageIcon(imagem);
+    }
+
+        /**
+     * 1. Verifica se uma SEÇÃO específica foi totalmente concluída com sucesso pelo aluno.
+     * Usado para liberar ou não o ícone visual da seção.
+     */
+    private boolean isSecaoConcluidaComSucesso(int idSecao) {
+        if (this.alunoLogado == null) {
+            return true; // Se não for aluno (ex: professor), exibe o ícone por padrão
+        }
+
+        String sql = "SELECT " +
+                    "  (SELECT COUNT(*) FROM tarefa t2 JOIN casa c2 ON t2.id_casa = c2.id_casa WHERE c2.id_secao = s.id_secao) AS total_tarefas, " +
+                    "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
+                    "FROM secao s " +
+                    "JOIN casa c ON c.id_secao = s.id_secao " +
+                    "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                    "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa AND ten.id_usuario = ? AND ten.status_tentativa = 'corrigida' " +
+                    "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                    "WHERE s.id_secao = ? " +
+                    "GROUP BY s.id_secao";
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            
+            comando.setInt(1, this.alunoLogado.getId());
+            comando.setInt(2, idSecao);
+            
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    int total = resultado.getInt("total_tarefas");
+                    int completas = resultado.getInt("tarefas_completas");
+                    return total > 0 && total == completas;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(java.util.logging.Level.SEVERE, "Erro ao verificar conclusão da seção", e);
+        }
+        return false;
+    }
+
+    private Integer descobrirProximaCasaObrigatoria() {
+        if (this.alunoLogado == null) {
+            return null; // Professores ou admin não têm travas de avanço
+        }
+
+        String sql = "SELECT c.id_casa, " +
+                "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
+                "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
+                "FROM secao s " +
+                "JOIN casa c ON c.id_secao = s.id_secao " +
+                "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
+                "    AND ten.id_usuario = ? " +
+                "    AND ten.status_tentativa = 'corrigida' " +
+                "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                "GROUP BY s.id_secao, c.id_casa " +
+                "HAVING total_tarefas > tarefas_completas " +
+                "ORDER BY s.id_secao, c.id_casa " +
+                "LIMIT 1";
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            
+            comando.setInt(1, this.alunoLogado.getId());
+            
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    return resultado.getInt("id_casa");
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(java.util.logging.Level.SEVERE, "Erro ao descobrir próxima casa obrigatória", e);
+        }
+        return null;
+    }
+    private Set<Integer> obterIdsCasasConcluidasSucesso() {
+    Set<Integer> concluidas = new HashSet<>();
+    if (this.alunoLogado == null) {
+        return concluidas; 
+    }
+
+    String sql = "SELECT c.id_casa " +
+                "FROM secao s " +
+                "JOIN casa c ON c.id_secao = s.id_secao " +
+                "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+                "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
+                "    AND ten.id_usuario = ? " +
+                "    AND ten.status_tentativa = 'corrigida' " +
+                "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+                "GROUP BY c.id_casa " +
+                "HAVING COUNT(DISTINCT t.id_tarefa) > 0 " +
+                "   AND COUNT(DISTINCT t.id_tarefa) = COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END)";
+
+    try (Connection conexao = ConnectionFactory.obterConexao();
+         PreparedStatement comando = conexao.prepareStatement(sql)) {
+        
+        comando.setInt(1, this.alunoLogado.getId());
+        
+        try (ResultSet resultado = comando.executeQuery()) {
+            while (resultado.next()) {
+                concluidas.add(resultado.getInt("id_casa"));
+            }
+        }
+    } catch (SQLException e) {
+        logger.log(java.util.logging.Level.SEVERE, "Erro ao buscar casas concluídas com sucesso", e);
+    }
+    return concluidas;
+}
+
+    private JPanel criarCartaoCasa(RegistroCasaTabuleiro registro, boolean casaBloqueada, int numeroCasaExibida) {
+        JPanel painel = new JPanel(new BorderLayout(18, 10));
+        boolean secaoPar = registro.idSecao % 2 == 0;
+        Color corBase = secaoPar ? COR_AZUL : COR_LARANJA;
+
+        Color corBorda = casaBloqueada ? Color.LIGHT_GRAY : corBase;
+
+        painel.setBackground(Color.WHITE);
+        painel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(corBorda, 2),
+            BorderFactory.createEmptyBorder(16, 18, 16, 18)));
+        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+        painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+        painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+
+        JLabel badgeCasa = new JLabel(String.valueOf(numeroCasaExibida));
+        badgeCasa.setHorizontalAlignment(SwingConstants.CENTER);
+        badgeCasa.setPreferredSize(new Dimension(60, 60));
+        badgeCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
+
+        badgeCasa.setForeground(corBorda);
+
+        JLabel tituloCasa = criarLabelFormatado(registro.tituloCasa, new Font("Segoe UI", Font.BOLD, 22), corBorda, 310);
+        tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
+
+        JLabel info = criarLabelFormatado(
+            "Casa " + numeroCasaExibida + " | Data limite: " + formatoData(registro.dataLimiteCasa),
+            new Font("Segoe UI", Font.PLAIN, 15),
+            new Color(130, 130, 130),
+            310);
+        info.setHorizontalAlignment(SwingConstants.LEFT);
+
+        JButton linkPagina = new JButton();
+        linkPagina.setFocusPainted(false);
+
+        if (casaBloqueada) {
+            // Estilo de botão desativado/bloqueado
+            linkPagina.setText("Bloqueado");
+            linkPagina.setBackground(Color.GRAY);
+            linkPagina.setForeground(Color.LIGHT_GRAY);
+            
+            // Se tentar clicar, toma o aviso na tela e não sai daqui
+            linkPagina.addActionListener(evt -> {
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "Acesso Bloqueado!\nPara liberar esta casa você precisa:\n" +
+                    "1. Concluir as tarefas da casa anterior com nota igual ou maior que 6.0\n" +
+                    "OU\n" +
+                    "2. Aguardar o prazo de entrega da casa anterior expirar.", 
+                    "Conteúdo Bloqueado",
+                    JOptionPane.WARNING_MESSAGE
+                );
+            });
+        } else {
+            // Estilo normal de botão liberado
+            linkPagina.setText("Tarefas");
+            linkPagina.setBackground(COR_LARANJA);
+            linkPagina.setForeground(Color.WHITE);
+            linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(registro.idCasa, registro.tituloCasa));
+        }
+
+        JPanel textos = new JPanel();
+        textos.setOpaque(false);
+        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+        textos.add(tituloCasa);
+        textos.add(Box.createRigidArea(new Dimension(0, 6)));
+        textos.add(info);
+        textos.add(Box.createRigidArea(new Dimension(0, 12)));
+        textos.add(linkPagina);
+
+        painel.add(badgeCasa, BorderLayout.WEST);
+        painel.add(textos, BorderLayout.CENTER);
+        return painel;
+}
+
+    // private JPanel criarCartaoCasa(Casa casa) {
+    //     JPanel painel = new JPanel(new BorderLayout(18, 10));
+    //     painel.setBackground(Color.WHITE);
+    //     painel.setBorder(BorderFactory.createCompoundBorder(
+    //         BorderFactory.createLineBorder(COR_AZUL, 2),
+    //         BorderFactory.createEmptyBorder(16, 18, 16, 18)));
+    //     painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    //     painel.setPreferredSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+    //     painel.setMinimumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+    //     painel.setMaximumSize(new Dimension(LARGURA_CASA, ALTURA_CASA));
+
+    //     JLabel badgeCasa = new JLabel(String.valueOf(casa.getOrdemCasa() > 0 ? casa.getOrdemCasa() : "-"));
+    //     badgeCasa.setHorizontalAlignment(SwingConstants.CENTER);
+    //     badgeCasa.setPreferredSize(new Dimension(60, 60));
+    //     badgeCasa.setFont(new Font("Segoe UI", Font.BOLD, 36));
+    //     badgeCasa.setForeground(COR_AZUL);
+
+    //     JLabel tituloCasa = criarLabelFormatado(casa.getTitulo(), new Font("Segoe UI", Font.BOLD, 22), COR_AZUL, 310);
+    //     tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
+
+    //     JLabel info = criarLabelFormatado(
+    //         "Casa " + (casa.getOrdemCasa() > 0 ? casa.getOrdemCasa() : "-") ,
+    //         new Font("Segoe UI", Font.PLAIN, 15),
+    //         new Color(130, 130, 130),
+    //         310);
+    //     info.setHorizontalAlignment(SwingConstants.LEFT);
+
+    //     JButton linkPagina = new JButton("Tarefas");
+    //     linkPagina.setBackground(COR_LARANJA);
+    //     linkPagina.setForeground(Color.WHITE);
+    //     linkPagina.setFocusPainted(false);
+    //     linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(casa.getIdCasa(), casa.getTitulo()));
+
+    //     JPanel textos = new JPanel();
+    //     textos.setOpaque(false);
+    //     textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+    //     textos.add(tituloCasa);
+    //     textos.add(Box.createRigidArea(new Dimension(0, 6)));
+    //     textos.add(info);
+    //     textos.add(Box.createRigidArea(new Dimension(0, 12)));
+    //     textos.add(linkPagina);
+
+    //     painel.add(badgeCasa, BorderLayout.WEST);
+    //     painel.add(textos, BorderLayout.CENTER);
+    //     return painel;
+    // }
+
+    // private JPanel criarCabecalhoSecao(Secao secao, int ordemSecao) {
+    //     JPanel painel = new JPanel(new BorderLayout());
+    //     boolean secaoPar = ordemSecao % 2 == 0;
+    //     Color corPrincipal = secaoPar ? COR_AZUL : COR_LARANJA;
+
+    //     painel.setBackground(corPrincipal);
+    //     painel.setBorder(BorderFactory.createCompoundBorder(
+    //         BorderFactory.createLineBorder(Color.WHITE, 8),
+    //         BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+    //     painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    //     painel.setPreferredSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+    //     painel.setMinimumSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+    //     painel.setMaximumSize(new Dimension(LARGURA_SECAO, ALTURA_SECAO));
+
+    //     JLabel numero = new JLabel(String.valueOf(ordemSecao));
+    //     numero.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 54));
+    //     numero.setForeground(Color.WHITE);
+
+    //     JLabel titulo = criarLabelFormatado(secao.getTitulo(), new Font("Segoe UI", Font.BOLD, 18), Color.WHITE, 280);
+    //     titulo.setHorizontalAlignment(SwingConstants.LEFT);
+
+    //     JPanel textos = new JPanel();
+    //     textos.setOpaque(false);
+    //     textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+
+    //     JPanel topo = new JPanel(new BorderLayout());
+    //     topo.setOpaque(false);
+    //     topo.add(numero, BorderLayout.WEST);
+
+    //     textos.add(topo);
+    //     textos.add(Box.createRigidArea(new Dimension(0, 10)));
+    //     textos.add(titulo);
+
+    //     painel.add(textos, BorderLayout.CENTER);
+    //     return painel;
+    // }
+
+    private JPanel criarEstadoVazio() {
+        JPanel painel = new JPanel(new BorderLayout());
+        painel.setBackground(Color.WHITE);
+        painel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(COR_AZUL, 2),
+                BorderFactory.createEmptyBorder(18, 20, 18, 20)));
+        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painel.setPreferredSize(new Dimension(LARGURA_CASA, 80));
+        painel.setMinimumSize(new Dimension(LARGURA_CASA, 80));
+        painel.setMaximumSize(new Dimension(LARGURA_CASA, 80));
+
+        JLabel mensagem = new JLabel("Nenhuma casa cadastrada no momento.");
+        mensagem.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        mensagem.setForeground(new Color(60, 60, 60));
+        painel.add(mensagem, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private JPanel criarEstadoErro(String mensagemErro) {
+        JPanel painel = new JPanel(new BorderLayout());
+        painel.setBackground(new Color(255, 245, 245));
+        painel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(204, 0, 0), 2),
+                BorderFactory.createEmptyBorder(18, 20, 18, 20)));
+        painel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+        JLabel mensagem = new JLabel("Erro ao carregar o tabuleiro: " + mensagemErro);
+        mensagem.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        mensagem.setForeground(new Color(204, 0, 0));
+        painel.add(mensagem, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private String formatoData(Timestamp dataLimite) {
+        if (dataLimite == null) {
+            return "sem data";
+        }
+        LocalDateTime dataHora = dataLimite.toLocalDateTime();
+        return dataHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+//     private boolean alunoPodeAvancar(Integer idCasa) {
+//     if (this.alunoLogado == null) {
+//         return true; 
+//     }
+//     String sql = "SELECT COUNT(*) AS pendentes " +
+//                  "FROM tarefa t " +
+//                  "LEFT JOIN tentativa ten ON t.id_tarefa = ten.id_tarefa " +
+//                  "    AND ten.id_usuario = ? " +
+//                  "    AND ten.status_tentativa = 'corrigida' " +
+//                  "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+//                  "WHERE t.id_casa = ? " +
+//                  "  AND (ten.id_tentativa IS NULL OR r.nota_resposta IS NULL OR r.nota_resposta < 6.0)";
+
+//     try (Connection conexao = ConnectionFactory.obterConexao();
+//          PreparedStatement comando = conexao.prepareStatement(sql)) {
+//         comando.setInt(1, this.alunoLogado.getIdAluno()); 
+//         comando.setInt(2, idCasa);
+        
+//         try (ResultSet resultado = comando.executeQuery()) {
+//             if (resultado.next()) {
+//                 int pendentes = resultado.getInt("pendentes");
+//                 return pendentes == 0;
+//             }
+//         }
+//     } catch (SQLException e) {
+//         logger.log(java.util.logging.Level.SEVERE, "Erro ao validar requisitos da casa", e);
+//         JOptionPane.showMessageDialog(this, "Erro ao verificar progresso no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+//         return false;
+//     }
+//     return false;
+// }
+
+    
+    private List<RegistroCasaTabuleiro> carregarCasasDoBanco() throws SQLException {
+        String sql = "SELECT c.id_casa, c.id_secao, c.titulo_casa, c.data_limite_casa, "
+        + "s.titulo_secao, s.descricao_secao, q.titulo_tarefa "
+        + "FROM secao s "
+        + "LEFT JOIN casa c ON c.id_secao = s.id_secao "
+        + "LEFT JOIN tarefa q ON q.id_casa = c.id_casa "
+        + "ORDER BY s.id_secao, c.id_casa";
+        Map<Integer, RegistroCasaTabuleiro> registrosPorCasa = new LinkedHashMap<>();
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+            PreparedStatement comando = conexao.prepareStatement(sql);
+            ResultSet resultado = comando.executeQuery()) {
+
+            while (resultado.next()) {
+                Integer idCasa = resultado.getObject("id_casa") != null ? resultado.getInt("id_casa") : null;
+                Integer idSecao = resultado.getInt("id_secao");
+                String tituloTarefa = resultado.getString("titulo_tarefa");
+
+                if (idCasa == null) {
+                    continue;
+                }
+
+                RegistroCasaTabuleiro registro = registrosPorCasa.get(idCasa);
+                if (registro == null) {
+                    registro = new RegistroCasaTabuleiro(
+                        idCasa,
+                        idSecao,
+                        resultado.getString("titulo_casa"),
+                        resultado.getTimestamp("data_limite_casa"),
+                        resultado.getString("titulo_secao"),
+                        resultado.getString("descricao_secao"),
+                        new ArrayList<>()
+                    );
+                    registrosPorCasa.put(idCasa, registro);
+                }
+
+                if (tituloTarefa != null && !tituloTarefa.isBlank()) {
+                    registro.titulosQuestionario.add(tituloTarefa);
+                }
+            }
+        }
+        return new ArrayList<>(registrosPorCasa.values());
+    }
+
+    // private void abrirQuestionarioAluno() {
+    //     new TelaQuestionarioAluno().setVisible(true);
+    //     dispose();
+    // }
+
+private void abrirTelaTarefasAluno(int idCasa, String tituloCasa) {
+   
+    Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getId() : null;
+    TelaTarefaAluno telaTarefas = new TelaTarefaAluno(idAluno, idCasa, tituloCasa);
+
+    telaTarefas.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+
+            atualizarTabuleiro(alunoLogado);
+        }
+    });
+    
+    br.maua.presentation.TelaNavegacao.abrir(this, telaTarefas);
+}
+
+    private static final class RegistroCasaTabuleiro {
+        private final Integer idCasa;
+        private final int idSecao;
+        
+        private final String tituloCasa;
+        private final Timestamp dataLimiteCasa;
+        private final String tituloSecao;
+        private final String descricaoSecao;
+        private final List<String> titulosQuestionario;
+
+        public int ordemSecao;
+
+        private RegistroCasaTabuleiro(Integer idCasa, int idSecao, String tituloCasa,
+                                    Timestamp dataLimiteCasa, String tituloSecao,
+                                                            String descricaoSecao, List<String> titulosQuestionario) {
+            this.idCasa = idCasa;
+            this.idSecao = idSecao;
+            
+            this.tituloCasa = tituloCasa;
+            this.dataLimiteCasa = dataLimiteCasa;
+            this.tituloSecao = tituloSecao;
+                                    this.descricaoSecao = descricaoSecao;
+                                    this.titulosQuestionario = titulosQuestionario;
+        }
+    }
+
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> new TelaTabuleiro1().setVisible(true));
+    }
 }

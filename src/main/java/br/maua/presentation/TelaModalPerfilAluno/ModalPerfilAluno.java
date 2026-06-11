@@ -6,7 +6,12 @@
 package br.maua.presentation.TelaModalPerfilAluno;
 
 import br.maua.domain.Aluno;
+import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.presentation.TelaNotaAluno.TelaNotaAluno;
+
+import javax.swing.*;
+import java.sql.SQLException;
+import java.util.Map;
 
 /**
  *
@@ -15,17 +20,19 @@ import br.maua.presentation.TelaNotaAluno.TelaNotaAluno;
 public class ModalPerfilAluno extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ModalPerfilAluno.class.getName());
-    private Aluno aluno;
+    private final Aluno aluno;
 
     /** Creates new form TelaPerfilAluno */
     public ModalPerfilAluno(Aluno aluno) {
         this.aluno = aluno;
         initComponents();
+        obterProgresso();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         if (this.aluno != null) {
-            nomeAluno.setText(this.aluno.getNome());
-            raAluno.setText(this.aluno.getUsername());       
+            nomeAluno.setText(aluno.getNome());
+            raAluno.setText(aluno.getUsername());
+            cursoAluno.setText(aluno.getTurma().getCurso().toString());
         }
     }
 
@@ -46,7 +53,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         raAluno = new javax.swing.JLabel();
         progresso = new javax.swing.JProgressBar();
         btnNotas = new javax.swing.JButton();
-        AtividadesConcluidas = new javax.swing.JLabel();
+        atividadesConcluidas = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -107,9 +114,9 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         btnNotas.setRolloverEnabled(false);
         btnNotas.addActionListener(this::btnNotasActionPerformed);
 
-        AtividadesConcluidas.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        AtividadesConcluidas.setForeground(new java.awt.Color(255, 255, 255));
-        AtividadesConcluidas.setText("Atividades Concluídas: xx/xx");
+        atividadesConcluidas.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        atividadesConcluidas.setForeground(new java.awt.Color(255, 255, 255));
+        atividadesConcluidas.setText("Atividades Concluídas: xx/xx");
 
         btnLogout.setBackground(new java.awt.Color(208, 204, 193));
         btnLogout.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
@@ -126,7 +133,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AtividadesConcluidas, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(atividadesConcluidas, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(progresso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -141,7 +148,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(AtividadesConcluidas)
+                .addComponent(atividadesConcluidas)
                 .addGap(18, 18, 18)
                 .addComponent(btnNotas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
@@ -163,43 +170,41 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void obterProgresso(){
+        try {
+            Map<String, Integer> progresso = AlunoDAO.obterProgressoAluno(this.aluno);
+            int tarefasConcluidas = progresso.get("tarefasConcluidas");
+            int totalTarefas = progresso.get("totalTarefas");
+            int porcentagemProgresso = progresso.get("porcentagemProgresso");
+            atividadesConcluidas.setText(String.format("Atividades Concluídas: %d/%d",tarefasConcluidas,totalTarefas));
+            this.progresso.setMinimum(0);
+            this.progresso.setMaximum(100);
+            this.progresso.setValue(porcentagemProgresso);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao obter progresso de aluno: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     private void btnNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotasActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-        TelaNotaAluno mna = new TelaNotaAluno(aluno, this);
+        if (aluno == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Aluno não carregado.");
+            return;
+        }
+
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaNotaAluno(aluno, this));
     }//GEN-LAST:event_btnNotasActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
+        new br.maua.presentation.TelaLogin.TelaLogin().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        Aluno aluno = new Aluno(1, "Luiza", "Lima", "26.01172-6@maua.br", "CIC", "Maua2024" );
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ModalPerfilAluno(aluno).setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel AtividadesConcluidas;
+    private javax.swing.JLabel atividadesConcluidas;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNotas;
     private javax.swing.JLabel cursoAluno;

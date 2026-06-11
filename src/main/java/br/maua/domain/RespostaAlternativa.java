@@ -25,4 +25,5 @@ public class RespostaAlternativa extends Resposta {
         String sql = String.format("(%d)", idAlternativa);
         return sql;
     }
+
 }

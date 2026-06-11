@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Alternativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Aluno.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Casa.java
@@ -7,28 +8,103 @@ C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Questao.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\QuestaoAlternativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\QuestaoDissertativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\QuestaoUpload.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Resposta.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\RespostaAlternativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\RespostaDissertativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\RespostaUpload.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Secao.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Tarefa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Tentativa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\domain\Turma.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\AlunoDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\exception\QuestoesException.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\exception\UpdateException.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\ArquivoService.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\ConnectionFactory.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\AlternativaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\AlunoDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\CasaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\ProfessorDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\QuestaoAlternativaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\QuestaoDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\QuestaoDissertativaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\QuestaoUploadDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\RespostaAlternativaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\RespostaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\RespostaDissertativaDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\RespostaUploadDAO.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\infrastructure\DAO\TarefaDAO.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\Main.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\ModalPerfilAluno.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\ModalPerfilProfessor.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaAcoesTarefa.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCadastroProfessor.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCorrecaoTarefa.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa2.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaHomeProfessor\TelaPainelAdministrativo.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\ModeloAtividade\Atividade.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaAcoesTarefa\TelaAcoesTarefa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaAdicionarAlunoNaTurma\TelaAdicionarAlunoNaTurma.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCadastroProfessor\TelaCadastroProfessor.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCorrecaoTarefa\TelaCorrecaoTarefa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\Components\AlternativaUI.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\Components\QuestaoAlternativaUI.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\Components\QuestaoDissertativaUI.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\Components\QuestaoUI.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\Components\QuestaoUploadUI.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaLogin\TelaLogin.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaNotaAluno.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaNotasProfessor.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaModalAdicionarTurma\TelaModalAdicionarTurma.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaModalPerfilAluno\ModalPerfilAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaModalPerfilProfessor\ModalPerfilProfessor.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaNotaAluno\TelaNotaAluno.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaPainelAdministrativo\TelaPainelAdministrativo1.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaPainelDeControle.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaQuestionarioAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaPainelDeControle\TelaPainelDeControle.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaQuestionarioAluno\PainelQuestaoAlternativa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaQuestionarioAluno\PainelQuestaoDissertativa.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaQuestionarioAluno\PainelQuestaoUpload.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaQuestionarioAluno\TelaQuestionarioAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelasNotasProfessor\TelaNotasProfessor.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaTabueiro.java
 C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.java
-C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaUploadAluno.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaTarefasCriadas\TelaTarefasCriadas.java
+C:\Users\Luiza\pi_1_semestre-1\src\main\java\br\maua\presentation\TelaUploadAluno\TelaUploadAluno.java
+=======
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Alternativa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Aluno.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Casa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Curso.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Professor.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Questao.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestaoAlternativa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestaoDissertativa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\QuestaoUpload.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\RespostaAlternativa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\RespostaDissertativa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\RespostaUpload.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Secao.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Tarefa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Tentativa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\domain\Turma.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\AlunoDAO.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\ConnectionFactory.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\DAO\CasaDAO.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\DAO\SecaoDAO.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\infrastructure\ProfessorDAO.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\Main.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaAcoesTarefa\TelaAcoesTarefa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaAdicionarAlunoNaTurma\TelaAdicionarAlunoNaTurma.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaAdicionarCasa\TelaAdicionarCasa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaAdicionarSecao\TelaAdicionarSecao.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaCadastroProfessor\TelaCadastroProfessor.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaCorrecaoTarefa\TelaCorrecaoTarefa.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa2.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaHomeProfessor\TelaPainelAdministrativo.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaLogin\TelaLogin.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalAdicionarTurma\TelaModalAdicionarTurma.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalPerfilAluno\ModalPerfilAluno.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaModalPerfilProfessor\ModalPerfilProfessor.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaNavegacao.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaNotaAluno\TelaNotaAluno.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaPainelAdministrativo\TelaPainelAdministrativo1.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaPainelDeControle\TelaPainelDeControle.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaQuestionarioAluno\TelaQuestionarioAluno.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelasNotasProfessor\TelaNotasProfessor.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabueiro.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTabuleiro\TelaTabuleiro1.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTarefasAluno\TelaTarefaAluno.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaTarefasCriadas\TelaTarefasCriadas.java
+C:\Users\Lenovo\OneDrive\Documentos\Aulas de CIC\PI_projeto\pi_1_semestre\src\main\java\br\maua\presentation\TelaUploadAluno\TelaUploadAluno.java
+>>>>>>> feature/tela_tabuleiro

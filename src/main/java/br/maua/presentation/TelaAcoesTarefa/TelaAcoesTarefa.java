@@ -4,7 +4,11 @@
  */
 package br.maua.presentation.TelaAcoesTarefa;
 
-import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa2;
+
+import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
+import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+
+import javax.swing.*;
 
 /**
  *
@@ -31,13 +35,23 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private void initComponents() {
 
         PainelAzul1 = new javax.swing.JPanel();
+        btnVoltar = new javax.swing.JButton();
         btnCriarTarefas = new javax.swing.JButton();
         btnTarefasCriadas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
+        botaoVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         PainelAzul1.setBackground(new java.awt.Color(19, 112, 178));
+
+        btnVoltar.setBackground(new java.awt.Color(240, 147, 32));
+        btnVoltar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
+        btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        btnVoltar.setText("Voltar");
+        btnVoltar.setBorder(null);
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
 
         btnCriarTarefas.setBackground(new java.awt.Color(240, 147, 32));
         btnCriarTarefas.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
@@ -59,6 +73,12 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         Titulo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         Titulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        botaoVoltar.setBackground(new java.awt.Color(240, 147, 23));
+        botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        botaoVoltar.setText("Voltar");
+        botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
+        // botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
         PainelAzul1Layout.setHorizontalGroup(
@@ -71,15 +91,23 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                             .addGap(122, 122, 122)
                             .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(PainelAzul1Layout.createSequentialGroup()
-                            .addGap(423, 423, 423)
+
+                            .addGap(39, 39, 39)
+                            .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(319, 319, 319)
                             .addComponent(Titulo))))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
         PainelAzul1Layout.setVerticalGroup(
             PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PainelAzul1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PainelAzul1Layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PainelAzul1Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(103, 103, 103)
                 .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(124, 124, 124)
@@ -104,16 +132,35 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        TelaCriarTarefa2 cf = new TelaCriarTarefa2();
-        cf.pack();
-        cf.setLocationRelativeTo(null);
-        cf.setVisible(true);
+        try {
+            TelaCriarTarefa cf = new TelaCriarTarefa(this);
+            cf.pack();
+            cf.setLocationRelativeTo(null);
+            cf.setVisible(true);
+        } catch (Exception e) {
+            this.setVisible(true);
+            JOptionPane.showMessageDialog(rootPane, "Erro ao criar Tarefa");
+            e.printStackTrace();
+        }
+
+
         
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
+    
+    
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas());
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
+
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -143,7 +190,9 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAzul1;
     private javax.swing.JLabel Titulo;
+    private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
     private javax.swing.JButton btnTarefasCriadas;
+    private javax.swing.JButton btnVoltar;
     // End of variables declaration//GEN-END:variables
 }

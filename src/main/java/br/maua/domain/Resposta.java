@@ -3,9 +3,10 @@ package br.maua.domain;
 public abstract class Resposta {
 
     private int idResposta;
-    private int idQuestao;
+    private Questao questao;
     private String enunciado;
     private float nota;
+    private Tentativa tentativa;
 
     public int getIdResposta() {
         return idResposta;
@@ -15,12 +16,12 @@ public abstract class Resposta {
         this.idResposta = idResposta;
     }
 
-    public int getIdQuestao() {
-        return idQuestao;
+    public Questao getQuestao() {
+        return questao;
     }
 
-    public void setIdQuestao(int idQuestao) {
-        this.idQuestao = idQuestao;
+    public void setQuestao(Questao questao) {
+        this.questao = questao;
     }
 
     public String getEnunciado() {
@@ -33,6 +34,14 @@ public abstract class Resposta {
 
     public float getNota() {
         return nota;
+    }
+
+    public Tentativa getTentativa() {
+        return tentativa;
+    }
+
+    public void setTentativa(Tentativa tentativa) {
+        this.tentativa = tentativa;
     }
 
     public void setNota(float nota) {

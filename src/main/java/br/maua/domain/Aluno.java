@@ -1,77 +1,57 @@
 package br.maua.domain;
 
-public class Aluno {
-    private int idAluno;
-    private String nome;
-    private String sobrenome;
-    private String username;
-    private String curso;
-    private String senha;
+import java.security.InvalidParameterException;
+import java.sql.SQLException;
+import java.util.regex.Pattern;
 
-    public Aluno() {
+import br.maua.infrastructure.DAO.AlunoDAO;
+
+public class Aluno extends Usuario {
+    private Turma turma;
+
+    public Aluno(){}
+    public Aluno(String nome, String sobrenome, String username, String senha) {
+        super(nome, sobrenome, senha);
+        setUsername(username);
     }
 
-    public Aluno(int idAluno, String nome, String sobrenome, String username, String curso, String senha){
-        this.idAluno = idAluno;
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.username = username;
-        this.curso = curso;
-        this.senha = senha;
+    public Aluno(int id, String nome, String sobrenome, String username) {
+        super(id, nome, sobrenome);
+        setUsername(username);
+    }
 
+    public Aluno(int idAluno, String nome, String sobrenome, String username, String senha) {
+        this(nome, sobrenome, username, senha);
+        setId(idAluno);
     }
-    
 
-    public int getIdAluno() {
-        return idAluno;
+    @Override
+    public int getId() {
+        return super.getId();
     }
-    public void setIdAluno(int idAluno) {
-        this.idAluno = idAluno;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getSobrenome() {
-        return sobrenome;
-    }
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
-    }
-    public String getNomeCompleto(){
-        return nome + " " + sobrenome;
-    }
-    public String getUsername() {
-        return username;
-    }
+
+    @Override
     public void setUsername(String username) {
-        this.username = username;
+        Pattern pattern = Pattern.compile("^\\d{2}\\.\\d{5}-\\d@maua\\.br$");
+        if (!pattern.matcher(username).matches()) {
+            throw new InvalidParameterException("Username invalido");
+        }
+        super.setUsername(username);
     }
 
-    public String getCurso() {
-        return curso;
+
+    public void setTurma(Turma turma) {
+        this.turma = turma;
     }
 
-    public void setCurso(String curso) {
-        this.curso = curso;
+    public Turma getTurma() {
+        return turma;
     }
 
-    public String getSenha(){
-        return senha;
-    }
 
-    public void setSenha(String senha){
-        this.senha = senha;
-    }
-    
+    @Override
+    public void preencheAtributos() throws SQLException {
+        AlunoDAO.obterTurma(this);
 
-    public void realizarTentativa(Tarefa tarefa) {
-        entregarTentativa(tarefa);
-    }
-
-    public Tentativa entregarTentativa(Tarefa tarefa) {
-        return new Tentativa(this, tarefa);
     }
 }

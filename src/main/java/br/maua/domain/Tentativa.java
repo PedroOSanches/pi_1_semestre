@@ -9,12 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.maua.infrastructure.ConnectionFactory;
+
 public class Tentativa {
 
-    private Double nota;
+    private int idTentativa;
+    private double nota;
     private Aluno aluno;
     private Tarefa tarefa;
-    private int idTentativa;
     private List <Resposta> respostas = new ArrayList<>();
     private TentativaDAO tentativaDAO;
 
@@ -86,8 +88,8 @@ public class Tentativa {
 
                     ){
                 ps.setInt(1, tarefa.getIdTarefa());
-                ps.setInt(2, aluno.getIdAluno());
-                ps.setString(3, "concluída");
+                ps.setInt(2, aluno.getId());
+                ps.setString(3, "concluida");
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
