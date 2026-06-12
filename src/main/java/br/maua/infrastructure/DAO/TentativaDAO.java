@@ -15,6 +15,7 @@ public class TentativaDAO {
     public Tentativa buscarTentativa(int idTentativa){
 
         Tentativa tentativa = new Tentativa(idTentativa);
+        tentativa.setRespostas(new ArrayList<>());
 
         String sqlTarefa = "SELECT te.id_tarefa, ta.titulo_tarefa FROM tentativa te " +
                             "JOIN tarefa ta USING(id_tarefa) WHERE te.id_tentativa = ?";
@@ -56,6 +57,7 @@ public class TentativaDAO {
                                 try (ResultSet rsAlternativa = psAlternativa.executeQuery()) {
                                     if (rsAlternativa.next()) {
                                         RespostaAlternativa respostaAlternativa = new RespostaAlternativa();
+                                        respostaAlternativa.setEnunciado(enunciado);
                                         respostaAlternativa.setIdAlternativaAssinalada(rsAlternativa.getInt("id_alternativa"));
 
                                         QuestaoAlternativa questaoAlternativa = new QuestaoAlternativa();
@@ -91,6 +93,7 @@ public class TentativaDAO {
                                 try (ResultSet rsDissertativa = psDissertativa.executeQuery()) {
                                     if (rsDissertativa.next()) {
                                         RespostaDissertativa respostaDissertativa = new RespostaDissertativa();
+                                        respostaDissertativa.setEnunciado(enunciado);
                                         respostaDissertativa.setRespostaAluno(rsDissertativa.getString("resposta"));
                                         resposta = respostaDissertativa;
                                     }
@@ -105,11 +108,15 @@ public class TentativaDAO {
                                 try (ResultSet rsUpload = psUpload.executeQuery()) {
                                     if (rsUpload.next()) {
                                         RespostaUpload respostaUpload = new RespostaUpload();
+                                        respostaUpload.setEnunciado(enunciado);
                                         respostaUpload.setPathArquivo(rsUpload.getString("arquivo_resposta"));
                                         resposta = respostaUpload;
                                     }
                                 }
                             }
+                        }
+                        if (resposta != null) {
+                            tentativa.getRespostas().add(resposta);
                         }
                     }
                 }
