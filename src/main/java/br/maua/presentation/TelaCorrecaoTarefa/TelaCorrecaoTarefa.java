@@ -86,58 +86,42 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         javax.swing.GroupLayout painelCinza1Layout = new javax.swing.GroupLayout(painelCinza1);
         painelCinza1.setLayout(painelCinza1Layout);
         painelCinza1Layout.setHorizontalGroup(
-                painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelCinza1Layout.createSequentialGroup()
-                                .addGap(202, 202, 202)
-                                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                                        .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                                                .addComponent(jScrollPane1)))
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1)
-                                .addGap(110, 110, 110))
+            painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelCinza1Layout.createSequentialGroup()
+                .addGap(202, 202, 202)
+                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane7))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(136, 136, 136))
         );
         painelCinza1Layout.setVerticalGroup(
-                painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelCinza1Layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addComponent(titulo3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton1)
-                                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(32, Short.MAX_VALUE))
+            painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelCinza1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(titulo3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE))
+                .addGap(91, 91, 91))
         );
 
-        javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
-        painelAzul1.setLayout(painelAzul1Layout);
-        painelAzul1Layout.setHorizontalGroup(
-                painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelAzul1Layout.createSequentialGroup()
-                                .addGap(47, 47, 47)
-                                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(48, Short.MAX_VALUE))
-        );
-        painelAzul1Layout.setVerticalGroup(
-                painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelAzul1Layout.createSequentialGroup()
-                                .addGap(47, 47, 47)
-                                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(55, Short.MAX_VALUE))
-        );
+        painelAzul1.add(painelCinza1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -205,6 +189,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 int idAlternativaAssinalada = respostaAlternativa.getIdAlternativaAssinalada();
 
                 javax.swing.JPanel painelAlternativas = new javax.swing.JPanel();
+                painelAlternativas.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
                 painelAlternativas.setLayout(new javax.swing.BoxLayout(painelAlternativas, javax.swing.BoxLayout.Y_AXIS));
                 javax.swing.ButtonGroup alternativas = new javax.swing.ButtonGroup();
 
@@ -212,6 +197,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                     for (Alternativa alt : respostaAlternativa.getQuestao().getAlternativas()) {
 
                         javax.swing.JRadioButton radioBtn = new javax.swing.JRadioButton(alt.getEnunciado());
+                        radioBtn.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
                         radioBtn.setEnabled(false);
 
                         if (alt.getIdAlternativa() == idAlternativaAssinalada) {
@@ -240,10 +226,33 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                     buttonDownload.addActionListener(new java.awt.event.ActionListener() {
                         @Override
                         public void actionPerformed(java.awt.event.ActionEvent e) {
+
+                            if (pathArquivo == null || pathArquivo.trim().equalsIgnoreCase("null") || pathArquivo.trim().isEmpty()) {
+
+                                javax.swing.JOptionPane.showMessageDialog(
+                                        TelaCorrecaoTarefa.this,
+                                        "Não há nenhum arquivo anexado para esta resposta.",
+                                        "Aviso",
+                                        javax.swing.JOptionPane.WARNING_MESSAGE
+                                );
+                                return;
+                            }
+
                             try {
 
                                 String pastaOrigem = "src/main/resources/assets/aluno/";
                                 java.io.File arquivoOrigem = new java.io.File(pastaOrigem + pathArquivo);
+
+                                if (!arquivoOrigem.exists()) {
+                                    javax.swing.JOptionPane.showMessageDialog(
+                                            TelaCorrecaoTarefa.this,
+                                            "O arquivo '" + pathArquivo + "' não foi encontrado na pasta do servidor.",
+                                            "Erro",
+                                            javax.swing.JOptionPane.ERROR_MESSAGE
+                                    );
+                                    return;
+                                }
+
                                 javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
                                 fileChooser.setDialogTitle("Escolha onde salvar o arquivo");
                                 fileChooser.setSelectedFile(new java.io.File(pathArquivo));
@@ -252,6 +261,12 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                                 if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
 
                                     java.io.File arquivoDestino = fileChooser.getSelectedFile();
+                                    java.io.File pastaDestino = arquivoDestino.getParentFile();
+
+                                    if (pastaDestino != null && !pastaDestino.exists()) {
+                                        pastaDestino.mkdirs();
+                                    }
+
                                     br.maua.service.ArquivoService.salvarArquivo(arquivoOrigem, arquivoDestino);
 
                                     if (arquivoDestino.exists()) {
@@ -308,8 +323,22 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             numeroQuestao++;
         }
 
-        painelQuestoes.revalidate();
-        painelQuestoes.repaint();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                painelQuestoes.setLayout(new javax.swing.BoxLayout(painelQuestoes, javax.swing.BoxLayout.Y_AXIS));
+                jScrollPane7.setViewportView(painelQuestoes);
+
+                painelQuestoes.revalidate();
+                painelQuestoes.repaint();
+                jScrollPane7.revalidate();
+                jScrollPane7.repaint();
+
+                TelaCorrecaoTarefa.this.revalidate();
+                TelaCorrecaoTarefa.this.repaint();
+            }
+        });
     }
 
     /**

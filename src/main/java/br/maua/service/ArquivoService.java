@@ -9,6 +9,12 @@ import java.nio.file.StandardCopyOption;
 public class ArquivoService {
     public static File salvarArquivo(File origem, File destino) throws UpdateException {
         try {
+
+            java.io.File pastaDestino = destino.getParentFile();
+            if (pastaDestino != null && !pastaDestino.exists()) {
+                pastaDestino.mkdirs();
+            }
+
             java.nio.file.Files.copy(
                     origem.toPath(),
                     destino.toPath(),
