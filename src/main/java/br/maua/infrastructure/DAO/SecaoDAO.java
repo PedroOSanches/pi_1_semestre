@@ -40,15 +40,14 @@ public class SecaoDAO {
         }
     }
 
-    public void salvarNoBanco(String tituloSecao, int ordemSecao, String descricaoSecao) throws SQLException {
-        String sql = "INSERT INTO secao (titulo_secao, ordem_secao, descricao_secao) VALUES (?, ?, ?)";
+    public void salvarNoBanco(String tituloSecao, String descricaoSecao) throws SQLException {
+        String sql = "INSERT INTO secao (titulo_secao, descricao_secao) VALUES (?, ?)";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-             PreparedStatement comando = conexao.prepareStatement(sql)) {
+            PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, tituloSecao);
-            comando.setInt(2, ordemSecao);
-            comando.setString(3, descricaoSecao);
+            comando.setString(2, descricaoSecao);
 
             comando.executeUpdate();
         }

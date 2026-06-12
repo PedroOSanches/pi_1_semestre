@@ -38,8 +38,8 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        // jLabel4 = new javax.swing.JLabel();
+        // jTextField3 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
@@ -59,9 +59,9 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
 
         jTextField2.addActionListener(this::jTextField2ActionPerformed);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Ordem");
+        // jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        // jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        // jLabel4.setText("Ordem");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -89,7 +89,7 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
                 .addGap(279, 279, 279)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        // .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -97,7 +97,7 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
+                            // .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addGap(0, 370, Short.MAX_VALUE))
@@ -117,9 +117,9 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jButton2))
                 .addGap(62, 62, 62)
-                .addComponent(jLabel4)
+                // .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                // .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -165,22 +165,20 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String tituloSecao = jTextField2.getText().trim();
-        String ordemTexto = jTextField3.getText().trim();
+        // String ordemTexto = jTextField3.getText().trim();
         String descricaoSecao = jTextField4.getText().trim();
 
-        if (tituloSecao.isEmpty() || ordemTexto.isEmpty() || descricaoSecao.isEmpty()) {
+        if (tituloSecao.isEmpty() || descricaoSecao.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha o título, a ordem e a descrição da seção.", "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
-            int ordemSecao = Integer.parseInt(ordemTexto);
-            secaoDAO.salvarNoBanco(tituloSecao, ordemSecao, descricaoSecao);
+            // int ordemSecao = Integer.parseInt(ordemTexto);
+            secaoDAO.salvarNoBanco(tituloSecao, descricaoSecao);
 
             JOptionPane.showMessageDialog(this, "Seção criada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             br.maua.presentation.TelaNavegacao.voltar(this);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "A ordem da seção precisa ser numérica.", "Valor inválido", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Erro ao criar a seção no banco de dados: " + e.getMessage(), "Erro no banco", JOptionPane.ERROR_MESSAGE);
         }
@@ -216,11 +214,11 @@ public class TelaAdicionarSecao extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    // private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    // private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
