@@ -6,6 +6,7 @@ package br.maua.presentation.TelaCorrecaoTarefa;
 
 import br.maua.domain.*;
 import br.maua.infrastructure.TentativaDAO;
+import br.maua.service.ArquivoService;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -246,7 +247,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                                 java.io.File arquivoOrigem = new java.io.File(pastaOrigem + pathArquivo);
                                 String pastaDestino = "src/main/resources/assets/professor/";
                                 java.io.File arquivoDestino = new java.io.File(pastaDestino + pathArquivo);
-                                br.maua.service.ArquivoService.salvarArquivo(arquivoOrigem, arquivoDestino);
+                                ArquivoService.salvarArquivo(arquivoOrigem, arquivoDestino);
 
                                 if (arquivoDestino.exists()) {
                                     java.awt.Desktop.getDesktop().open(arquivoDestino);

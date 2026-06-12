@@ -144,7 +144,7 @@ public class TelaPainelDeControle extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdminActionPerformed
-        br.maua.presentation.TelaNavegacao.abrir(this, new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1());
+        br.maua.presentation.TelaNavegacao.abrir(this, new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1(professorLogado, this));
     }//GEN-LAST:event_botaoAdminActionPerformed
 
     private void botaoTabuleiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTabuleiroActionPerformed

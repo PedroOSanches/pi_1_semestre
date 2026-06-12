@@ -9,8 +9,11 @@ import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import br.maua.domain.Professor;
 import br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa;
 import br.maua.presentation.TelaTurmasDoProfessor.TelaTurmasDoProfessor;
+
+import javax.swing.*;
 
 /**
  *
@@ -19,11 +22,15 @@ import br.maua.presentation.TelaTurmasDoProfessor.TelaTurmasDoProfessor;
 public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPainelAdministrativo1.class.getName());
+    private Professor professor;
+    private JFrame telaAnterior;
+    private JFrame telaAtual = this;
 
     /**
      * Creates new form TelaPainelAdministrativo1
      */
-    public TelaPainelAdministrativo1() {
+    public TelaPainelAdministrativo1(Professor professor,  JFrame telaAnterior) {
+        this.professor = professor;
         initComponents();
         configurarAtalhoTarefas();
         configurarAtalhoTurmas();
@@ -53,8 +60,8 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         MouseAdapter abrirTurmas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                new TelaTurmasDoProfessor().setVisible(true);
-                dispose();
+                new TelaTurmasDoProfessor(professor, telaAtual).setVisible(true);
+                telaAtual.setVisible(false);
             }
         };
 
@@ -203,27 +210,6 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaPainelAdministrativo1().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVoltar;

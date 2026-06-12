@@ -3,7 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.maua.presentation.TelaTurmasDoProfessor;
+import br.maua.domain.Professor;
+import br.maua.domain.Turma;
+import br.maua.infrastructure.DAO.TurmaSubturmaDAO;
 import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
+import br.maua.presentation.TelaLogin.TelaLogin;
+
+import javax.swing.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -12,12 +21,19 @@ import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 public class TelaTurmasDoProfessor extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTurmasDoProfessor.class.getName());
-
+    private List<Turma> turmas = new ArrayList<>();
+    private final JFrame telaAnterior;
     /**
      * Creates new form TelaTurmasDoProfessor
      */
-    public TelaTurmasDoProfessor() {
+    public TelaTurmasDoProfessor(Professor professor, JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         initComponents();
+        try {
+            this.turmas = TurmaSubturmaDAO.listarTurmaSubturmaProfessor(professor);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar turmas do turma!");
+        }
     }
 
     /**
@@ -118,23 +134,23 @@ public class TelaTurmasDoProfessor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1().setVisible(true);
         this.dispose();
+        telaAnterior.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void abrirTurma(String nomeTurma) {
-        new TelaAlunosDaTurma(nomeTurma).setVisible(true);
+    private void abrirTurma(Turma turma) {
+        new TelaAlunosDaTurma(turma).setVisible(true);
         this.dispose();
     }
-    
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SQLException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -149,7 +165,7 @@ public class TelaTurmasDoProfessor extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaTurmasDoProfessor().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaTurmasDoProfessor(new Professor(6, "Giulia", "Soares"), new TelaLogin()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

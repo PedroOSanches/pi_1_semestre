@@ -47,6 +47,10 @@ public abstract class Usuario {
     public String getUsername() {
         return username;
     }
+    public String getRa(){
+        String[] ra = username.split("@");
+        return ra[0];
+    }
 
     public void setUsername(String username){
         this.username = username;
