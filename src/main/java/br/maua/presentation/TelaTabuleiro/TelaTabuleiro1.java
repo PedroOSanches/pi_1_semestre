@@ -51,10 +51,10 @@ public class TelaTabuleiro1 extends JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTabuleiro1.class.getName());
 
     private Aluno alunoLogado;
-    private Professor professorLogado;
-    private boolean mostrarVoltarParaAdmin;
-    private List<Casa> casasInformadas;
-    private List<Secao> secoesInformadas;
+    private final Professor professorLogado;
+    private final boolean mostrarVoltarParaAdmin;
+    private final List<Casa> casasInformadas;
+    private final List<Secao> secoesInformadas;
 
     private final JornadaService jornadaService = new JornadaService();
 
@@ -94,7 +94,7 @@ public class TelaTabuleiro1 extends JFrame {
     }
 
     public TelaTabuleiro1() {
-        this((Aluno) null);
+        this(null);
     }
 
     private TelaTabuleiro1(Aluno aluno, Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
@@ -731,7 +731,7 @@ private void montarTabuleiroDinamico() {
 
     private void abrirTelaTarefasAluno(int idCasa, String tituloCasa) {
         Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getId() : null;
-        TelaTarefaAluno telaTarefas = new TelaTarefaAluno(idAluno, idCasa, tituloCasa);
+        TelaTarefaAluno telaTarefas = new TelaTarefaAluno(idAluno, idCasa, tituloCasa, this);
 
         telaTarefas.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

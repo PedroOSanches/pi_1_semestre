@@ -12,39 +12,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 
 /**
  * Tela unificada: Design limpo com carregamento dinâmico de tarefas.
  * @author Luiza / Lenovo
  */
-public class TelaTarefaAluno extends javax.swing.JFrame {
+public class TelaTarefaAluno extends JFrame {
     
     private final Integer idAluno;
     private final Integer idCasa;
     private final String tituloTarefa;
+    private final JFrame telaAnterior;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTarefaAluno.class.getName());
 
-    public TelaTarefaAluno() {
-        this(null, null, "Atividade");
+    public TelaTarefaAluno(JFrame telaAnterior, Integer idAluno) {
+        this(idAluno, null, "Atividade", telaAnterior);
     }
 
-    public TelaTarefaAluno(String tituloTarefa) {
-        this(null, null, tituloTarefa);
+    public TelaTarefaAluno(String tituloTarefa, JFrame telaAnterior) {
+        this(null, null, tituloTarefa, telaAnterior);
     }
 
-    public TelaTarefaAluno(Integer idAluno, Integer idCasa, String tituloTarefa) {
+    public TelaTarefaAluno(Integer idAluno, Integer idCasa, String tituloTarefa, JFrame telaAnterior) {
         this.idAluno = idAluno;
         this.idCasa = idCasa;
         this.tituloTarefa = tituloTarefa != null && !tituloTarefa.isBlank() ? tituloTarefa : "Atividade";
+        this.telaAnterior = telaAnterior;
         initComponents();
         configurarConteudo();
     }
@@ -282,21 +278,6 @@ public class TelaTarefaAluno extends javax.swing.JFrame {
         br.maua.presentation.TelaNavegacao.abrir(this, questionario);
     }
 
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        java.awt.EventQueue.invokeLater(() -> new TelaTarefaAluno().setVisible(true));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel nomeTitulo;
@@ -305,15 +286,6 @@ public class TelaTarefaAluno extends javax.swing.JFrame {
     private javax.swing.JPanel painelCinza;
     // End of variables declaration//GEN-END:variables
 
-    private static final class RegistroTarefaAluno {
-        private final int idTarefa;
-        private final String tituloTarefa;
-        private final int totalTentativas;
-
-        private RegistroTarefaAluno(int idTarefa, String tituloTarefa, int totalTentativas) {
-            this.idTarefa = idTarefa;
-            this.tituloTarefa = tituloTarefa;
-            this.totalTentativas = totalTentativas;
-        }
+    private record RegistroTarefaAluno(int idTarefa, String tituloTarefa, int totalTentativas) {
     }
 }

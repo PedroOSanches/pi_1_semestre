@@ -30,9 +30,8 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
     public TelaAlunosDaTurma(Turma turma) {
         this.turma = turma;
         initComponents();
-        carregarAlunos();
+        carregarAlunos(this);
         jLabel1.setText(turma.toString());
-        jTable1.setEnabled(false);
 
     }
     /** This method is called from within the constructor to
@@ -166,11 +165,17 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
 
     }//GEN-LAST:event_buttonAddAlunoActionPerformed
 
-    private void carregarAlunos(){
+    private void carregarAlunos(JFrame telaAnterior) {
         DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
                 new String[] {"Nome", "RA", "Média", "Atividades"},
                 0
-        );
+        ) {
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return columnIndex == 3;
+            }
+        };
+
         jTable1.setModel(modelo);
         new SwingWorker<List<Aluno>, Void>() {
             @Override
@@ -186,9 +191,13 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
                                 aluno,
                                 aluno.getRa(),
                                 aluno.getMedia(),
-                                "Acessar Atividades"
+                                "Acessar"
                         });
                     }
+                    jTable1.getColumn("Atividades")
+                            .setCellRenderer(new ButtonRenderer());
+                    jTable1.getColumn("Atividades")
+                            .setCellEditor(new ButtonAcessarTarefasAluno(new JCheckBox(), jTable1, telaAnterior));
                 } catch (Exception ex) {
                     Logger.getLogger(TelaAlunosDaTurma.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -199,7 +208,7 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws SQLException {
+    public static void main(String[] args) throws SQLException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
