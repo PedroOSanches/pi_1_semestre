@@ -1,15 +1,13 @@
 package br.maua.domain;
 
 import br.maua.infrastructure.ConnectionFactory;
-import br.maua.infrastructure.TentativaDAO;
+import br.maua.infrastructure.DAO.TentativaDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import br.maua.infrastructure.ConnectionFactory;
 
 public class Tentativa {
 
