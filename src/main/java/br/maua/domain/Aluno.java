@@ -8,6 +8,7 @@ import br.maua.infrastructure.DAO.AlunoDAO;
 
 public class Aluno extends Usuario {
     private Turma turma;
+    private float media;
 
     public Aluno(){}
     public Aluno(String nome, String sobrenome, String username, String senha) {
@@ -53,5 +54,13 @@ public class Aluno extends Usuario {
     public void preencheAtributos() throws SQLException {
         AlunoDAO.obterTurma(this);
 
+    }
+
+    public float getMedia() {
+        return media;
+    }
+
+    public void setMedia(float media) {
+        this.media = media;
     }
 }

@@ -14,6 +14,7 @@ public class Turma {
     private Ano ano;
     private List<Aluno> alunos;
 
+    public Turma() {}
     public Turma(String nomeTurma) {
         setNomeTurma(nomeTurma);
     }
@@ -96,6 +97,11 @@ public class Turma {
 
     @Override
     public String toString() {
+        if((subturma != null && curso != null && ano != null && semestre != null)){
+        return String.format(
+                "%s - %s-%s - %s Semestre de %s",
+                curso.getNome(), nomeTurma, subturma.getCodSubTurma(), semestre.getSemestreOrdinal(), ano.toString());
+        }
         return nomeTurma;
     }
 }

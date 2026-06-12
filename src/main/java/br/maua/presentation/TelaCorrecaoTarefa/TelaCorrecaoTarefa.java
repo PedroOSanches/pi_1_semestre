@@ -6,6 +6,7 @@ package br.maua.presentation.TelaCorrecaoTarefa;
 
 import br.maua.domain.*;
 import br.maua.infrastructure.DAO.TentativaDAO;
+import br.maua.service.ArquivoService;
 
 import javax.swing.*;
 import java.util.ArrayList;

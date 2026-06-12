@@ -5,6 +5,19 @@
 
 package br.maua.presentation.TelaAlunosDaTurma;
 
+import br.maua.domain.Aluno;
+import br.maua.domain.Professor;
+import br.maua.domain.Turma;
+import br.maua.infrastructure.DAO.TurmaDAO;
+import br.maua.infrastructure.DAO.TurmaSubturmaDAO;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author marjo
@@ -12,20 +25,16 @@ package br.maua.presentation.TelaAlunosDaTurma;
 public class TelaAlunosDaTurma extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAlunosDaTurma.class.getName());
-
+    private final Turma turma;
     /** Creates new form TelaAlunosDaTurma */
-    public TelaAlunosDaTurma() {
+    public TelaAlunosDaTurma(Turma turma) {
+        this.turma = turma;
         initComponents();
+        carregarAlunos();
+        jLabel1.setText(turma.toString());
+        jTable1.setEnabled(false);
+
     }
-
-    public TelaAlunosDaTurma(String nomeTurma) {
-        initComponents();
-
-        if (nomeTurma != null) {
-            jLabel1.setText(nomeTurma);
-        }
-    }
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -53,6 +62,7 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(950, 610));
 
         jLabel1.setBackground(new java.awt.Color(220, 140, 30));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("NomeDaTurma");
         jLabel1.setOpaque(true);
@@ -102,27 +112,29 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(323, 323, 323)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(buttonAddAluno)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(buttonAddAluno)
+                        .addGap(53, 53, 53)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonAddAluno)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(buttonAddAluno))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -151,13 +163,43 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAddAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAlunoActionPerformed
-        
+
     }//GEN-LAST:event_buttonAddAlunoActionPerformed
 
+    private void carregarAlunos(){
+        DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+                new String[] {"Nome", "RA", "Média", "Atividades"},
+                0
+        );
+        jTable1.setModel(modelo);
+        new SwingWorker<List<Aluno>, Void>() {
+            @Override
+            protected List<Aluno> doInBackground() throws Exception {
+                return TurmaDAO.buscaAlunos(turma);
+            }
+            @Override
+            protected void done() {
+                try {
+                    List<Aluno> alunos = get();
+                    for (Aluno aluno : alunos) {
+                        modelo.addRow(new Object[]{
+                                aluno,
+                                aluno.getRa(),
+                                aluno.getMedia(),
+                                "Acessar Atividades"
+                        });
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(TelaAlunosDaTurma.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }.execute();
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SQLException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -175,8 +217,8 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaAlunosDaTurma().setVisible(true));
+        Turma turma = TurmaSubturmaDAO.listarTurmaSubturmaProfessor(new Professor(16, "Giulia", "Soares")).get(0);
+        java.awt.EventQueue.invokeLater(() -> new TelaAlunosDaTurma(turma).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
