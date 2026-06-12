@@ -5,7 +5,7 @@
 package br.maua.presentation.TelaCorrecaoTarefa;
 
 import br.maua.domain.*;
-import br.maua.infrastructure.TentativaDAO;
+import br.maua.infrastructure.DAO.TentativaDAO;
 import br.maua.service.ArquivoService;
 
 import javax.swing.*;
@@ -237,7 +237,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                     painelIndividual.add(labelUpload);
                     painelIndividual.add(javax.swing.Box.createVerticalStrut(5));
 
-                    javax.swing.JButton buttonDownload = new javax.swing.JButton("Baixar Arquivo Submetido");
+                    javax.swing.JButton buttonDownload = new javax.swing.JButton("Baixar arquivo");
                     buttonDownload.addActionListener(new java.awt.event.ActionListener() {
                         @Override
                         public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -245,21 +245,29 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
                                 String pastaOrigem = "src/main/resources/assets/aluno/";
                                 java.io.File arquivoOrigem = new java.io.File(pastaOrigem + pathArquivo);
-                                String pastaDestino = "src/main/resources/assets/professor/";
-                                java.io.File arquivoDestino = new java.io.File(pastaDestino + pathArquivo);
-                                ArquivoService.salvarArquivo(arquivoOrigem, arquivoDestino);
+                                javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+                                fileChooser.setDialogTitle("Escolha onde salvar o arquivo");
+                                fileChooser.setSelectedFile(new java.io.File(pathArquivo));
+                                int userSelection = fileChooser.showSaveDialog(TelaCorrecaoTarefa.this);
 
-                                if (arquivoDestino.exists()) {
-                                    java.awt.Desktop.getDesktop().open(arquivoDestino);
-                                }
+                                if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
 
-                                else {
+                                    java.io.File arquivoDestino = fileChooser.getSelectedFile();
+                                    br.maua.service.ArquivoService.salvarArquivo(arquivoOrigem, arquivoDestino);
 
-                                    javax.swing.JOptionPane.showMessageDialog(TelaCorrecaoTarefa.this,
-                                            "Arquivo não localizado em: " + arquivoDestino.getAbsolutePath(),
-                                            "Arquivo não encontrado",
-                                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                                    if (arquivoDestino.exists()) {
+                                        java.awt.Desktop.getDesktop().open(arquivoDestino);
+                                    }
 
+                                    else {
+
+                                        javax.swing.JOptionPane.showMessageDialog(
+                                                TelaCorrecaoTarefa.this,
+                                                "Arquivo não localizado em: " + arquivoDestino.getAbsolutePath(),
+                                                "Arquivo não encontrado",
+                                                javax.swing.JOptionPane.ERROR_MESSAGE
+                                        );
+                                    }
                                 }
                             }
                             catch (Exception ex) {

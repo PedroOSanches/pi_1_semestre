@@ -6,9 +6,8 @@ package br.maua.presentation.TelasNotasProfessor;
 
 import br.maua.domain.Tentativa;
 import br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa;
-import br.maua.infrastructure.TentativaDAO;
+import br.maua.infrastructure.DAO.TentativaDAO;
 
-import java.awt.*;
 import java.util.List;
 
 /**

@@ -1,6 +1,7 @@
-package br.maua.infrastructure;
+package br.maua.infrastructure.DAO;
 
 import br.maua.domain.*;
+import br.maua.infrastructure.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

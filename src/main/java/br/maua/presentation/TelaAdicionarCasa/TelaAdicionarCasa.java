@@ -50,10 +50,10 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        // jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        // jTextField3 = new javax.swing.JTextField();
         comboSecao = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
@@ -75,9 +75,9 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Adiciona Casa");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Número da Casa");
+        // jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        // jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        // jLabel3.setText("Número da Casa");
 
         jTextField2.addActionListener(this::jTextField2ActionPerformed);
 
@@ -119,7 +119,7 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(279, 279, 279)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                            // .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                             .addComponent(comboSecao, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                             .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -127,11 +127,12 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel4)
-                                    .addComponent(jLabel3))
+                                    // .addComponent(jLabel3)
+                                )
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))))
                 .addGap(325, 325, 325))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup( jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(213, 213, 213))
@@ -147,9 +148,9 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
                         .addGap(54, 54, 54)
                         .addComponent(jButton4)))
                 .addGap(26, 26, 26)
-                .addComponent(jLabel3)
+                // .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                // .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -194,46 +195,44 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-            String numeroTexto = jTextField3.getText().trim();      // Ordem/Número da Casa
+            // String numeroTexto = jTextField3.getText().trim();      // Ordem/Número da Casa
             String dataLimiteTexto = jTextField4.getText().trim();  // Data Limite
             String tituloCasa = jTextField5.getText().trim();       // Título da Casa
             Secao secaoSelecionada = (Secao) comboSecao.getSelectedItem();
 
-        if (numeroTexto.isEmpty() || secaoSelecionada == null || tituloCasa.isEmpty() || dataLimiteTexto.isEmpty()) {
+        if (secaoSelecionada == null || tituloCasa.isEmpty() || dataLimiteTexto.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha o número, a seção, o título e a data limite da casa.", "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
-            int ordemCasa = Integer.parseInt(numeroTexto);
             int idSecao = secaoSelecionada.getidSecao();
             SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
             formatoData.setLenient(false);
             Date dataParseada = formatoData.parse(dataLimiteTexto);
             Timestamp dataLimite = new Timestamp(dataParseada.getTime());
 
-            String sql = "INSERT INTO casa (id_secao, ordem_casa, titulo_casa, data_limite_casa) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO casa (id_secao, titulo_casa, data_limite_casa) VALUES (?, ?, ?)";
 
             try (Connection conexao = ConnectionFactory.obterConexao();
-                 PreparedStatement comando = conexao.prepareStatement(sql)) {
+                PreparedStatement comando = conexao.prepareStatement(sql)) {
 
                 comando.setInt(1, idSecao);
-                comando.setInt(2, ordemCasa);
-                comando.setString(3, tituloCasa);
-                comando.setTimestamp(4, dataLimite);
+                comando.setString(2, tituloCasa);
+                comando.setTimestamp(3, dataLimite);
 
                 comando.executeUpdate();
             }
 
             JOptionPane.showMessageDialog(this, "Casa criada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             br.maua.presentation.TelaNavegacao.voltar(this);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Número da casa e seção precisam ser numéricos.", "Valor inválido", JOptionPane.ERROR_MESSAGE);
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(this, "Digite uma data válida no formato dd/MM/aaaa.", "Data inválida", JOptionPane.ERROR_MESSAGE);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao criar a casa no banco de dados: " + e.getMessage(), "Erro no banco", JOptionPane.ERROR_MESSAGE);
-        }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Número da casa e seção precisam ser numéricos.", "Valor inválido", JOptionPane.ERROR_MESSAGE);
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(this, "Digite uma data válida no formato dd/MM/aaaa.", "Data inválida", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Erro ao criar a casa no banco de dados: " + e.getMessage(), "Erro no banco", JOptionPane.ERROR_MESSAGE);
+            }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
@@ -291,13 +290,13 @@ public class TelaAdicionarCasa extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    // private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    // private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
