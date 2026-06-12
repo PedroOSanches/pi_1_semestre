@@ -14,8 +14,7 @@ public class RespostaUploadDAO {
              PreparedStatement ps = cx.prepareStatement(sqlUpload)) {
 
             ps.setInt(1, respostaupload.getIdResposta());
-            ps.setString(2, respostaupload.getCaminhoArquivo());
-
+            ps.setString(2, respostaupload.getArquivo().getPath());
             ps.executeUpdate();
 
         } catch (SQLException e) {

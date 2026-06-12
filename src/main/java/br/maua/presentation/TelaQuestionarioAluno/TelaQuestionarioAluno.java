@@ -57,12 +57,6 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                 BoxLayout.Y_AXIS
             )
         );
-    
-        
-        painelAzul1.setLayout(new java.awt.GridBagLayout());
-        painelAzul1.add(painelCinza1);
-        jScrollPane6.getVerticalScrollBar().setUnitIncrement(25);
-        configurarScroll();
         
         try {
         carregarQuestoes(tarefa.getQuestoes());
@@ -70,8 +64,14 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         } catch (Exception e) {
         e.printStackTrace();
         }
+
+        painelAzul1.setLayout(new java.awt.GridBagLayout());
+        painelAzul1.add(painelCinza1);
+        jScrollPane6.getVerticalScrollBar().setUnitIncrement(25);
+        configurarScroll();
         
     }
+    
     
 
     private void carregarQuestoes(List<Questao>questoes){
@@ -96,22 +96,19 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         PainelQuestoes.revalidate();
         PainelQuestoes.repaint();
     }
+    
     private void configurarScroll() {
 
         painelCinza1.setPreferredSize(null);
+        painelAzul1.setPreferredSize(null);
 
-        jScrollPane6.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-
+        PainelQuestoes.revalidate();
         painelCinza1.revalidate();
-        painelCinza1.repaint();
+        painelAzul1.revalidate();
 
-
-        java.awt.Dimension tamanhoReal = painelCinza1.getLayout().preferredLayoutSize(painelCinza1);
-        painelCinza1.setPreferredSize(tamanhoReal);
-
-
-        jScrollPane6.setViewportView(painelCinza1);
+        jScrollPane6.setViewportView(painelAzul1);
+        jScrollPane6.revalidate();
+        jScrollPane6.repaint();
     }
 
     /**
@@ -133,12 +130,11 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jScrollPane6.setPreferredSize(new java.awt.Dimension(1024, 993));
+        jScrollPane6.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
 
         painelCinza1.setBackground(new java.awt.Color(217, 217, 217));
-        painelCinza1.setPreferredSize(new java.awt.Dimension(956, 725));
 
         titulo3.setAlignment(java.awt.Label.CENTER);
         titulo3.setBackground(new java.awt.Color(19, 112, 178));
@@ -157,6 +153,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         btnEnviarTarefa2.addActionListener(this::btnEnviarTarefa2ActionPerformed);
 
         PainelQuestoes.setBackground(new java.awt.Color(217, 217, 217));
+        PainelQuestoes.setLayout(new javax.swing.BoxLayout(PainelQuestoes, javax.swing.BoxLayout.Y_AXIS));
 
         javax.swing.GroupLayout PainelQuestoesLayout = new javax.swing.GroupLayout(PainelQuestoes);
         PainelQuestoes.setLayout(PainelQuestoesLayout);
@@ -265,7 +262,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                     }
 
                     RespostaUpload respostaUpload = new RespostaUpload();
-                    File pastaUploads = new File("uploads");
+                    File pastaUploads = new File("src/main/resources/aluno/");
 
                     if (!pastaUploads.exists()) {
                         pastaUploads.mkdirs();
@@ -281,9 +278,10 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                             arquivoSelecionado, destino
                     );
 
-                    respostaUpload.setCaminhoArquivo(
-                        "uploads/" + nomeArquivo
+                    respostaUpload.setArquivo(
+                        new File("uploads/" + nomeArquivo)
                     );
+                    
                 RespostaUploadDAO dao = new RespostaUploadDAO();
                 dao.salvar(respostaUpload);
 

@@ -1,7 +1,9 @@
 package br.maua.domain;
 
+import java.io.File; 
+
 public class RespostaUpload extends Resposta{
-    private String caminhoArquivo;
+    private File arquivo;
     private String nomeArquivo;
 
      public String gerarRespostaBanco(String arquivo_resposta){
@@ -9,12 +11,12 @@ public class RespostaUpload extends Resposta{
         return sql;
     }
 
-    public String getCaminhoArquivo() {
-        return caminhoArquivo;
+    public File getArquivo() {
+        return arquivo;
     }
 
-    public void setCaminhoArquivo(String caminhoArquivo) {
-        this.caminhoArquivo = caminhoArquivo;
+    public void setArquivo(File arquivo) {
+        this.arquivo = arquivo;
     } 
 
     public String getNomeArquivo() {
