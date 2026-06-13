@@ -19,6 +19,7 @@ import br.maua.domain.QuestaoUpload;
  * @author Luiza
  */
 public class PainelQuestaoUpload extends javax.swing.JPanel {
+    private final QuestaoUpload questao;
     private File arquivoSelecionado;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
@@ -26,6 +27,7 @@ public class PainelQuestaoUpload extends javax.swing.JPanel {
      * Creates new form PainelQuestaoUpload
      */
     public PainelQuestaoUpload(QuestaoUpload questao) {
+        this.questao = questao;
         initComponents();
         jTextPane4.setEditable(false);
         jTextPane4.setFocusable(false);
@@ -33,6 +35,7 @@ public class PainelQuestaoUpload extends javax.swing.JPanel {
         questao.getEnunciado()
         );
     }
+    public QuestaoUpload getQuestao() { return questao; }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -12,16 +12,20 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 
+import br.maua.domain.Aluno;
 import br.maua.domain.Questao;
 import br.maua.domain.QuestaoAlternativa;
 import br.maua.domain.QuestaoDissertativa;
 import br.maua.domain.QuestaoUpload;
+import br.maua.domain.Resposta;
 import br.maua.domain.RespostaAlternativa;
 import br.maua.domain.RespostaDissertativa;
 import br.maua.domain.RespostaUpload;
 import br.maua.domain.Tarefa;
+import br.maua.domain.Tentativa;
 import br.maua.infrastructure.DAO.QuestaoDAO;
 import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
+import br.maua.infrastructure.DAO.RespostaDAO;
 import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
 import br.maua.infrastructure.DAO.RespostaUploadDAO;
 import br.maua.service.ArquivoService;
@@ -36,12 +40,16 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger
     (TelaQuestionarioAluno.class.getName());
     private final Tarefa tarefa;
+    private Aluno aluno;
+    private final Tentativa tentativa;
 
     /**
      * Creates new form TelaQuestionarioAluno
      */
-    public TelaQuestionarioAluno(Tarefa tarefa) {
+    public TelaQuestionarioAluno(Tarefa tarefa, Tentativa tentativa, Aluno aluno) {
         this.tarefa = tarefa;
+        this.tentativa = tentativa;
+        this.aluno = aluno;
         initComponents();
         try{
             QuestaoDAO.buscarPorTarefa(tarefa);
@@ -231,72 +239,61 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
 
     private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
         // TODO add your handling code her
-        for (Component c : PainelQuestoes.getComponents()){
-            if (c instanceof PainelQuestaoDissertativa painel){
-                String textoResposta = painel.getTextoResposta();
-                
-                RespostaDissertativa respostadis = new RespostaDissertativa();
-                
-                respostadis.setTextoResposta(textoResposta);
-                
-                RespostaDissertativaDAO dao = new RespostaDissertativaDAO();
-                dao.salvar(respostadis);
-            }
-            
-            else if (c instanceof PainelQuestaoAlternativa painel){
-                int idAlternativa = painel.getAlternativaSelecionada();
-                
-                RespostaAlternativa respostaalt = new RespostaAlternativa();
-                
-                respostaalt.setIdAlternativa(idAlternativa);
-                
-                RespostaAlternativaDAO dao = new RespostaAlternativaDAO();
-                dao.salvar(respostaalt);
-            }
-            
-            else if (c instanceof PainelQuestaoUpload painel){
+        RespostaDAO respostaDAO = new RespostaDAO();
+        for (Component c : PainelQuestoes.getComponents()) {
+
+            Questao questao = null;
+            if      (c instanceof PainelQuestaoDissertativa p) questao = p.getQuestao();
+            else if (c instanceof PainelQuestaoAlternativa  p) questao = p.getQuestao();
+            else if (c instanceof PainelQuestaoUpload       p) questao = p.getQuestao();
+            if (questao == null) continue;
+
+            Resposta resposta = new Resposta();
+            resposta.setTentativa(tentativa);
+            resposta.setQuestao(questao);
+            resposta.setNota(0.0);
+            respostaDAO.salvar(resposta); 
+
+            if (c instanceof PainelQuestaoDissertativa painel) {
+                RespostaDissertativa rd = new RespostaDissertativa();
+                rd.setIdResposta(resposta.getIdResposta()); 
+                rd.setTextoResposta(painel.getTextoResposta());
+                new RespostaDissertativaDAO().salvar(rd);
+
+            } else if (c instanceof PainelQuestaoAlternativa painel) {
+                int idAlt = painel.getAlternativaSelecionada();
+                if (idAlt == -1) {
+                    JOptionPane.showMessageDialog(this, "Selecione uma alternativa antes de enviar.");
+                    return;
+                }
+                RespostaAlternativa ra = new RespostaAlternativa();
+                ra.setIdResposta(resposta.getIdResposta());
+                ra.setIdAlternativa(idAlt);
+                new RespostaAlternativaDAO().salvar(ra);
+
+            } else if (c instanceof PainelQuestaoUpload painel) {
                 try {
-                    File arquivoSelecionado = painel.getArquivoSelecionado();
-                    if (arquivoSelecionado == null) {
-                        continue;
-                    }
+                    File arquivo = painel.getArquivoSelecionado();
+                    if (arquivo == null) continue;
 
-                    RespostaUpload respostaUpload = new RespostaUpload();
-                    File pastaUploads = new File("src/main/resources/aluno/");
+                    File pasta = new File("src/main/resources/aluno/");
+                    if (!pasta.exists()) pasta.mkdirs();
 
-                    if (!pastaUploads.exists()) {
-                        pastaUploads.mkdirs();
-                    }
+                    String nomeArquivo = System.currentTimeMillis() + "_" + arquivo.getName();
+                    ArquivoService.salvarArquivo(arquivo, new File(pasta, nomeArquivo));
 
-                    String nomeArquivo = System.currentTimeMillis() + "_" + arquivoSelecionado.getName();
-
-                    File destino = new File(
-                        pastaUploads, nomeArquivo
-                    );
-
-                    ArquivoService.salvarArquivo(
-                            arquivoSelecionado, destino
-                    );
-
-                    respostaUpload.setArquivo(
-                        new File("uploads/" + nomeArquivo)
-                    );
-                    
-                RespostaUploadDAO dao = new RespostaUploadDAO();
-                dao.salvar(respostaUpload);
+                    RespostaUpload ru = new RespostaUpload();
+                    ru.setIdResposta(resposta.getIdResposta()); 
+                    ru.setArquivo(new File("uploads/" + nomeArquivo));
+                    new RespostaUploadDAO().salvar(ru);
 
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(
-                            this, "Erro ao enviar arquivo: " 
-                                    + e.getMessage()
-                    );
+                    JOptionPane.showMessageDialog(this, "Erro ao enviar arquivo: " + e.getMessage());
                 }
-
             }
         }
 
-        JOptionPane.showMessageDialog(this,"Tarefa enviada!");
-
+        JOptionPane.showMessageDialog(this, "Tarefa enviada!");
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
     /**
@@ -324,7 +321,14 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         Tarefa tarefa = new Tarefa();
         tarefa.setIdTarefa(20);
         tarefa.setTitulo("Teste Geral");
-        TelaQuestionarioAluno tqa = new TelaQuestionarioAluno(tarefa);
+
+        Aluno aluno = new Aluno();
+        aluno.setIdAluno(9);
+
+        Tentativa tentativa = new Tentativa(aluno, tarefa); 
+        tentativa.registraTentativa();
+
+        TelaQuestionarioAluno tqa = new TelaQuestionarioAluno(tarefa, tentativa, aluno);
         tqa.setVisible(true);
     }
 

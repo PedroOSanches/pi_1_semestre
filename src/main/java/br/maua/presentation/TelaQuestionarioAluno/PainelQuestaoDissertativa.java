@@ -11,6 +11,7 @@ import br.maua.domain.QuestaoDissertativa;
  * @author Luiza
  */
 public class PainelQuestaoDissertativa extends javax.swing.JPanel {
+    private final QuestaoDissertativa questao;
     public String getTextoResposta(){
         return jTextArea2.getText();
     }
@@ -18,6 +19,7 @@ public class PainelQuestaoDissertativa extends javax.swing.JPanel {
      * Creates new form PainelQuestaoDissertativa
      */
     public PainelQuestaoDissertativa(QuestaoDissertativa questao) {
+        this.questao = questao;
         initComponents();
         jTextPane3.setEditable(false);
         jTextPane3.setFocusable(false);
@@ -25,6 +27,7 @@ public class PainelQuestaoDissertativa extends javax.swing.JPanel {
         questao.getEnunciado()
         );
     }
+    public QuestaoDissertativa getQuestao() { return questao; }
 
     /**
      * This method is called from within the constructor to initialize the form.

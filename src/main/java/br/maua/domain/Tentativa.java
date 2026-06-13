@@ -2,6 +2,7 @@ package br.maua.domain;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import br.maua.infrastructure.ConnectionFactory;
@@ -56,19 +57,26 @@ public class Tentativa {
         this.concluida = concluida;
     }
     public void registraTentativa(){
-        String sql = "INSERT INTO tentativa (id_questionario, id_usuario, concluido) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO tentativa (id_tarefa, id_usuario, status_tentativa) VALUES (?, ?, ?)";
 
         try(
                 Connection cx = ConnectionFactory.obterConexao();
         ) {
             assert cx != null;
-            try(PreparedStatement ps = cx.prepareStatement(sql);
+            try(PreparedStatement ps = cx.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
                     ){
                 ps.setInt(1, tarefa.getIdTarefa());
                 ps.setInt(2, aluno.getIdAluno());
-                ps.setBoolean(3, concluida);
+                ps.setString(3, "pendente");
                 ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) { 
+                    if (rs.next()) {
+                        this.idTentativa = rs.getInt(1);
+                    }
+                }
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,5 +84,9 @@ public class Tentativa {
     }
     public int getIdTentativa() {
         return idTentativa;
+    }
+
+    public void setIdTentativa(int idTentativa) {
+        this.idTentativa = idTentativa;
     }
 }

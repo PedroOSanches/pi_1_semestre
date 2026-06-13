@@ -4,21 +4,22 @@
  */
 package br.maua.presentation.TelaQuestionarioAluno;
 
-import br.maua.domain.Questao;
-import br.maua.domain.QuestaoAlternativa;
-import br.maua.domain.RespostaAlternativa;
-import br.maua.domain.Alternativa;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
-import java.util.HashMap;
-import java.util.Map;
+
+import br.maua.domain.Alternativa;
+import br.maua.domain.QuestaoAlternativa;
 /**
  *
  * @author Luiza
  */
 public class PainelQuestaoAlternativa extends javax.swing.JPanel {
 
+    private final QuestaoAlternativa questao;
     private ButtonGroup grupo = new ButtonGroup();
     private Map<JRadioButton, Alternativa> alternativasMap =
         new HashMap<>();
@@ -26,6 +27,7 @@ public class PainelQuestaoAlternativa extends javax.swing.JPanel {
      * Creates new form PainelQuestaoAlternativa
      */
     public PainelQuestaoAlternativa(QuestaoAlternativa questao) {
+        this.questao = questao;
         initComponents();
         jTextPane2.setEditable(false);
         jTextPane2.setFocusable(false);
@@ -49,8 +51,10 @@ public class PainelQuestaoAlternativa extends javax.swing.JPanel {
         grupo.add(radio);
         PainelOpcoesAlternativas.add(radio);
         alternativasMap.put(radio, alt);
+        }
     }
-    }
+    
+    public QuestaoAlternativa getQuestao() { return questao; }
 
     /**
      * This method is called from within the constructor to initialize the form.
