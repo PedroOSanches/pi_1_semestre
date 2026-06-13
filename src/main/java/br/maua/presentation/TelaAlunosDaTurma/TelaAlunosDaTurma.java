@@ -10,6 +10,8 @@ import br.maua.domain.Professor;
 import br.maua.domain.Turma;
 import br.maua.infrastructure.DAO.TurmaDAO;
 import br.maua.infrastructure.DAO.TurmaSubturmaDAO;
+import br.maua.presentation.TelaAdicionarAlunoNaTurma.TelaAdicionarAlunoNaTurma;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
@@ -25,9 +27,12 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAlunosDaTurma.class.getName());
     private final Turma turma;
+    private final JFrame telaAnterior;
+
     /** Creates new form TelaAlunosDaTurma */
-    public TelaAlunosDaTurma(Turma turma) {
+    public TelaAlunosDaTurma(Turma turma, JFrame telaAnterior) {
         this.turma = turma;
+        this.telaAnterior = telaAnterior;
         initComponents();
         carregarAlunos(this);
         jLabel1.setText(turma.toString());
@@ -48,6 +53,7 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         buttonAddAluno = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        buttonVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(1048, 768));
@@ -106,6 +112,12 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        buttonVoltar.setBackground(new java.awt.Color(220, 140, 30));
+        buttonVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        buttonVoltar.setText("Voltar");
+        buttonVoltar.setOpaque(true);
+        buttonVoltar.addActionListener(this::buttonVoltarActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -117,22 +129,25 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(buttonVoltar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonAddAluno)
-                        .addGap(53, 53, 53)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGap(155, 155, 155)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(buttonAddAluno))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap()
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonAddAluno)
+                            .addComponent(buttonVoltar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -160,9 +175,17 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonAddAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAlunoActionPerformed
-
+    private void buttonAddAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAlunoActionPerforme
+        java.awt.EventQueue.invokeLater(() -> {
+            new TelaAdicionarAlunoNaTurma(this).setVisible(true);
+            setVisible(false);
+        });
     }//GEN-LAST:event_buttonAddAlunoActionPerformed
+
+    private void buttonVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVoltarActionPerformed
+        telaAnterior.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_buttonVoltarActionPerformed
 
     private void carregarAlunos(JFrame telaAnterior) {
         DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
@@ -204,33 +227,9 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
             }
         }.execute();
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws SQLException {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        Turma turma = TurmaSubturmaDAO.listarTurmaSubturmaProfessor(new Professor(16, "Giulia", "Soares")).get(0);
-        java.awt.EventQueue.invokeLater(() -> new TelaAlunosDaTurma(turma).setVisible(true));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddAluno;
+    private javax.swing.JButton buttonVoltar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

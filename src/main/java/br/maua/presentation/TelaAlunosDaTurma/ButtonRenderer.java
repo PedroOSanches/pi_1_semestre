@@ -3,7 +3,7 @@ package br.maua.presentation.TelaAlunosDaTurma;
 import javax.swing.*;
 import java.awt.*;
 
-class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
+public class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
 
     public ButtonRenderer() {
         setText("Acessar");
