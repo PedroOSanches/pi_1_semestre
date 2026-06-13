@@ -10,6 +10,9 @@ import br.maua.exception.UpdateException;
 public class ArquivoService {
     public static File salvarArquivo(File origem, File destino) throws UpdateException {
         try {
+            if (origem == null || !origem.exists()) {
+                throw new UpdateException("Arquivo de origem nao existe!");
+            }
             java.nio.file.Files.copy(
                     origem.toPath(),
                     destino.toPath(),

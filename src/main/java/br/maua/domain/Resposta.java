@@ -34,5 +34,6 @@ public class Resposta {
     public void setNota(Double nota) { 
         this.nota = nota; 
     }
+
 }
 
