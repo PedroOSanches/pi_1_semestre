@@ -10,7 +10,6 @@ import br.maua.domain.Professor;
 import br.maua.domain.Turma;
 import br.maua.infrastructure.DAO.TurmaDAO;
 import br.maua.infrastructure.DAO.TurmaSubturmaDAO;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;

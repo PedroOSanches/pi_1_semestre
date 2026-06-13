@@ -1,23 +1,21 @@
 package br.maua.presentation.TelaTarefasAluno;
 
-import br.maua.infrastructure.ConnectionFactory;
-import br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno;
+import br.maua.infrastructure.DAO.TentativaDAO;
+import br.maua.infrastructure.DAO.TentativaDAO.TarefaTentadaDTO;
+// import br.maua.presentation.TelaCorrecaoProfessor.TelaCorrecaoProfessor; // Descomente quando criar/ajustar a tela de correção
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.*;
 
-
 /**
- * Tela unificada: Design limpo com carregamento dinâmico de tarefas.
- * @author Luiza / Lenovo
+ * Tela unificada: Exibe dinamicamente as tarefas que o aluno selecionado realizou.
+ * @author Luiza / Lenovo (Adaptado para visão do Professor)
  */
 public class TelaTarefaAluno extends JFrame {
     
@@ -26,14 +24,11 @@ public class TelaTarefaAluno extends JFrame {
     private final String tituloTarefa;
     private final JFrame telaAnterior;
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTarefaAluno.class.getName());
-
-    public TelaTarefaAluno(JFrame telaAnterior, Integer idAluno) {
-        this(idAluno, null, "Atividade", telaAnterior);
-    }
-
-    public TelaTarefaAluno(String tituloTarefa, JFrame telaAnterior) {
-        this(null, null, tituloTarefa, telaAnterior);
+    /**
+     * Construtor chamado pela TelaAlunosDaTurma ao clicar em "Acessar"
+     */
+    public TelaTarefaAluno(JFrame telaAnterior, Integer idAluno, Integer idCasa) {
+        this(idAluno, idCasa, "Tarefas Realizadas", telaAnterior);
     }
 
     public TelaTarefaAluno(Integer idAluno, Integer idCasa, String tituloTarefa, JFrame telaAnterior) {
@@ -57,7 +52,6 @@ public class TelaTarefaAluno extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        // Design base da primeira tela
         painelAzul.setBackground(new java.awt.Color(19, 112, 178));
 
         painelCinza.setBackground(new java.awt.Color(217, 217, 217));
@@ -67,27 +61,24 @@ public class TelaTarefaAluno extends JFrame {
         painelCinza.setLayout(null);
 
         painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
-        painelAzul1.setMaximumSize(new java.awt.Dimension(710, 90));
-        painelAzul1.setMinimumSize(new java.awt.Dimension(710, 90));
-        painelAzul1.setPreferredSize(new java.awt.Dimension(710, 90));
 
-        nomeTitulo.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 48)); // NOI18N
+        nomeTitulo.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 36)); // NOI18N
         nomeTitulo.setForeground(new java.awt.Color(255, 255, 255));
-        nomeTitulo.setText("Tarefas");
+        nomeTitulo.setText("Tarefas do Aluno");
 
         javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
         painelAzul1.setLayout(painelAzul1Layout);
         painelAzul1Layout.setHorizontalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(271, 271, 271)
+                .addGap(40, 40, 40)
                 .addComponent(nomeTitulo)
-                .addContainerGap(301, Short.MAX_VALUE))
+                .addContainerGap(420, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
             painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(22, 22, 22)
                 .addComponent(nomeTitulo)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
@@ -95,7 +86,6 @@ public class TelaTarefaAluno extends JFrame {
         painelCinza.add(painelAzul1);
         painelAzul1.setBounds(94, 37, 720, 90);
 
-        // Botão voltar com a cor laranja original do design
         jButton1.setBackground(new java.awt.Color(240, 147, 23));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Voltar");
@@ -135,39 +125,48 @@ public class TelaTarefaAluno extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        br.maua.presentation.TelaNavegacao.voltar(this);
+        this.dispose();
+        if (telaAnterior != null) {
+            telaAnterior.setVisible(true);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
-     * Mescla o carregamento dinâmico dentro da estrutura fixa do layout
+     * Limpa, gerencia o scroll e renderiza os cards dinâmicos na tela.
      */
     private void configurarConteudo() {
-        // Altera o título dinâmico se houver
         if (this.tituloTarefa != null && !this.tituloTarefa.equals("Atividade")) {
             nomeTitulo.setText(this.tituloTarefa);
         }
 
-        // Criamos um container interno com Scroll para os cards de tarefa não estourarem o painel cinza
         JPanel containerCards = new JPanel();
         containerCards.setBackground(new java.awt.Color(217, 217, 217));
         containerCards.setLayout(new BoxLayout(containerCards, BoxLayout.Y_AXIS));
 
-        // Carrega os dados do banco
-        List<RegistroTarefaAluno> tarefas = carregarTarefasDaCasa();
-        if (tarefas.isEmpty()) {
-            JLabel vazio = new JLabel("Nenhuma tarefa encontrada para esta casa.");
-            vazio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-            vazio.setForeground(new Color(90, 90, 90));
-            vazio.setAlignmentX(LEFT_ALIGNMENT);
-            containerCards.add(vazio);
-        } else {
-            for (RegistroTarefaAluno tarefa : tarefas) {
-                containerCards.add(criarCardTarefa(tarefa));
-                containerCards.add(Box.createRigidArea(new Dimension(0, 12)));
+        // Busca os dados delegando a ação para o TentativaDAO
+        try {
+            if (idAluno != null) {
+                List<TarefaTentadaDTO> tarefas = TentativaDAO.buscarTarefasTentadasPeloAluno(idAluno, idCasa);
+                
+                if (tarefas.isEmpty()) {
+                    JLabel vazio = new JLabel("Nenhuma tarefa realizada por este aluno.");
+                    vazio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+                    vazio.setForeground(new Color(90, 90, 90));
+                    vazio.setAlignmentX(LEFT_ALIGNMENT);
+                    containerCards.add(vazio);
+                } else {
+                    for (TarefaTentadaDTO tarefa : tarefas) {
+                        // Adiciona o card cinza retangular e o espaçamento vertical
+                        containerCards.add(criarCardTarefaClicavel(tarefa));
+                        containerCards.add(Box.createRigidArea(new Dimension(0, 12)));
+                    }
+                }
             }
+        } catch (java.sql.SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar dados do banco: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
 
-        // Criamos uma barra de rolagem invisível ou discreta para encaixar no painel fixo
+        // Configuração do ScrollPane para encaixar perfeitamente no painelCinza
         JScrollPane scrollPane = new JScrollPane(containerCards);
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
@@ -175,7 +174,6 @@ public class TelaTarefaAluno extends JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        // Adiciona o ScrollPane dinâmico na parte inferior do painelCinza fixo
         painelCinza.add(scrollPane);
         scrollPane.setBounds(94, 150, 720, 420); 
 
@@ -183,100 +181,72 @@ public class TelaTarefaAluno extends JFrame {
         painelCinza.repaint();
     }
 
-    private List<RegistroTarefaAluno> carregarTarefasDaCasa() {
-        List<RegistroTarefaAluno> tarefas = new ArrayList<>();
-        if (idCasa == null) {
-            return tarefas;
-        }
-
-        String sql = "SELECT t.id_tarefa, t.titulo_tarefa, COUNT(te.id_tentativa) AS total_tentativas "
-            + "FROM tarefa t "
-            + "LEFT JOIN tentativa te ON te.id_tarefa = t.id_tarefa "
-            + (idAluno != null ? "AND te.id_usuario = ? " : "")
-            + "WHERE t.id_casa = ? "
-            + "GROUP BY t.id_tarefa, t.titulo_tarefa "
-            + "ORDER BY t.id_tarefa";
-
-        try (Connection conexao = ConnectionFactory.obterConexao();
-             PreparedStatement comando = conexao.prepareStatement(sql)) {
-
-            int index = 1;
-            if (idAluno != null) {
-                comando.setInt(index++, idAluno);
-            }
-            comando.setInt(index, idCasa);
-
-            try (ResultSet resultado = comando.executeQuery()) {
-                while (resultado.next()) {
-                    tarefas.add(new RegistroTarefaAluno(
-                        resultado.getInt("id_tarefa"),
-                        resultado.getString("titulo_tarefa"),
-                        resultado.getInt("total_tentativas")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao carregar tarefas: " + e.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-
-        return tarefas;
-    }
-
-    private JPanel criarCardTarefa(RegistroTarefaAluno tarefa) {
-        JPanel card = new JPanel(new BorderLayout(10, 8));
-        card.setBackground(Color.WHITE);
-        card.setMaximumSize(new Dimension(720, 90)); // Fixa o tamanho para alinhar com o cabeçalho azul
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(240, 147, 23), 2), // Laranja combinando com o botão voltar
-            BorderFactory.createEmptyBorder(12, 16, 12, 16)));
+    /**
+     * Desenha o Card conforme o print enviado (Cinza, texto "Atividade: [Nome]")
+     * Adiciona o evento de clique do Mouse para redirecionar para a correção.
+     */
+    private JPanel criarCardTarefaClicavel(TarefaTentadaDTO tarefa) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(new Color(217, 217, 217)); // Cor cinza idêntica ao print
+        card.setMaximumSize(new Dimension(720, 60));  
+        card.setPreferredSize(new Dimension(720, 60));
+        card.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         card.setAlignmentX(LEFT_ALIGNMENT);
 
-        JPanel painelTextos = new JPanel();
-        painelTextos.setOpaque(false);
-        painelTextos.setLayout(new BoxLayout(painelTextos, BoxLayout.Y_AXIS));
-
-        JLabel titulo = new JLabel(tarefa.tituloTarefa);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        titulo.setForeground(new Color(19, 112, 178));
-        titulo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
-
-        JLabel id = new JLabel("Tarefa #" + tarefa.idTarefa);
-        id.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        id.setForeground(new Color(100, 100, 100));
-
-        JLabel tentativas = new JLabel("Tentativas: " + tarefa.totalTentativas);
-        tentativas.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tentativas.setForeground(new Color(100, 100, 100));
-
-        JButton abrir = new JButton("Questionário");
-        abrir.setBackground(new Color(240, 147, 23)); // Laranja padrão do design
-        abrir.setForeground(Color.WHITE);
-        abrir.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        abrir.setFocusPainted(false);
-        abrir.addActionListener(evt -> abrirQuestionarioAluno());
-
-        JPanel textos = new JPanel();
-        textos.setOpaque(false);
-        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
-        textos.add(titulo);
-        textos.add(Box.createRigidArea(new Dimension(0, 4)));
+        JLabel labelTitulo = new JLabel("Atividade: " + tarefa.tituloTarefa());
+        labelTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        labelTitulo.setForeground(Color.BLACK);
         
-        JPanel subTextos = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
-        subTextos.setOpaque(false);
-        subTextos.add(id);
-        subTextos.add(Box.createRigidArea(new Dimension(15, 0)));
-        subTextos.add(tentativas);
-        textos.add(subTextos);
+        card.add(labelTitulo, BorderLayout.WEST);
 
-        card.add(textos, BorderLayout.CENTER);
-        card.add(abrir, BorderLayout.EAST);
+        // Ouvinte de eventos do Mouse para clique e efeito de foco (hover)
+        card.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                abrirCorrecaoProfessor(tarefa.idTarefa(), tarefa.tituloTarefa());
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                card.setBackground(new Color(200, 200, 200)); // Escurece de leve ao passar o mouse
+                card.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                card.setBackground(new Color(217, 217, 217)); // Retorna à cor original
+            }
+        });
+
         return card;
     }
 
-    private void abrirQuestionarioAluno() {
-        TelaQuestionarioAluno questionario = new TelaQuestionarioAluno();
-        br.maua.presentation.TelaNavegacao.abrir(this, questionario);
+    /**
+     * Executa a transição para a tela de Correção enviando os IDs de contexto obtidos
+     */
+    private void abrirCorrecaoProfessor(int idTarefa, String titulo) {
+    try {
+        int idTentativa = br.maua.infrastructure.DAO.TentativaDAO.buscarIdTentativaPorAlunoETarefa(this.idAluno, idTarefa);
+        
+        if (idTentativa != -1) {
+            br.maua.domain.Tentativa tentativaParaCorrigir = new br.maua.domain.Tentativa(idTentativa);
+            
+            br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa telaCorrecao = 
+                new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(tentativaParaCorrigir);
+            
+            telaCorrecao.setVisible(true);
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Não foi possível localizar o registro da tentativa para este aluno.", 
+                "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Erro ao mapear tentativa: " + e.getMessage(), 
+            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -285,7 +255,4 @@ public class TelaTarefaAluno extends JFrame {
     private javax.swing.JPanel painelAzul1;
     private javax.swing.JPanel painelCinza;
     // End of variables declaration//GEN-END:variables
-
-    private record RegistroTarefaAluno(int idTarefa, String tituloTarefa, int totalTentativas) {
-    }
 }

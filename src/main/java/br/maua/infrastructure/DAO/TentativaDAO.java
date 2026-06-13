@@ -184,4 +184,55 @@ public class TentativaDAO {
             return false;
         }
     }
+
+    public record TarefaTentadaDTO(int idTarefa, String tituloTarefa) {}
+
+    public static List<TarefaTentadaDTO> buscarTarefasTentadasPeloAluno(int idAluno, Integer idCasa) throws SQLException {
+        List<TarefaTentadaDTO> lista = new ArrayList<>();
+        
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT t.id_tarefa, t.titulo_tarefa ");
+        sql.append("FROM tarefa t ");
+        sql.append("INNER JOIN tentativa te ON te.id_tarefa = t.id_tarefa ");
+        sql.append("WHERE te.id_usuario = ? ");
+        
+        if (idCasa != null) {
+            sql.append("AND t.id_casa = ? ");
+        }
+        
+        sql.append("GROUP BY t.id_tarefa, t.titulo_tarefa ORDER BY t.id_tarefa");
+
+        try (Connection conexao = ConnectionFactory.obterConexao();
+            PreparedStatement comando = conexao.prepareStatement(sql.toString())) {
+
+            comando.setInt(1, idAluno);
+            if (idCasa != null) {
+                comando.setInt(2, idCasa);
+            }
+
+            try (ResultSet resultado = comando.executeQuery()) {
+                while (resultado.next()) {
+                    lista.add(new TarefaTentadaDTO(
+                        resultado.getInt("id_tarefa"),
+                        resultado.getString("titulo_tarefa")
+                    ));
+                }
+            }
+        }
+        return lista;
+    }
+    public static int buscarIdTentativaPorAlunoETarefa(int idAluno, int idTarefa) throws SQLException {
+        String sql = "SELECT id_tentativa FROM tentativa WHERE id_usuario = ? AND id_tarefa = ? LIMIT 1";
+        try (Connection conexao = ConnectionFactory.obterConexao();
+            PreparedStatement comando = conexao.prepareStatement(sql)) {
+            comando.setInt(1, idAluno);
+            comando.setInt(2, idTarefa);
+            try (ResultSet resultado = comando.executeQuery()) {
+                if (resultado.next()) {
+                    return resultado.getInt("id_tentativa");
+                }
+            }
+        }
+        return -1;
+    }
 }

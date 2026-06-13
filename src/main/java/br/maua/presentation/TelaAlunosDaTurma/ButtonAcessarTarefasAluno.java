@@ -13,15 +13,20 @@ public class ButtonAcessarTarefasAluno extends DefaultCellEditor {
 
     public ButtonAcessarTarefasAluno(JCheckBox checkBox, JTable tabela, JFrame telaBotao) {
         super(checkBox);
+        this.telaBotao = telaBotao;
         button = new JButton();
         button.addActionListener(e -> {
             fireEditingStopped();
 
-            System.out.println("Clicou linha" + row);
+            System.out.println("Clicou linha " + row);
 
             Aluno aluno = (Aluno) tabela.getValueAt(row, 0);
             java.awt.EventQueue.invokeLater(() -> {
-                        new TelaTarefaAluno(telaBotao, aluno.getId()).setVisible(true);
+                        
+                        new TelaTarefaAluno(telaBotao, aluno.getId(), null).setVisible(true);
+                        if (telaBotao != null) {
+                            telaBotao.setVisible(false);
+                        }
                     }
             );
         });
