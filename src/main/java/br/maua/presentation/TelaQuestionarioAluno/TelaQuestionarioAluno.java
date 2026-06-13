@@ -26,6 +26,8 @@ import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
 import br.maua.infrastructure.DAO.RespostaUploadDAO;
 import br.maua.service.ArquivoService;
 
+import static br.maua.config.AppConfig.BASE_ALUNO;
+
 /**
  *
  * @author Luiza
@@ -48,7 +50,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
         }catch(SQLException e ){
             JOptionPane.showMessageDialog(rootPane, "Erro ao se comunicar com o banco!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         titulo3.setText(tarefa.getTitulo());
 
         PainelQuestoes.setLayout(
@@ -57,7 +59,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                 BoxLayout.Y_AXIS
             )
         );
-        
+
         try {
         carregarQuestoes(tarefa.getQuestoes());
 
@@ -262,7 +264,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                     }
 
                     RespostaUpload respostaUpload = new RespostaUpload();
-                    File pastaUploads = new File("src/main/resources/aluno/");
+                    File pastaUploads = new File(BASE_ALUNO);
 
                     if (!pastaUploads.exists()) {
                         pastaUploads.mkdirs();
@@ -271,7 +273,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                     String nomeArquivo = System.currentTimeMillis() + "_" + arquivoSelecionado.getName();
 
                     File destino = new File(
-                        pastaUploads, nomeArquivo
+                            pastaUploads, nomeArquivo
                     );
 
                     ArquivoService.salvarArquivo(
@@ -279,11 +281,11 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
                     );
 
                     respostaUpload.setArquivo(
-                        new File("uploads/" + nomeArquivo)
+                            destino
                     );
-                    
-                RespostaUploadDAO dao = new RespostaUploadDAO();
-                dao.salvar(respostaUpload);
+
+                    RespostaUploadDAO dao = new RespostaUploadDAO();
+                    RespostaUploadDAO.salvar(respostaUpload);
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(
@@ -302,7 +304,7 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

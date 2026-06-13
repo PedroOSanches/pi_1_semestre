@@ -13,12 +13,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import br.maua.domain.QuestaoUpload;
+import br.maua.service.ArquivoService;
 
 /**
  *
  * @author Luiza
  */
 public class PainelQuestaoUpload extends javax.swing.JPanel {
+    private final File arquivoProfessor;
     private File arquivoSelecionado;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
@@ -32,6 +34,7 @@ public class PainelQuestaoUpload extends javax.swing.JPanel {
         jTextPane4.setText(
         questao.getEnunciado()
         );
+        this.arquivoProfessor = questao.getArquivo();
     }
 
     /**
@@ -105,40 +108,32 @@ public class PainelQuestaoUpload extends javax.swing.JPanel {
 
     private void btnDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDownloadActionPerformed
         // TODO add your handling code here:
-        try {
-            String arquivoPath = "/assets/";
-            String arquivo = "a.pdf";
-            arquivoPath = arquivoPath + arquivo;
-
-            InputStream inputStream = getClass().getResourceAsStream(arquivoPath);
-
-            if (inputStream == null) {
-                JOptionPane.showMessageDialog(this,
-                    "Arquivo não encontrado em: " + arquivoPath);
-                return;
-            }
 
             JFileChooser chooser = new JFileChooser();
             chooser.setDialogTitle("Salvar arquivo");
-            chooser.setSelectedFile(new File("a.pdf"));
+        chooser.setSelectedFile(new File(arquivoProfessor.getName()));
 
             int opcao = chooser.showSaveDialog(this);
 
             if (opcao == JFileChooser.APPROVE_OPTION) {
                 File destino = chooser.getSelectedFile();
+                String nome = destino.getName();
+                int index = nome.lastIndexOf('.');
+                boolean hasExtensao = index != -1;
+
+                if (!hasExtensao) {
+
+                    int indexOriginal = arquivoProfessor.getName().lastIndexOf('.');
+                    String extensao = arquivoProfessor.getName().substring(indexOriginal);
+
+                    destino = new File(destino.getPath() + extensao);
+                }
 
                 // Copia do InputStream para o destino
-                Files.copy(inputStream, destino.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+                ArquivoService.salvarArquivo(arquivoProfessor, destino);
 
                 JOptionPane.showMessageDialog(this, "Download concluído!");
             }
-
-            inputStream.close();
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
-        }
     }//GEN-LAST:event_btnDownloadActionPerformed
 
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed

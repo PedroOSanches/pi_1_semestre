@@ -11,6 +11,8 @@ import br.maua.exception.UpdateException;
 import br.maua.infrastructure.ConnectionFactory;
 import br.maua.service.ArquivoService;
 
+import static br.maua.config.AppConfig.BASE_PROFESSOR;
+
 
 public class QuestaoUploadDAO {
 
@@ -20,14 +22,15 @@ public class QuestaoUploadDAO {
         sql = "INSERT INTO upload(titulo_upload, arquivo_modelo_upload, id_questao) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps = cx.prepareStatement(sql)) {
-            File arquivo = ArquivoService.gerarArquivoDestino(qu, "src/main/resources/assets/professor");
+            File arquivo = ArquivoService.gerarArquivoDestino(qu, BASE_PROFESSOR);
+
+            ArquivoService.salvarArquivo(qu.getArquivo(), arquivo);
 
             ps.setString(1, qu.getTitulo());
             ps.setString(2, arquivo.getName());
             ps.setInt(3, qu.getIdQuestao());
 
             ps.executeUpdate();
-            ArquivoService.salvarArquivo(qu.getArquivo(), arquivo);
         }
     }
 
@@ -42,7 +45,7 @@ public class QuestaoUploadDAO {
                 String tituloUpload = rs.getString("titulo_upload");
                 String arquivoModeloUpload = rs.getString("arquivo_modelo_upload");
                 qu.setTitulo(tituloUpload);
-                qu.setArquivo(new File("src/main/resources/assets/professor/" + arquivoModeloUpload));
+                qu.setArquivo(new File(BASE_PROFESSOR + arquivoModeloUpload));
             }
         }
     }
