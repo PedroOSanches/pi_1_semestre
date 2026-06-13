@@ -7,6 +7,7 @@ package br.maua.presentation.TelaAdicionarTurma;
 import br.maua.domain.*;
 import br.maua.enums.SemestreEnum;
 import br.maua.infrastructure.DAO.*;
+import br.maua.presentation.TelaTurmasDoProfessor.TelaTurmasDoProfessor;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -18,11 +19,11 @@ import java.util.Objects;
  * @author Lenovo
  */
 public class TelaAdicionarTurma extends javax.swing.JFrame {
-    private final JFrame anterior;
+    private final TelaTurmasDoProfessor anterior;
     /**
      * Creates new form TelaModalAdicionarTurma
      */
-    public TelaAdicionarTurma(JFrame anterior) {
+    public TelaAdicionarTurma(TelaTurmasDoProfessor anterior) {
         this.anterior = anterior;
         initComponents();
 
@@ -278,6 +279,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Turma Salvo com sucesso!");
             dispose();
             anterior.setVisible(true);
+            anterior.recarregarAtributos();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao salvar o turma");
         }
@@ -356,22 +358,6 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
             carregarComboAsync(comboBoxSubturma, SubturmaDAO::listarSubturmas);
         }
     }//GEN-LAST:event_botaoAddSubturmaActionPerformed
-
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        java.awt.EventQueue.invokeLater(() -> {
-            new TelaAdicionarTurma(new JFrame()).setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAddAno;

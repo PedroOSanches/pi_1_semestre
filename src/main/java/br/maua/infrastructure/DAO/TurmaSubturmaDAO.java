@@ -41,7 +41,8 @@ public class TurmaSubturmaDAO {
             }
         }
     }
-    public static List<Turma> listarTurmaSubturmaProfessor(Professor professor) throws SQLException {
+
+    public static List<Turma> buscaTurmasProfessor(Professor professor) throws SQLException {
         String sql = """
                 SELECT\s
                 	id_turma_subturma, cod_turma, cod_subturma, nome_curso, ano, semestre_turma_subturma
@@ -51,12 +52,13 @@ public class TurmaSubturmaDAO {
                     JOIN subturma USING(id_subturma)
                     JOIN curso USING(id_curso)
                     JOIN ano USING(id_ano)
-                    WHERE id_usuario = ?;
+                    WHERE id_usuario = ?
+                    ORDER BY nome_curso, cod_turma, cod_subturma, semestre_turma_subturma, ano;
                 """;
         List<Turma> turmas = new ArrayList<>();
         try (
                 Connection cx = ConnectionFactory.obterConexao();
-                PreparedStatement ps = cx.prepareStatement(sql);
+                PreparedStatement ps = cx.prepareStatement(sql)
         ){
             ps.setInt(1, professor.getId());
             ResultSet rs = ps.executeQuery();
