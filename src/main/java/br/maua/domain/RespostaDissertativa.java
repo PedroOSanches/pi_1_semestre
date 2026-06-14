@@ -9,6 +9,8 @@ import java.sql.SQLException;
 public class RespostaDissertativa extends Resposta{
     private String textoResposta;
 
+    public RespostaDissertativa() {
+    }
     public RespostaDissertativa(Tentativa tentativa, QuestaoDissertativa questao, String textoResposta) {
         super(tentativa, questao);
         setTextoResposta(textoResposta);

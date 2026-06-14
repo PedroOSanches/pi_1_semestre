@@ -9,8 +9,11 @@ import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import br.maua.domain.Professor;
 import br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa;
 import br.maua.presentation.TelaTurmasDoProfessor.TelaTurmasDoProfessor;
+
+import javax.swing.*;
 
 /**
  *
@@ -19,11 +22,15 @@ import br.maua.presentation.TelaTurmasDoProfessor.TelaTurmasDoProfessor;
 public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPainelAdministrativo1.class.getName());
+    private final Professor professor;
+    private JFrame telaAnterior;
+    private final JFrame telaAtual = this;
 
     /**
      * Creates new form TelaPainelAdministrativo1
      */
-    public TelaPainelAdministrativo1() {
+    public TelaPainelAdministrativo1(Professor professor, JFrame telaAnterior) {
+        this.professor = professor;
         initComponents();
         configurarAtalhoTarefas();
         configurarAtalhoTurmas();
@@ -37,8 +44,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         MouseAdapter abrirTarefas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                new TelaAcoesTarefa().setVisible(true);
-                dispose();
+                br.maua.presentation.TelaNavegacao.abrir(TelaPainelAdministrativo1.this, new TelaAcoesTarefa());
             }
         };
 
@@ -54,8 +60,8 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         MouseAdapter abrirTurmas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                new TelaTurmasDoProfessor().setVisible(true);
-                dispose();
+                new TelaTurmasDoProfessor(professor, telaAtual).setVisible(true);
+                telaAtual.setVisible(false);
             }
         };
 
@@ -140,7 +146,7 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
         btnVoltar.setText("Voltar");
         btnVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
+        btnVoltar.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -196,35 +202,14 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        new br.maua.presentation.TelaPainelDeControle.TelaPainelDeControle().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        br.maua.presentation.TelaNavegacao.voltar(this);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaPainelAdministrativo1().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVoltar;

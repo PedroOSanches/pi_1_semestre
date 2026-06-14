@@ -7,22 +7,32 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class RespostaAlternativa extends Resposta {
-    private int idAlternativa;
 
+    private int idAlternativaAssinalada;
+
+
+    @Override
+    public QuestaoAlternativa getQuestao() {
+        return (QuestaoAlternativa) super.getQuestao();
+    }
+
+    public int getIdAlternativaAssinalada() {
+        return idAlternativaAssinalada;
+    }
+
+    public void setIdAlternativaAssinalada(int idAlternativaAssinalada) {
+        this.idAlternativaAssinalada = idAlternativaAssinalada;
+    }
+
+    public RespostaAlternativa() {
+    }
     public RespostaAlternativa(
             Tentativa tentativa, QuestaoAlternativa questao, int idAlternativa
     ) {
         super(tentativa, questao);
-        setIdAlternativa(idAlternativa);
+        setIdAlternativaAssinalada(idAlternativa);
     }
 
-    public int getIdAlternativa() {
-        return idAlternativa;
-    }
-
-    public void setIdAlternativa(int idAlternativa) {
-        this.idAlternativa = idAlternativa;
-    }
 
     @Override
     public void commitResposta(Connection cx) throws SQLException, UpdateException {

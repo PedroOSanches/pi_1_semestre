@@ -16,7 +16,7 @@ public class RespostaAlternativaDAO extends RespostaDAO {
                 PreparedStatement ps = cx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
             ps.setInt(1, resposta.getIdResposta());
-            ps.setInt(2, resposta.getIdAlternativa());
+            ps.setInt(2, resposta.getIdAlternativaAssinalada());
 
             ps.executeUpdate();
 

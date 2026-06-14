@@ -51,10 +51,6 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
         titulo = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         painelAtividades = new javax.swing.JPanel();
-        JPanel painelCinza = new JPanel();
-        Atividade = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        botaoVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,73 +92,6 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
         painelAzul.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, 840, 520));
 
-        painelCinza.setBackground(new java.awt.Color(217, 217, 217));
-
-        Atividade.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
-        Atividade.setText("Atividade:");
-
-        javax.swing.GroupLayout painelCinzaLayout = new javax.swing.GroupLayout(painelCinza);
-        painelCinza.setLayout(painelCinzaLayout);
-        painelCinzaLayout.setHorizontalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Atividade, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(788, Short.MAX_VALUE))
-        );
-        painelCinzaLayout.setVerticalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addComponent(Atividade)
-                .addGap(18, 18, 18))
-        );
-
-        jComboBox1.setBackground(new java.awt.Color(240, 147, 32));
-        jComboBox1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Explorador", "Conector", "Transformador", "Conhecedor", "Planejador", "Realizador" }));
-        jComboBox1.setBorder(null);
-        jComboBox1.setOpaque(true);
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-
-        botaoVoltar.setBackground(new java.awt.Color(240, 147, 23));
-        botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
-        botaoVoltar.setText("Voltar");
-        botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
-
-        javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
-        painelAzul.setLayout(painelAzulLayout);
-        painelAzulLayout.setHorizontalGroup(
-            painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 834, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-        painelAzulLayout.setVerticalGroup(
-            painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(644, Short.MAX_VALUE))
-        );
-
         jScrollPane1.setViewportView(painelAzul);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,9 +109,6 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jComboBox1ActionPerformed(ActionEvent actionEvent) {
-    }
 
     private void filtroSecaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroSecaoActionPerformed
         // TODO add your handling code here:
@@ -241,16 +167,10 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
 
     }
 
-    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
-        // TODO add your handling code here:
-        new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_botaoVoltarActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -275,9 +195,6 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<String> filtroSecao;
-    private javax.swing.JLabel Atividade;
-    private javax.swing.JButton botaoVoltar;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel painelAtividades;

@@ -260,7 +260,7 @@ public class TelaQuestionarioAluno extends JFrame {
             Tarefa tarefa = new Tarefa();
             tarefa.setIdTarefa(20);
             tarefa.setTitulo("Titulo Tarefa");
-            Aluno aluno = new Aluno(14, "Pedro", "Sanches", "26.01461-3@maua.br", "CIC", "Teste1");
+            Aluno aluno = new Aluno(14, "Pedro", "Sanches", "26.01461-3@maua.br");
             new TelaQuestionarioAluno(tarefa, aluno, new JFrame()).setVisible(true);
         });
 

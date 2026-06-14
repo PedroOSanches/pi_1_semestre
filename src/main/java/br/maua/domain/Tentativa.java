@@ -11,11 +11,11 @@ import br.maua.infrastructure.ConnectionFactory;
 
 public class Tentativa {
 
-    private Double nota;
+    private int idTentativa;
+    private double nota;
     private Aluno aluno;
     private Tarefa tarefa;
     private boolean concluida = false;
-    private int idTentativa;
     private List<Resposta> respostas = new ArrayList<>();
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
@@ -27,6 +27,10 @@ public class Tentativa {
     public Tentativa(Aluno aluno, Tarefa tarefa){
         this.aluno = aluno;
         this.tarefa = tarefa;
+    }
+
+    public Tentativa(int idTentativa) {
+        this.idTentativa = idTentativa;
     }
 
     public Double getNota() {

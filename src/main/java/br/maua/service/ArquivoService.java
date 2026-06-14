@@ -1,5 +1,7 @@
 package br.maua.service;
 
+import br.maua.exception.UpdateException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;

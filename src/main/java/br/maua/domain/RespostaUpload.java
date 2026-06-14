@@ -12,6 +12,8 @@ public class RespostaUpload extends Resposta{
     private File arquivo;
     private String nomeArquivo;
 
+    public RespostaUpload() {
+    }
     public RespostaUpload(
             Tentativa tentativa,
             QuestaoUpload questao,
@@ -27,7 +29,7 @@ public class RespostaUpload extends Resposta{
 
     public void setArquivo(File arquivo) {
         this.arquivo = arquivo;
-    } 
+    }
 
     public String getNomeArquivo() {
         return nomeArquivo;

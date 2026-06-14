@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
 import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
-import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -81,6 +80,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
         botaoVoltar.setText("Voltar");
         botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
+        // botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
         //botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
 
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
@@ -149,18 +149,15 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Erro ao criar Tarefa");
             e.printStackTrace();
         }
-        
+
+
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
     
     
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        TelaTarefasCriadas ttc = new TelaTarefasCriadas();
-        ttc.pack();
-        ttc.setLocationRelativeTo(null);
-        ttc.setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas());
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
 
 

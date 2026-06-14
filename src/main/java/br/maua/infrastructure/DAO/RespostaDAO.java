@@ -20,7 +20,7 @@ public class RespostaDAO {
 
             ps.setInt(1, resposta.getTentativa().getIdTentativa());
             ps.setInt(2, resposta.getQuestao().getIdQuestao());
-            ps.setDouble(3, resposta.getNota() != null ? resposta.getNota() : 0.0);
+            ps.setDouble(3, resposta.getNota());
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();

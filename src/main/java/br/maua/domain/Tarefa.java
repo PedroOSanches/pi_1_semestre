@@ -9,11 +9,12 @@ import java.util.regex.Pattern;
 import br.maua.infrastructure.DAO.TarefaDAO;
 
 public class Tarefa {
+
     private int idTarefa;
     private String titulo;
     private Date prazo;
     private Casa casa;
-    private List<Questao> questoes = new ArrayList<>();
+    private final List<Questao> questoes = new ArrayList<>();
 
     public Tarefa(String prazo, Casa casa) {
         setPrazo(prazo);
@@ -21,6 +22,12 @@ public class Tarefa {
     }
 
     public Tarefa(){}
+
+    public Tarefa(int idTarefa) {
+
+        this.idTarefa = idTarefa;
+
+    }
 
     public int getIdTarefa() {
         return idTarefa;

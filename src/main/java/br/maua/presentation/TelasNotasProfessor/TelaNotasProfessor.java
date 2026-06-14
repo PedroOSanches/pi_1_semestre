@@ -4,22 +4,38 @@
  */
 package br.maua.presentation.TelasNotasProfessor;
 
-
+import br.maua.domain.Tentativa;
 import br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa;
+import br.maua.infrastructure.DAO.TentativaDAO;
+
+import java.util.List;
+
 /**
  *
  * @author Luiza
  */
 public class TelaNotasProfessor extends javax.swing.JFrame {
-    
+
+    private final TentativaDAO tentativaDAO;
+    private final int idTurma;
+    private final int idSubturma;
+    private final int idCurso;
+    private final int idSemestre;
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaNotasProfessor.class.getName());
     
 
     /**
      * Creates new form TelaNotasProfessor
      */
-    public TelaNotasProfessor() {
+    public TelaNotasProfessor(int idTurma, int idSubturma, int idCurso, int idSemestre) {
         initComponents();
+        this.idTurma = idTurma;
+        this.idSubturma = idSubturma;
+        this.idCurso = idCurso;
+        this.idSemestre = idSemestre;
+        this.tentativaDAO = new TentativaDAO();
+        consultarBanco();
     }
 
     /**
@@ -135,25 +151,32 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void consultarBanco() {
+
+        List<String[]> lista = tentativaDAO.buscarNotasAlunosPorTurma(idTurma, idSubturma, idCurso, idSemestre);
+        popularTela(lista);
+
+    }
+
+    private void popularTela(List<String[]> lista) {
+
+    }
+
     private void btnCorrigirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrigirTarefaActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa();
-        tct.pack();
-        tct.setLocationRelativeTo(null);
-        tct.setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaCorrecaoTarefa(new Tentativa(1)));
     }//GEN-LAST:event_btnCorrigirTarefaActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
-        new br.maua.presentation.TelasNotasProfessor.TelaNotasProfessor().setVisible(true);
+        new br.maua.presentation.TelasNotasProfessor.TelaNotasProfessor(1, 1, 1, 1).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -172,7 +195,6 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
         //</editor-fold>
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaNotasProfessor().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

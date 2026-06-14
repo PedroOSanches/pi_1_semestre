@@ -17,6 +17,8 @@ public class Alternativa {
         setIdAlternativa(idAlternativa);
     }
 
+    public Alternativa() {
+    }
     public Alternativa(QuestaoAlternativa questaoAlternativa, String enunciado, boolean alternativaCorreta) {
         setQuestaoAlternativa(questaoAlternativa);
         setEnunciado(enunciado);
