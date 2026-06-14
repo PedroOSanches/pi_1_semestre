@@ -2,24 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package br.maua.presentation.TelaQuestionarioAluno;
+package br.maua.presentation.TelaQuestionarioAluno.Components;
 
 import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import br.maua.domain.RespostaUpload;
+import br.maua.domain.Tentativa;
 import br.maua.domain.QuestaoUpload;
+import br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno;
 import br.maua.service.ArquivoService;
 
 /**
  *
  * @author Luiza
  */
-public class PainelQuestaoUpload extends javax.swing.JPanel {
+public class PainelQuestaoUpload extends PainelQuestao {
     private final QuestaoUpload questao;
     private final File arquivoProfessor;
-    private File arquivoSelecionado;
+    private File uploadAluno;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
     /**
@@ -31,11 +34,10 @@ public class PainelQuestaoUpload extends javax.swing.JPanel {
         jTextPane4.setEditable(false);
         jTextPane4.setFocusable(false);
         jTextPane4.setText(
-        questao.getEnunciado()
+                questao.getEnunciado()
         );
         this.arquivoProfessor = questao.getArquivo();
     }
-    public QuestaoUpload getQuestao() { return questao; }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -140,12 +142,22 @@ public class PainelQuestaoUpload extends javax.swing.JPanel {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            arquivoSelecionado = fileChooser.getSelectedFile();
-            System.out.println("Arquivo selecionado: " + arquivoSelecionado.getAbsolutePath());
+            uploadAluno = fileChooser.getSelectedFile();
+            System.out.println("Arquivo selecionado: " + uploadAluno.getAbsolutePath());
         }
     }//GEN-LAST:event_btnUploadActionPerformed
-    public File getArquivoSelecionado() {
-        return arquivoSelecionado;
+
+    @Override
+    public QuestaoUpload getQuestao() {
+        return questao;
+    }
+
+    public File getUploadAluno() {
+        return uploadAluno;
+    }
+
+    public void salvar(Tentativa tentativa) {
+        tentativa.getRespostas().add(new RespostaUpload(tentativa, questao, getUploadAluno()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

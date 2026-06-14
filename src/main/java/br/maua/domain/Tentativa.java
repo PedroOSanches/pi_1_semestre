@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.maua.infrastructure.ConnectionFactory;
 
@@ -14,6 +16,7 @@ public class Tentativa {
     private Tarefa tarefa;
     private boolean concluida = false;
     private int idTentativa;
+    private List<Resposta> respostas = new ArrayList<>();
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
         this.setNota(nota);
@@ -56,37 +59,24 @@ public class Tentativa {
     public void setConcluida(boolean concluida) {
         this.concluida = concluida;
     }
-    public void registraTentativa(){
-        String sql = "INSERT INTO tentativa (id_tarefa, id_usuario, status_tentativa) VALUES (?, ?, ?)";
 
-        try(
-                Connection cx = ConnectionFactory.obterConexao();
-        ) {
-            assert cx != null;
-            try(PreparedStatement ps = cx.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-
-                    ){
-                ps.setInt(1, tarefa.getIdTarefa());
-                ps.setInt(2, aluno.getIdAluno());
-                ps.setString(3, "pendente");
-                ps.executeUpdate();
-
-                try (ResultSet rs = ps.getGeneratedKeys()) { 
-                    if (rs.next()) {
-                        this.idTentativa = rs.getInt(1);
-                    }
-                }
-
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
     public int getIdTentativa() {
         return idTentativa;
     }
 
     public void setIdTentativa(int idTentativa) {
         this.idTentativa = idTentativa;
+    }
+
+    public List<Resposta> getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(List<Resposta> respostas) {
+        this.respostas = respostas;
+    }
+
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 }

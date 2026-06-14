@@ -1,10 +1,20 @@
 package br.maua.domain;
 
-public class Resposta {
+import br.maua.exception.UpdateException;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public abstract class Resposta {
     private int idResposta;
     private Tentativa tentativa;
     private Questao questao;
     private Double nota;
+
+    public Resposta(Tentativa tentativa, Questao questao) {
+        setTentativa(tentativa);
+        setQuestao(questao);
+    }
 
     public int getIdResposta() { 
         return idResposta; 
@@ -35,5 +45,6 @@ public class Resposta {
         this.nota = nota; 
     }
 
+    public abstract void commitResposta(Connection cx) throws SQLException, UpdateException;
 }
 

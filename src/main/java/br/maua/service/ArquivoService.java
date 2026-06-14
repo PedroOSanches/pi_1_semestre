@@ -5,7 +5,12 @@ import java.io.IOException;
 import java.nio.file.StandardCopyOption;
 
 import br.maua.domain.QuestaoUpload;
+import br.maua.domain.RespostaAlternativa;
+import br.maua.domain.RespostaUpload;
 import br.maua.exception.UpdateException;
+import br.maua.exception.UploadException;
+
+import static br.maua.config.AppConfig.BASE_ALUNO;
 
 public class ArquivoService {
     public static File salvarArquivo(File origem, File destino) throws UpdateException {
@@ -21,7 +26,7 @@ public class ArquivoService {
             return destino;
         } catch (IOException e) {
             e.printStackTrace();
-            throw new UpdateException("Erro ao tentar salvar arquivo" );
+            throw new UpdateException("Erro ao tentar gerarResposta arquivo");
         }
     }
 
@@ -57,7 +62,7 @@ public class ArquivoService {
                 novoArquivo = new File(pasta, nomeComContador);
                 contador++;
             }
- 
+
             return novoArquivo;
 
 
@@ -65,5 +70,30 @@ public class ArquivoService {
             e.printStackTrace();
             return arquivo;
         }
+    }
+
+    public static File gerarArquivoDestino(RespostaUpload resposta) throws UploadException {
+        try {
+            File arquivoOrigem = resposta.getArquivo();
+
+            int i = arquivoOrigem.getName().lastIndexOf(".");
+            String extensao = (i > 0) ? arquivoOrigem.getName().substring(i) : "";
+            String prefix = resposta.getTentativa().getAluno().getUsername().substring(0, 10);
+            String nomeBase = prefix + "_" + arquivoOrigem.getName() + extensao;
+
+            File arquivoDestino = new File(BASE_ALUNO, nomeBase);
+            int contador = 1;
+
+            while (arquivoDestino.exists()) {
+                String nomeComContador = nomeBase + "_" + contador + extensao;
+                arquivoDestino = new File(BASE_ALUNO, nomeComContador);
+                contador++;
+            }
+            return arquivoDestino;
+        } catch (Exception e) {
+            throw new UploadException("Erro ao gerar arquivo destino");
+        }
+
+
     }
 }

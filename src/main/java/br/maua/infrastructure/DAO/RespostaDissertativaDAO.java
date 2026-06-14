@@ -3,23 +3,26 @@ package br.maua.infrastructure.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import br.maua.domain.RespostaDissertativa;
-import br.maua.infrastructure.ConnectionFactory;
+import org.jetbrains.annotations.NotNull;
 
 public class RespostaDissertativaDAO {
-    public void salvar(RespostaDissertativa respostaDissertativa) {
+    public static void commitResposta(@NotNull Connection cx, RespostaDissertativa resposta) throws SQLException {
+        RespostaDAO.gerarResposta(cx, resposta);
         String sqlDissertativa = "INSERT INTO resposta_dissertativa (id_resposta, resposta) VALUES (?, ?)";
-        try (Connection cx = ConnectionFactory.obterConexao();
-             PreparedStatement ps = cx.prepareStatement(sqlDissertativa)) {
+        try (
+                PreparedStatement ps = cx.prepareStatement(sqlDissertativa, Statement.RETURN_GENERATED_KEYS)
+        ) {
 
-            ps.setInt(1, respostaDissertativa.getIdResposta());
-            ps.setString(2, respostaDissertativa.getTextoResposta());
+            ps.setInt(1, resposta.getIdResposta());
+            ps.setString(2, resposta.getTextoResposta());
 
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao salvar resposta dissertativa", e);
+            throw new RuntimeException("Erro ao gerarResposta resposta dissertativa", e);
         }
     }
 }

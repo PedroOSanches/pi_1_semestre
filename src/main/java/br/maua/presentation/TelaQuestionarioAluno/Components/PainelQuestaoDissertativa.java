@@ -2,15 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package br.maua.presentation.TelaQuestionarioAluno;
+package br.maua.presentation.TelaQuestionarioAluno.Components;
 
 import br.maua.domain.QuestaoDissertativa;
+import br.maua.domain.RespostaDissertativa;
+import br.maua.domain.Tentativa;
 
 /**
  *
  * @author Luiza
  */
-public class PainelQuestaoDissertativa extends javax.swing.JPanel {
+public class PainelQuestaoDissertativa extends PainelQuestao {
     private final QuestaoDissertativa questao;
     public String getTextoResposta(){
         return jTextArea2.getText();
@@ -27,7 +29,6 @@ public class PainelQuestaoDissertativa extends javax.swing.JPanel {
         questao.getEnunciado()
         );
     }
-    public QuestaoDissertativa getQuestao() { return questao; }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -116,6 +117,15 @@ public class PainelQuestaoDissertativa extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jTextArea2FocusLost
 
+    @Override
+    public QuestaoDissertativa getQuestao() {
+        return questao;
+    }
+
+    @Override
+    public void salvar(Tentativa tentativa) {
+        tentativa.getRespostas().add(new RespostaDissertativa(tentativa, questao, getTextoResposta()));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelDissertativa;
