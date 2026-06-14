@@ -24,12 +24,13 @@ public enum SemestreEnum {
         return semestreOrdinal;
     }
 
-    public static SemestreEnum descobreSemestre(String semestre){
-        if(semestre.equalsIgnoreCase("primeiro")){
+    public static SemestreEnum descobreSemestre(String semestre) {
+        if (semestre.equalsIgnoreCase("primeiro")) {
             return SemestreEnum.PRIMEIRO;
         }
         return SemestreEnum.SEGUNDO;
     }
+
     public String toString() {
         return this.semestre;
     }

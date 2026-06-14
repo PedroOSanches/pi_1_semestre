@@ -5,20 +5,20 @@ import java.sql.SQLException;
 
 import br.maua.infrastructure.DAO.AlternativaDAO;
 
-
-import br.maua.infrastructure.DAO.AlternativaDAO;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
 public class Alternativa {
     private QuestaoAlternativa questaoAlternativa;
     private String enunciado;
-    private boolean alternativaAssinalada;
     private boolean alternativaCorreta;
     private int idAlternativa;
+    
+    public Alternativa (QuestaoAlternativa questaoAlternativa, int id ,String enunciado){
+        setQuestaoAlternativa(questaoAlternativa);
+        setEnunciado(enunciado);
+        setIdAlternativa(idAlternativa);
+    }
 
-    public Alternativa(){}
+    public Alternativa() {
+    }
     public Alternativa(QuestaoAlternativa questaoAlternativa, String enunciado, boolean alternativaCorreta) {
         setQuestaoAlternativa(questaoAlternativa);
         setEnunciado(enunciado);

@@ -24,9 +24,9 @@ public class SecaoDAO {
         String sql = "SELECT id_secao, titulo_secao FROM secao ORDER BY id_secao";
 
         try (
-            Connection cx = ConnectionFactory.obterConexao();
-            PreparedStatement ps = cx.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
         ) {
             List<Secao> secoes = new ArrayList<>();
             while (rs.next()) {
@@ -44,7 +44,7 @@ public class SecaoDAO {
         String sql = "INSERT INTO secao (titulo_secao, descricao_secao) VALUES (?, ?)";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, tituloSecao);
             comando.setString(2, descricaoSecao);

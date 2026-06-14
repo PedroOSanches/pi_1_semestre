@@ -133,7 +133,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(atividadesConcluidas, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(atividadesConcluidas, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(progresso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -148,7 +148,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(atividadesConcluidas)
+                    .addComponent(atividadesConcluidas)
                 .addGap(18, 18, 18)
                 .addComponent(btnNotas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
@@ -170,13 +170,13 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void obterProgresso(){
+    private void obterProgresso() {
         try {
             Map<String, Integer> progresso = AlunoDAO.obterProgressoAluno(this.aluno);
             int tarefasConcluidas = progresso.get("tarefasConcluidas");
             int totalTarefas = progresso.get("totalTarefas");
             int porcentagemProgresso = progresso.get("porcentagemProgresso");
-            atividadesConcluidas.setText(String.format("Atividades Concluídas: %d/%d",tarefasConcluidas,totalTarefas));
+            atividadesConcluidas.setText(String.format("Atividades Concluídas: %d/%d", tarefasConcluidas, totalTarefas));
             this.progresso.setMinimum(0);
             this.progresso.setMaximum(100);
             this.progresso.setValue(porcentagemProgresso);

@@ -7,6 +7,9 @@ package br.maua.presentation.TelaTarefasCriadas;
 import br.maua.infrastructure.ConnectionFactory;
 import br.maua.infrastructure.DAO.TarefaDAO;
 import br.maua.presentation.ModeloAtividade.Atividade;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -167,7 +170,7 @@ public class TelaTarefasCriadas extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

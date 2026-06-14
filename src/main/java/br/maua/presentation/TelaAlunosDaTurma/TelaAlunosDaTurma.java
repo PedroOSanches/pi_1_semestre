@@ -123,17 +123,17 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                    .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(buttonVoltar)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonAddAluno)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(buttonAddAluno)
+                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                             .addGap(155, 155, 155)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -189,7 +189,7 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
 
     private void carregarAlunos(JFrame telaAnterior) {
         DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
-                new String[] {"Nome", "RA", "Média", "Atividades"},
+                new String[]{"Nome", "RA", "Média", "Atividades"},
                 0
         ) {
             @Override
@@ -204,6 +204,7 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
             protected List<Aluno> doInBackground() throws Exception {
                 return TurmaDAO.buscaAlunos(turma);
             }
+
             @Override
             protected void done() {
                 try {

@@ -297,7 +297,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
-                "Erro ao salvar no banco de dados: " + ex.getMessage(),
+                    "Erro ao gerarResposta no banco de dados: " + ex.getMessage(),
                 "Erro de Banco",
                 JOptionPane.ERROR_MESSAGE);
         }

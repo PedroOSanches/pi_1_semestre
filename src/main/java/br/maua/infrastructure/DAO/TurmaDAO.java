@@ -61,13 +61,13 @@ public class TurmaDAO {
                     ) tab_media USING (id_usuario) 
                     WHERE id_turma_subturma = ? AND tipo_usuario = 'aluno';
                 """;
-        if(!(turma.getIdTurma() > 0)){
+        if (!(turma.getIdTurma() > 0)) {
             throw new InvalidParameterException("Id de turma deve ser maior que 0");
         }
-        try(
+        try (
                 Connection cx = ConnectionFactory.obterConexao();
                 PreparedStatement ps = cx.prepareStatement(sql)
-                ){
+        ) {
             ps.setInt(1, turma.getIdTurma());
             ResultSet rs = ps.executeQuery();
             List<Aluno> alunos = new ArrayList<>();

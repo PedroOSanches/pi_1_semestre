@@ -1,19 +1,49 @@
 package br.maua.domain;
 
-public class RespostaUpload extends Resposta {
+import br.maua.exception.UpdateException;
+import br.maua.infrastructure.DAO.RespostaUploadDAO;
+import br.maua.service.ArquivoService;
 
-    private String pathArquivo;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-    public String getPathArquivo() {
-        return pathArquivo;
+public class RespostaUpload extends Resposta{
+    private File arquivo;
+    private String nomeArquivo;
+
+    public RespostaUpload() {
+    }
+    public RespostaUpload(
+            Tentativa tentativa,
+            QuestaoUpload questao,
+            File arquivo
+    ) {
+        super(tentativa, questao);
+        setArquivo(arquivo);
     }
 
-    public void setPathArquivo(String pathArquivo) {
-        this.pathArquivo = pathArquivo;
+    public File getArquivo() {
+        return arquivo;
     }
 
-    public String gerarRespostaBanco(String arquivo_resposta){
-        String sql = String.format("(%s)", arquivo_resposta);
-        return sql;
+    public void setArquivo(File arquivo) {
+        this.arquivo = arquivo;
+    }
+
+    public String getNomeArquivo() {
+        return nomeArquivo;
+    }
+
+    public void setNomeArquivo(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
+    }
+
+
+    @Override
+    public void commitResposta(Connection cx) throws SQLException, UpdateException {
+        File arquivoDestino = ArquivoService.gerarArquivoDestino(this);
+        File arquivoSalvo = ArquivoService.salvarArquivo(arquivo, arquivoDestino);
+        RespostaUploadDAO.commitResposta(cx, this, arquivoSalvo);
     }
 }

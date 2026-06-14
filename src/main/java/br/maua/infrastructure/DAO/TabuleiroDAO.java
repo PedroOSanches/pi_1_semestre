@@ -22,9 +22,9 @@ public class TabuleiroDAO {
     public List<Casa> buscarCasasDoTabuleiro() {
         List<Casa> lista = new ArrayList<>();
         String sql = "SELECT c.id_casa, c.titulo_casa, c.id_secao, s.titulo_secao " +
-                     "FROM casa c " +
-                     "JOIN secao s ON c.id_secao = s.id_secao " +
-                     "ORDER BY c.id_secao, c.id_casa";
+                "FROM casa c " +
+                "JOIN secao s ON c.id_secao = s.id_secao " +
+                "ORDER BY c.id_secao, c.id_casa";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
              PreparedStatement comando = conexao.prepareStatement(sql);
@@ -33,13 +33,13 @@ public class TabuleiroDAO {
             while (resultado.next()) {
                 // Instancia a Casa usando o construtor oficial fornecido
                 Casa casa = new Casa(resultado.getString("titulo_casa"), resultado.getInt("id_casa"));
-                
+
                 // Instancia a Secao usando o construtor oficial fornecido
                 Secao secao = new Secao(resultado.getInt("id_secao"), resultado.getString("titulo_secao"));
-                
+
                 // Vincula a seção dentro da casa
                 casa.setSecao(secao);
-                
+
                 lista.add(casa);
             }
         } catch (SQLException e) {
@@ -73,9 +73,9 @@ public class TabuleiroDAO {
      */
     public Integer descobrirProximaCasaObrigatoria(int idAluno) {
         String sql = "SELECT c.id_casa FROM casa c " +
-                     "LEFT JOIN nota_aluno n ON c.id_casa = n.id_casa AND n.id_aluno = ? " +
-                     "WHERE n.nota IS NULL OR n.nota < 6.0 " +
-                     "ORDER BY c.id_secao, c.id_casa LIMIT 1";
+                "LEFT JOIN nota_aluno n ON c.id_casa = n.id_casa AND n.id_aluno = ? " +
+                "WHERE n.nota IS NULL OR n.nota < 6.0 " +
+                "ORDER BY c.id_secao, c.id_casa LIMIT 1";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
              PreparedStatement comando = conexao.prepareStatement(sql)) {
@@ -90,16 +90,16 @@ public class TabuleiroDAO {
         } catch (SQLException e) {
             System.err.println("Erro ao descobrir próxima casa obrigatória: " + e.getMessage());
         }
-        return null; 
+        return null;
     }
 
     public boolean salvarNotaDaTentativa(int idAluno, int idCasa, double nota) {
-    
+
         String sql = "INSERT INTO nota_aluno (id_aluno, id_casa, nota) VALUES (?, ?, ?) " +
-                    "ON DUPLICATE KEY UPDATE nota = VALUES(nota)";
+                "ON DUPLICATE KEY UPDATE nota = VALUES(nota)";
 
         try (Connection conexao = br.maua.infrastructure.ConnectionFactory.obterConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setInt(1, idAluno);
             comando.setInt(2, idCasa);
@@ -115,23 +115,23 @@ public class TabuleiroDAO {
 
     public boolean verificarPendenciasNaSecao(int idAluno, int idSecao) {
         String sql = "SELECT c.id_casa FROM casa c " +
-                    "LEFT JOIN nota_aluno n ON c.id_casa = n.id_casa AND n.id_aluno = ? " +
-                    "WHERE c.id_secao = ? AND (n.nota IS NULL OR n.nota < 6.0) " +
-                    "AND c.data_limite_casa > NOW() LIMIT 1";
+                "LEFT JOIN nota_aluno n ON c.id_casa = n.id_casa AND n.id_aluno = ? " +
+                "WHERE c.id_secao = ? AND (n.nota IS NULL OR n.nota < 6.0) " +
+                "AND c.data_limite_casa > NOW() LIMIT 1";
 
         try (Connection conexao = br.maua.infrastructure.ConnectionFactory.obterConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setInt(1, idAluno);
             comando.setInt(2, idSecao);
 
             try (ResultSet resultado = comando.executeQuery()) {
-                return resultado.next(); 
+                return resultado.next();
             }
 
         } catch (SQLException e) {
             System.err.println("Erro ao verificar pendências da seção: " + e.getMessage());
-            return true; 
+            return true;
         }
     }
 }

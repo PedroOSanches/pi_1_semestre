@@ -1,29 +1,32 @@
 package br.maua.infrastructure.DAO;
 
 import br.maua.domain.*;
+import br.maua.exception.UploadException;
 import br.maua.infrastructure.ConnectionFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static br.maua.config.AppConfig.BASE_ALUNO;
 
 public class TentativaDAO {
 
-    public Tentativa buscarTentativa(int idTentativa){
+    public Tentativa buscarTentativa(int idTentativa) {
 
         Tentativa tentativa = new Tentativa(idTentativa);
         tentativa.setRespostas(new ArrayList<>());
 
         String sqlTarefa = "SELECT te.id_tarefa, ta.titulo_tarefa FROM tentativa te " +
-                            "JOIN tarefa ta USING(id_tarefa) WHERE te.id_tentativa = ?";
+                "JOIN tarefa ta USING(id_tarefa) WHERE te.id_tentativa = ?";
         String sqlRespostas = "SELECT r.id_resposta, r.id_questao, r.nota_resposta, " +
-                            "q.enunciado_questao, q.tipo_questao " +
-                            "FROM resposta r " +
-                            "JOIN questao q USING(id_questao) " +
-                            "WHERE r.id_tentativa = ?";
+                "q.enunciado_questao, q.tipo_questao " +
+                "FROM resposta r " +
+                "JOIN questao q USING(id_questao) " +
+                "WHERE r.id_tentativa = ?";
 
         try (Connection cx = ConnectionFactory.obterConexao()) {
 
@@ -70,10 +73,10 @@ public class TentativaDAO {
                                             psAlternativas.setInt(1, idResposta);
                                             try (ResultSet rsAlternativas = psAlternativas.executeQuery()) {
                                                 while (rsAlternativas.next()) {
-                                                    
+
                                                     Alternativa alternativa = new Alternativa();
                                                     alternativa.setIdAlternativa(rsAlternativas.getInt("id_alternativa"));
-                                                    alternativa.setEnunciado(rsAlternativas.getString ("texto_alternativa"));
+                                                    alternativa.setEnunciado(rsAlternativas.getString("texto_alternativa"));
                                                     listaAlternativas.add(alternativa);
                                                 }
                                             }
@@ -84,9 +87,7 @@ public class TentativaDAO {
                                     }
                                 }
                             }
-                        }
-
-                        else if ("dissertativa".equalsIgnoreCase(tipoQuestao)) {
+                        } else if ("dissertativa".equalsIgnoreCase(tipoQuestao)) {
                             String sqlDissertativa = "SELECT resposta FROM resposta_dissertativa WHERE id_resposta = ?";
                             try (PreparedStatement psDissertativa = cx.prepareStatement(sqlDissertativa)) {
                                 psDissertativa.setInt(1, idResposta);
@@ -94,14 +95,12 @@ public class TentativaDAO {
                                     if (rsDissertativa.next()) {
                                         RespostaDissertativa respostaDissertativa = new RespostaDissertativa();
                                         respostaDissertativa.setEnunciado(enunciado);
-                                        respostaDissertativa.setRespostaAluno(rsDissertativa.getString("resposta"));
+                                        respostaDissertativa.setTextoResposta(rsDissertativa.getString("resposta"));
                                         resposta = respostaDissertativa;
                                     }
                                 }
                             }
-                        }
-
-                        else if ("upload".equalsIgnoreCase(tipoQuestao)) {
+                        } else if ("upload".equalsIgnoreCase(tipoQuestao)) {
                             String sqlUpload = "SELECT arquivo_resposta FROM resposta_upload WHERE id_resposta = ?";
                             try (PreparedStatement psUpload = cx.prepareStatement(sqlUpload)) {
                                 psUpload.setInt(1, idResposta);
@@ -109,7 +108,7 @@ public class TentativaDAO {
                                     if (rsUpload.next()) {
                                         RespostaUpload respostaUpload = new RespostaUpload();
                                         respostaUpload.setEnunciado(enunciado);
-                                        respostaUpload.setPathArquivo(rsUpload.getString("arquivo_resposta"));
+                                        respostaUpload.setArquivo(new File(BASE_ALUNO, rsUpload.getString("arquivo_resposta")));
                                         resposta = respostaUpload;
                                     }
                                 }
@@ -121,14 +120,13 @@ public class TentativaDAO {
                     }
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return tentativa;
     }
 
-    public List <String[]> buscarNotasAlunosPorTurma(int idTurma, int idSubturma, int idCurso, int idSemestre){
+    public List<String[]> buscarNotasAlunosPorTurma(int idTurma, int idSubturma, int idCurso, int idSemestre) {
 
         List<String[]> lista = new ArrayList<>();
         String sql = "SELECT u.nome_usuario, t.id_tentativa, SUM(r.nota_resposta) AS nota_total " +
@@ -162,14 +160,14 @@ public class TentativaDAO {
         return lista;
     }
 
-    public boolean atualizarNota(Tentativa tentativa){
+    public boolean atualizarNota(Tentativa tentativa) {
 
         String sql = "UPDATE resposta " +
                 "SET nota_resposta = ? " +
                 "WHERE id_resposta = ?";
 
         try (Connection cx = ConnectionFactory.obterConexao();
-            PreparedStatement ps = cx.prepareStatement(sql)){
+             PreparedStatement ps = cx.prepareStatement(sql)) {
 
             for (Resposta resposta : tentativa.getRespostas()) {
                 ps.setFloat(1, resposta.getNota());
@@ -185,25 +183,26 @@ public class TentativaDAO {
         }
     }
 
-    public record TarefaTentadaDTO(int idTarefa, String tituloTarefa) {}
+    public record TarefaTentadaDTO(int idTarefa, String tituloTarefa) {
+    }
 
     public static List<TarefaTentadaDTO> buscarTarefasTentadasPeloAluno(int idAluno, Integer idCasa) throws SQLException {
         List<TarefaTentadaDTO> lista = new ArrayList<>();
-        
+
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT t.id_tarefa, t.titulo_tarefa ");
         sql.append("FROM tarefa t ");
         sql.append("INNER JOIN tentativa te ON te.id_tarefa = t.id_tarefa ");
         sql.append("WHERE te.id_usuario = ? ");
-        
+
         if (idCasa != null) {
             sql.append("AND t.id_casa = ? ");
         }
-        
+
         sql.append("GROUP BY t.id_tarefa, t.titulo_tarefa ORDER BY t.id_tarefa");
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql.toString())) {
+             PreparedStatement comando = conexao.prepareStatement(sql.toString())) {
 
             comando.setInt(1, idAluno);
             if (idCasa != null) {
@@ -213,18 +212,19 @@ public class TentativaDAO {
             try (ResultSet resultado = comando.executeQuery()) {
                 while (resultado.next()) {
                     lista.add(new TarefaTentadaDTO(
-                        resultado.getInt("id_tarefa"),
-                        resultado.getString("titulo_tarefa")
+                            resultado.getInt("id_tarefa"),
+                            resultado.getString("titulo_tarefa")
                     ));
                 }
             }
         }
         return lista;
     }
+
     public static int buscarIdTentativaPorAlunoETarefa(int idAluno, int idTarefa) throws SQLException {
         String sql = "SELECT id_tentativa FROM tentativa WHERE id_usuario = ? AND id_tarefa = ? LIMIT 1";
         try (Connection conexao = ConnectionFactory.obterConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
             comando.setInt(1, idAluno);
             comando.setInt(2, idTarefa);
             try (ResultSet resultado = comando.executeQuery()) {
@@ -234,5 +234,46 @@ public class TentativaDAO {
             }
         }
         return -1;
+    }
+    public static void salvarTentativa(Tentativa tentativa) throws SQLException, UploadException {
+        String sql = """
+                INSERT INTO
+                tentativa(
+                    status_tentativa,\s
+                    data_tentativa,\s
+                    id_usuario,\s
+                    id_tarefa
+                )\s
+                VALUES(
+                    'concluida', NOW(), ?, ?
+                );
+                """;
+
+        try (
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+        ) {
+            cx.setAutoCommit(false);
+            ps.setInt(1, tentativa.getAluno().getId());
+            ps.setInt(2, tentativa.getTarefa().getIdTarefa());
+
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (!rs.next())
+                throw new SQLException("Erro ao gerar Tentativa");
+            tentativa.setIdTentativa(rs.getInt(1));
+            List<Resposta> respostas = tentativa.getRespostas();
+            for (Resposta resposta : respostas) {
+                try {
+                    resposta.commitResposta(cx);
+                } catch (SQLException ex) {
+                    Logger.getLogger(TentativaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    cx.rollback();
+                    throw new SQLException("Erro ao gerar Tentativa!");
+                }
+            }
+            cx.commit();
+        }
+
     }
 }

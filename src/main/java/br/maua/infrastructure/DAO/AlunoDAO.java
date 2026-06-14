@@ -18,7 +18,7 @@ public class AlunoDAO {
         String sql = "INSERT INTO usuario (nome_usuario, sobrenome_usuario, username_usuario, senha_usuario, tipo_usuario) VALUES (?, ?, ?, ?, 'aluno')";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
-                PreparedStatement comando = conexao.prepareStatement(sql)) {
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, aluno.getNome());
             comando.setString(2, aluno.getSobrenome());
@@ -28,7 +28,7 @@ public class AlunoDAO {
             comando.executeUpdate();
         }
     }
-    
+
 
     public static Map<String, Integer> obterProgressoAluno(Aluno aluno) throws SQLException {
         String sql = "SELECT tarefas_concluidas, total_tarefas, ROUND(tarefas_concluidas * 100 / total_tarefas, 0) as progresso_aluno FROM ("

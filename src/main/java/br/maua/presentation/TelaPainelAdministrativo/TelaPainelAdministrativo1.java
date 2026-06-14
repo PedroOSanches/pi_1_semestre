@@ -22,14 +22,14 @@ import javax.swing.*;
 public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPainelAdministrativo1.class.getName());
-    private Professor professor;
+    private final Professor professor;
     private JFrame telaAnterior;
-    private JFrame telaAtual = this;
+    private final JFrame telaAtual = this;
 
     /**
      * Creates new form TelaPainelAdministrativo1
      */
-    public TelaPainelAdministrativo1(Professor professor,  JFrame telaAnterior) {
+    public TelaPainelAdministrativo1(Professor professor, JFrame telaAnterior) {
         this.professor = professor;
         initComponents();
         configurarAtalhoTarefas();

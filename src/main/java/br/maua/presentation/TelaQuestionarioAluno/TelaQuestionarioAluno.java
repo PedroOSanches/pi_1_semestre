@@ -4,97 +4,119 @@
  */
 package br.maua.presentation.TelaQuestionarioAluno;
 
-import java.awt.Component;
-import java.io.File;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
+import br.maua.domain.Aluno;
 import br.maua.domain.Questao;
 import br.maua.domain.QuestaoAlternativa;
 import br.maua.domain.QuestaoDissertativa;
 import br.maua.domain.QuestaoUpload;
-import br.maua.domain.RespostaAlternativa;
-import br.maua.domain.RespostaDissertativa;
-import br.maua.domain.RespostaUpload;
-import br.maua.service.ArquivoService;
-import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
-import br.maua.infrastructure.DAO.RespostaDissertativaDAO;
-import br.maua.infrastructure.DAO.RespostaUploadDAO;
+import br.maua.domain.Tarefa;
+import br.maua.domain.Tentativa;
+import br.maua.exception.UploadException;
+import br.maua.infrastructure.DAO.*;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestao;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoAlternativa;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoDissertativa;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoUpload;
 
 /**
  *
  * @author Luiza
  */
-public class TelaQuestionarioAluno extends javax.swing.JFrame {
+public class TelaQuestionarioAluno extends JFrame {
 
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
+    private static final Logger logger = Logger.getLogger
+    (TelaQuestionarioAluno.class.getName());
+    private final Tarefa tarefa;
+    private final Aluno aluno;
+    private final Tentativa tentativa;
+    private final JFrame telaAnterior;
+    private final List<PainelQuestao> respostas = new ArrayList<>();
 
     /**
      * Creates new form TelaQuestionarioAluno
      */
-    public TelaQuestionarioAluno() {
+    public TelaQuestionarioAluno(Tarefa tarefa, Aluno aluno, JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
+        this.tarefa = tarefa;
+        this.tentativa = new Tentativa(aluno, tarefa);
+        this.aluno = aluno;
         initComponents();
-        PainelQuestoes.setLayout(
+        try{
+            QuestaoDAO.buscarPorTarefa(tarefa);
+        }catch(SQLException e ){
+            JOptionPane.showMessageDialog(rootPane, "Erro ao se comunicar com o banco!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+        titulo3.setText(tarefa.getTitulo());
+
+        painelQuestao.setLayout(
             new BoxLayout(
-                PainelQuestoes,
+                    painelQuestao,
                 BoxLayout.Y_AXIS
             )
         );
-    
-        
-        painelAzul1.setLayout(new java.awt.GridBagLayout());
+
+        try {
+        carregarQuestoes(tarefa.getQuestoes());
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+
+        painelAzul1.setLayout(new GridBagLayout());
         painelAzul1.add(painelCinza1);
         jScrollPane6.getVerticalScrollBar().setUnitIncrement(25);
         configurarScroll();
         
-        
     }
-    public TelaQuestionarioAluno(List<Questao> questoes) {
-        this(); 
-        carregarQuestoes(questoes);
-    }
+    
+    
 
     private void carregarQuestoes(List<Questao>questoes){
         for (Questao q : questoes){
+            PainelQuestao painel = null;
             if (q instanceof QuestaoDissertativa qd){
-                PainelQuestoes.add(
-                    new PainelQuestaoDissertativa(qd)
-                );
+                painel = new PainelQuestaoDissertativa(qd);
             }
             else if (q instanceof QuestaoAlternativa qa){
-                PainelQuestoes.add(
-                        new PainelQuestaoAlternativa(qa)
-                );
+                painel = new PainelQuestaoAlternativa(qa);
             }
             else if (q instanceof QuestaoUpload qu){
-                PainelQuestoes.add(
-                        new PainelQuestaoUpload(qu)
-                );
+                painel = new PainelQuestaoUpload(qu);
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao carregar questões!", "Erro", JOptionPane.ERROR_MESSAGE);
             }
-            
+
+            respostas.add(painel);
+            painelQuestao.add(painel);
         }
-        PainelQuestoes.revalidate();
-        PainelQuestoes.repaint();
+        painelQuestao.revalidate();
+        painelQuestao.repaint();
     }
+    
     private void configurarScroll() {
 
         painelCinza1.setPreferredSize(null);
+        painelAzul1.setPreferredSize(null);
 
-        jScrollPane6.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-
+        painelQuestao.revalidate();
         painelCinza1.revalidate();
-        painelCinza1.repaint();
+        painelAzul1.revalidate();
 
-
-        java.awt.Dimension tamanhoReal = painelCinza1.getLayout().preferredLayoutSize(painelCinza1);
-        painelCinza1.setPreferredSize(tamanhoReal);
-
-
-        jScrollPane6.setViewportView(painelCinza1);
+        jScrollPane6.setViewportView(painelAzul1);
+        jScrollPane6.revalidate();
+        jScrollPane6.repaint();
     }
 
     /**
@@ -106,215 +128,151 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane6 = new javax.swing.JScrollPane();
-        painelAzul1 = new javax.swing.JPanel();
-        painelCinza1 = new javax.swing.JPanel();
-        titulo3 = new java.awt.Label();
-        prazo = new java.awt.Label();
-        btnEnviarTarefa2 = new javax.swing.JButton();
-        PainelQuestoes = new javax.swing.JPanel();
+        jScrollPane6 = new JScrollPane();
+        painelAzul1 = new JPanel();
+        painelCinza1 = new JPanel();
+        titulo3 = new Label();
+        prazo = new Label();
+        btnEnviarTarefa2 = new JButton();
+        painelQuestao = new PainelQuestao();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        jScrollPane6.setPreferredSize(new java.awt.Dimension(1024, 993));
+        jScrollPane6.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
+        painelAzul1.setBackground(new Color(19, 112, 178));
 
-        painelCinza1.setBackground(new java.awt.Color(217, 217, 217));
-        painelCinza1.setPreferredSize(new java.awt.Dimension(956, 725));
+        painelCinza1.setBackground(new Color(217, 217, 217));
 
-        titulo3.setAlignment(java.awt.Label.CENTER);
-        titulo3.setBackground(new java.awt.Color(19, 112, 178));
-        titulo3.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 60)); // NOI18N
-        titulo3.setForeground(new java.awt.Color(255, 255, 255));
+        titulo3.setAlignment(Label.CENTER);
+        titulo3.setBackground(new Color(19, 112, 178));
+        titulo3.setFont(new Font("Yu Gothic UI Semilight", 0, 60)); // NOI18N
+        titulo3.setForeground(new Color(255, 255, 255));
         titulo3.setText("Questionário");
 
-        prazo.setAlignment(java.awt.Label.CENTER);
-        prazo.setBackground(new java.awt.Color(19, 112, 178));
-        prazo.setForeground(new java.awt.Color(255, 255, 255));
+        prazo.setAlignment(Label.CENTER);
+        prazo.setBackground(new Color(19, 112, 178));
+        prazo.setForeground(new Color(255, 255, 255));
         prazo.setText("Prazo: 01/01");
 
-        btnEnviarTarefa2.setBackground(new java.awt.Color(240, 147, 32));
-        btnEnviarTarefa2.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnviarTarefa2.setBackground(new Color(240, 147, 32));
+        btnEnviarTarefa2.setForeground(new Color(255, 255, 255));
         btnEnviarTarefa2.setText("Enviar Tarefa");
         btnEnviarTarefa2.addActionListener(this::btnEnviarTarefa2ActionPerformed);
 
-        PainelQuestoes.setBackground(new java.awt.Color(217, 217, 217));
+        painelQuestao.setBackground(new Color(217, 217, 217));
+        painelQuestao.setLayout(new BoxLayout(painelQuestao, BoxLayout.Y_AXIS));
 
-        javax.swing.GroupLayout PainelQuestoesLayout = new javax.swing.GroupLayout(PainelQuestoes);
-        PainelQuestoes.setLayout(PainelQuestoesLayout);
+        GroupLayout PainelQuestoesLayout = new GroupLayout(painelQuestao);
+        painelQuestao.setLayout(PainelQuestoesLayout);
         PainelQuestoesLayout.setHorizontalGroup(
-            PainelQuestoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                PainelQuestoesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
         PainelQuestoesLayout.setVerticalGroup(
-            PainelQuestoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                PainelQuestoesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 617, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout painelCinza1Layout = new javax.swing.GroupLayout(painelCinza1);
+        GroupLayout painelCinza1Layout = new GroupLayout(painelCinza1);
         painelCinza1.setLayout(painelCinza1Layout);
         painelCinza1Layout.setHorizontalGroup(
-            painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(painelCinza1Layout.createSequentialGroup()
                 .addContainerGap(138, Short.MAX_VALUE)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(painelCinza1Layout.createSequentialGroup()
-                        .addComponent(prazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(prazo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addGap(25, 25, 25)
                         .addComponent(btnEnviarTarefa2))
-                    .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
-                        .addComponent(PainelQuestoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(titulo3, GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+                                    .addComponent(painelQuestao, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(0, 118, Short.MAX_VALUE))
         );
         painelCinza1Layout.setVerticalGroup(
-            painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(painelCinza1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(titulo3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titulo3, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
-                .addComponent(PainelQuestoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(prazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(painelQuestao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                    .addGroup(painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(prazo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEnviarTarefa2))
                 .addGap(51, 51, 51))
         );
 
-        javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
+        GroupLayout painelAzul1Layout = new GroupLayout(painelAzul1);
         painelAzul1.setLayout(painelAzul1Layout);
         painelAzul1Layout.setHorizontalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                painelAzul1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(painelCinza1, GroupLayout.PREFERRED_SIZE, 930, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                painelAzul1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 899, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(painelCinza1, GroupLayout.PREFERRED_SIZE, 899, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
 
         jScrollPane6.setViewportView(painelAzul1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane6, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
-        // TODO add your handling code her
-        for (Component c : PainelQuestoes.getComponents()){
-            if (c instanceof PainelQuestaoDissertativa painel){
-                String textoResposta = painel.getTextoResposta();
-                
-                RespostaDissertativa respostadis = new RespostaDissertativa();
-                
-                respostadis.setRespostaAluno(textoResposta);
-                
-                RespostaDissertativaDAO dao = new RespostaDissertativaDAO();
-                dao.salvar(respostadis);
-            }
-            
-            else if (c instanceof PainelQuestaoAlternativa painel){
-                int idAlternativa = painel.getAlternativaSelecionada();
-                
-                RespostaAlternativa respostaalt = new RespostaAlternativa();
-                
-                respostaalt.setIdAlternativaAssinalada(idAlternativa);
-                
-                RespostaAlternativaDAO dao = new RespostaAlternativaDAO();
-                dao.salvar(respostaalt);
-            }
-            
-            else if (c instanceof PainelQuestaoUpload painel){
-                try {
-                    File arquivoSelecionado = painel.getArquivoSelecionado();
-                    if (arquivoSelecionado == null) {
-                        continue;
-                    }
-
-                    RespostaUpload respostaUpload = new RespostaUpload();
-                    File pastaUploads = new File("uploads");
-
-                    if (!pastaUploads.exists()) {
-                        pastaUploads.mkdirs();
-                    }
-
-                    String nomeArquivo = System.currentTimeMillis() + "_" + arquivoSelecionado.getName();
-
-                    File destino = new File(
-                        pastaUploads, nomeArquivo
-                    );
-
-                    ArquivoService.salvarArquivo(
-                            arquivoSelecionado, destino
-                    );
-
-                    respostaUpload.setPathArquivo(
-                        "uploads/" + nomeArquivo
-                    );
-                RespostaUploadDAO.salvar(respostaUpload);
-
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(
-                            this, "Erro ao enviar arquivo: " 
-                                    + e.getMessage()
-                    );
-                }
-
-            }
+    private void btnEnviarTarefa2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
+        for (PainelQuestao resposta : respostas) {
+            resposta.salvar(tentativa);
         }
-
-        JOptionPane.showMessageDialog(this,"Tarefa enviada!");
-
+        try {
+            TentativaDAO.salvarTentativa(tentativa);
+            JOptionPane.showMessageDialog(null, "Tentativa Salvo com sucesso!");
+            dispose();
+            telaAnterior.setVisible(true);
+        } catch (SQLException | UploadException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        EventQueue.invokeLater(() -> {
+            Tarefa tarefa = new Tarefa();
+            tarefa.setIdTarefa(20);
+            tarefa.setTitulo("Titulo Tarefa");
+            Aluno aluno = new Aluno(14, "Pedro", "Sanches", "26.01461-3@maua.br");
+            new TelaQuestionarioAluno(tarefa, aluno, new JFrame()).setVisible(true);
+        });
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaQuestionarioAluno().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel PainelQuestoes;
-    private javax.swing.JButton btnEnviarTarefa2;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JPanel painelAzul1;
-    private javax.swing.JPanel painelCinza1;
-    private java.awt.Label prazo;
-    private java.awt.Label titulo3;
+    private PainelQuestao painelQuestao;
+    private JButton btnEnviarTarefa2;
+    private JScrollPane jScrollPane6;
+    private JPanel painelAzul1;
+    private JPanel painelCinza1;
+    private Label prazo;
+    private Label titulo3;
     // End of variables declaration//GEN-END:variables
 }

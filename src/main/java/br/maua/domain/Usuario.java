@@ -9,7 +9,9 @@ public abstract class Usuario {
     private String username;
     private String senha;
 
-    public Usuario() {}
+    public Usuario() {
+    }
+
     public Usuario(int id, String nome, String sobrenome) {
         setId(id);
         setNome(nome);
@@ -25,9 +27,11 @@ public abstract class Usuario {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getNome() {
         return nome;
     }
@@ -47,12 +51,13 @@ public abstract class Usuario {
     public String getUsername() {
         return username;
     }
-    public String getRa(){
+
+    public String getRa() {
         String[] ra = username.split("@");
         return ra[0];
     }
 
-    public void setUsername(String username){
+    public void setUsername(String username) {
         this.username = username;
     }
 

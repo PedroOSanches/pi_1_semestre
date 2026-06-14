@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class TelaNotasProfessor extends javax.swing.JFrame {
 
-    private TentativaDAO tentativaDAO;
-    private int idTurma;
-    private int idSubturma;
-    private int idCurso;
-    private int idSemestre;
+    private final TentativaDAO tentativaDAO;
+    private final int idTurma;
+    private final int idSubturma;
+    private final int idCurso;
+    private final int idSemestre;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaNotasProfessor.class.getName());
     
@@ -151,15 +151,15 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void consultarBanco(){
+    private void consultarBanco() {
 
-        List <String[]> lista = tentativaDAO.buscarNotasAlunosPorTurma(idTurma, idSubturma, idCurso, idSemestre);
+        List<String[]> lista = tentativaDAO.buscarNotasAlunosPorTurma(idTurma, idSubturma, idCurso, idSemestre);
         popularTela(lista);
 
     }
 
-    private void popularTela(List <String[]> lista){
-        
+    private void popularTela(List<String[]> lista) {
+
     }
 
     private void btnCorrigirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrigirTarefaActionPerformed
@@ -169,14 +169,14 @@ public class TelaNotasProfessor extends javax.swing.JFrame {
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
-        new br.maua.presentation.TelasNotasProfessor.TelaNotasProfessor(1, 1,1, 1).setVisible(true);
+        new br.maua.presentation.TelasNotasProfessor.TelaNotasProfessor(1, 1, 1, 1).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

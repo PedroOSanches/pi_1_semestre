@@ -6,11 +6,14 @@ package br.maua.presentation.TelaCorrecaoTarefa;
 
 import br.maua.domain.*;
 import br.maua.infrastructure.DAO.TentativaDAO;
-import br.maua.service.ArquivoService;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static br.maua.config.AppConfig.BASE_ALUNO;
 
 /**
  *
@@ -20,7 +23,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
     private Tentativa tentativa;
     private final TentativaDAO tentativaDAO;
-    private final List <JFormattedTextField> campoNotaUI = new ArrayList<>();
+    private final List<JFormattedTextField> campoNotaUI = new ArrayList<>();
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCorrecaoTarefa.class.getName());
 
@@ -91,12 +94,12 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             .addGroup(painelCinza1Layout.createSequentialGroup()
                 .addGap(202, 202, 202)
                 .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane7))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addGap(136, 136, 136))
+                        .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane7))
+                    .addGap(18, 18, 18)
+                    .addComponent(jButton1)
+                    .addGap(136, 136, 136))
         );
         painelCinza1Layout.setVerticalGroup(
             painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,10 +109,10 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE))
-                .addGap(91, 91, 91))
+                    .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE))
+                    .addGap(91, 91, 91))
         );
 
         painelAzul1.add(painelCinza1);
@@ -149,7 +152,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         }
     }
 
-    private void carregarTentativa(){
+    private void carregarTentativa() {
 
         this.tentativa = tentativaDAO.buscarTentativa(tentativa.getIdTentativa());
         popularTela();
@@ -174,7 +177,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
 
             if (resposta instanceof RespostaDissertativa) {
 
-                String respostaAluno = ((RespostaDissertativa) resposta).getRespostaAluno();
+                String respostaAluno = ((RespostaDissertativa) resposta).getTextoResposta();
                 javax.swing.JTextArea txtArea = new javax.swing.JTextArea(3, 40);
                 txtArea.setText(respostaAluno != null ? respostaAluno : "O aluno não respondeu.");
                 txtArea.setEditable(false);
@@ -182,11 +185,8 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 txtArea.setWrapStyleWord(true);
                 painelIndividual.add(new javax.swing.JScrollPane(txtArea));
 
-            }
+            } else if (resposta instanceof RespostaAlternativa respostaAlternativa) {
 
-            else if (resposta instanceof RespostaAlternativa) {
-
-                RespostaAlternativa respostaAlternativa = (RespostaAlternativa) resposta;
                 int idAlternativaAssinalada = respostaAlternativa.getIdAlternativaAssinalada();
 
                 javax.swing.JPanel painelAlternativas = new javax.swing.JPanel();
@@ -210,16 +210,13 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                     }
                 }
                 painelIndividual.add(painelAlternativas);
-            }
+            } else if (resposta instanceof RespostaUpload respostaUpload) {
 
-            else if (resposta instanceof RespostaUpload) {
+                File arquivo = respostaUpload.getArquivo();
 
-                RespostaUpload respostaUpload = (RespostaUpload) resposta;
-                String pathArquivo = respostaUpload.getPathArquivo();
+                if (arquivo != null && !arquivo.getName().trim().isEmpty()) {
 
-                if (pathArquivo != null && !pathArquivo.trim().isEmpty()) {
-
-                    javax.swing.JLabel labelUpload = new javax.swing.JLabel("Arquivo anexado: " + pathArquivo);
+                    javax.swing.JLabel labelUpload = new javax.swing.JLabel("Arquivo anexado: " + arquivo);
                     painelIndividual.add(labelUpload);
                     painelIndividual.add(javax.swing.Box.createVerticalStrut(5));
 
@@ -228,35 +225,20 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                         @Override
                         public void actionPerformed(java.awt.event.ActionEvent e) {
 
-                            if (pathArquivo == null || pathArquivo.trim().equalsIgnoreCase("null") || pathArquivo.trim().isEmpty()) {
-
-                                javax.swing.JOptionPane.showMessageDialog(
-                                        TelaCorrecaoTarefa.this,
-                                        "Não há nenhum arquivo anexado para esta resposta.",
-                                        "Aviso",
-                                        javax.swing.JOptionPane.WARNING_MESSAGE
-                                );
-                                return;
-                            }
-
                             try {
 
-                                String pastaOrigem = "src/main/resources/assets/aluno/";
-                                java.io.File arquivoOrigem = new java.io.File(pastaOrigem + pathArquivo);
-
-                                if (!arquivoOrigem.exists()) {
+                                if (!arquivo.exists()) {
                                     javax.swing.JOptionPane.showMessageDialog(
                                             TelaCorrecaoTarefa.this,
-                                            "O arquivo '" + pathArquivo + "' não foi encontrado na pasta do servidor.",
+                                            "O arquivo '" + arquivo.getAbsolutePath() + "' não foi encontrado na pasta do servidor.",
                                             "Erro",
                                             javax.swing.JOptionPane.ERROR_MESSAGE
                                     );
                                     return;
                                 }
 
-                                javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+                                javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
                                 fileChooser.setDialogTitle("Escolha onde salvar o arquivo");
-                                fileChooser.setSelectedFile(new java.io.File(pathArquivo));
                                 int userSelection = fileChooser.showSaveDialog(TelaCorrecaoTarefa.this);
 
                                 if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
@@ -268,13 +250,11 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                                         pastaDestino.mkdirs();
                                     }
 
-                                    br.maua.service.ArquivoService.salvarArquivo(arquivoOrigem, arquivoDestino);
+                                    br.maua.service.ArquivoService.salvarArquivo(arquivo, arquivoDestino);
 
                                     if (arquivoDestino.exists()) {
                                         java.awt.Desktop.getDesktop().open(arquivoDestino);
-                                    }
-
-                                    else {
+                                    } else {
 
                                         javax.swing.JOptionPane.showMessageDialog(
                                                 TelaCorrecaoTarefa.this,
@@ -284,8 +264,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                                         );
                                     }
                                 }
-                            }
-                            catch (Exception ex) {
+                            } catch (Exception ex) {
 
                                 javax.swing.JOptionPane.showMessageDialog(TelaCorrecaoTarefa.this,
                                         "Erro ao tentar abrir o arquivo: " + ex.getMessage(),
@@ -296,9 +275,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                         }
                     });
                     painelIndividual.add(buttonDownload);
-                }
-
-                else {
+                } else {
                     javax.swing.JLabel labelUpload = new javax.swing.JLabel("Nenhum arquivo foi anexado.");
                     painelIndividual.add(labelUpload);
                 }

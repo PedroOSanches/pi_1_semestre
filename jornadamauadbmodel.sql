@@ -22,7 +22,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 --
 
 SET
-@@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-199,
+    @@GLOBAL.GTID_PURGED = /*!80000 '+'*/ '051cd0db-5503-11f1-b4df-420ceaa35c25:1-199,
 53843901-4d28-11f1-b1f4-76f7b9ecc862:1-31,
 ebee13f3-4dfb-11f1-a16b-c202e0cec888:1-39';
 
@@ -41,7 +41,10 @@ CREATE TABLE `alternativa` (
   PRIMARY KEY (`id_alternativa`,`id_questao`),
   KEY `alternativa_questao_idx` (`id_questao`),
   CONSTRAINT `alternativa_questao` FOREIGN KEY (`id_questao`) REFERENCES `questao` (`id_questao`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 18
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,7 +59,10 @@ CREATE TABLE `ano` (
   `ano` year NOT NULL,
   PRIMARY KEY (`id_ano`),
   UNIQUE KEY `ano_UNIQUE` (`ano`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +80,10 @@ CREATE TABLE `casa` (
   PRIMARY KEY (`id_casa`),
   KEY `casa_pertence_sessao_idx` (`id_secao`),
   CONSTRAINT `casa_pertence_secao` FOREIGN KEY (`id_secao`) REFERENCES `secao` (`id_secao`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 17
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +97,10 @@ CREATE TABLE `curso` (
   `id_curso` int NOT NULL AUTO_INCREMENT,
   `nome_curso` varchar(100) NOT NULL,
   PRIMARY KEY (`id_curso`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 4
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +134,10 @@ CREATE TABLE `questao` (
   PRIMARY KEY (`id_questao`),
   KEY `questao_pertence_tarefa_idx` (`id_tarefa`),
   CONSTRAINT `questao_pertence_tarefa` FOREIGN KEY (`id_tarefa`) REFERENCES `tarefa` (`id_tarefa`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 41
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +158,10 @@ CREATE TABLE `resposta` (
   KEY `resposta_questao_idx` (`id_questao`),
   CONSTRAINT `resposta_questao` FOREIGN KEY (`id_questao`) REFERENCES `questao` (`id_questao`),
   CONSTRAINT `resposta_questao_tentativa` FOREIGN KEY (`id_tentativa`) REFERENCES `tentativa` (`id_tentativa`)
-) ENGINE=InnoDB AUTO_INCREMENT=502 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 502
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +223,10 @@ CREATE TABLE `secao` (
   `titulo_secao` varchar(100) NOT NULL,
   `descricao_secao` text NOT NULL,
   PRIMARY KEY (`id_secao`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 7
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +240,10 @@ CREATE TABLE `subturma` (
   `id_subturma` int NOT NULL AUTO_INCREMENT,
   `cod_subturma` varchar(5) NOT NULL,
   PRIMARY KEY (`id_subturma`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 4
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,7 +261,10 @@ CREATE TABLE `tarefa` (
   PRIMARY KEY (`id_tarefa`),
   KEY `tarefa_pertence_casa_idx` (`id_casa`),
   CONSTRAINT `tarefa_pertence_casa` FOREIGN KEY (`id_casa`) REFERENCES `casa` (`id_casa`) ON DELETE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 28
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -278,7 +305,10 @@ CREATE TABLE `tentativa` (
   KEY `tentativa_responde_tarefa_idx` (`id_tarefa`),
   CONSTRAINT `tentativa_responde_tarefa` FOREIGN KEY (`id_tarefa`) REFERENCES `tarefa` (`id_tarefa`),
   CONSTRAINT `usuario_tentou` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 101
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +322,10 @@ CREATE TABLE `turma` (
   `id_turma` int NOT NULL AUTO_INCREMENT,
   `cod_turma` varchar(3) NOT NULL,
   PRIMARY KEY (`id_turma`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,18 +340,21 @@ CREATE TABLE `turma_subturma` (
   `id_turma` int NOT NULL,
   `id_subturma` int NOT NULL,
   `id_curso` int NOT NULL,
-  `id_ano` int NOT NULL,
-  `semestre_turma_subturma` enum('primeiro','segundo') NOT NULL,
+  `id_ano`                  int                         NOT NULL,
+  `semestre_turma_subturma` enum ('primeiro','segundo') NOT NULL,
   PRIMARY KEY (`id_turma_subturma`),
   KEY `fk_turma_subturma_turma1_idx` (`id_turma`),
   KEY `fk_turma_subturma_subturma1_idx` (`id_subturma`),
   KEY `fk_turma_subturma_Curso1_idx` (`id_curso`),
-  KEY      `fk_tuma_subturma_ano_idx` (`id_ano`),
+  KEY `fk_tuma_subturma_ano_idx` (`id_ano`),
   CONSTRAINT `fk_tuma_subturma_ano` FOREIGN KEY (`id_ano`) REFERENCES `ano` (`id_ano`),
   CONSTRAINT `fk_turma_subturma_Curso1` FOREIGN KEY (`id_curso`) REFERENCES `curso` (`id_curso`),
   CONSTRAINT `fk_turma_subturma_subturma1` FOREIGN KEY (`id_subturma`) REFERENCES `subturma` (`id_subturma`),
   CONSTRAINT `fk_turma_subturma_turma1` FOREIGN KEY (`id_turma`) REFERENCES `turma` (`id_turma`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 5
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,15 +362,15 @@ CREATE TABLE `turma_subturma` (
 --
 
 DROP TABLE IF EXISTS `turma_usuario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `turma_usuario`
 (
     `id_usuario`        int NOT NULL,
     `id_turma_subturma` int NOT NULL,
     PRIMARY KEY (`id_usuario`, `id_turma_subturma`),
-    KEY                 `fk_usuario_turma_usuario_idx` (`id_usuario`),
-    KEY                 `fk_turma_subturma_turma_usuario_idx` (`id_turma_subturma`),
+    KEY `fk_usuario_turma_usuario_idx` (`id_usuario`),
+    KEY `fk_turma_subturma_turma_usuario_idx` (`id_turma_subturma`),
     CONSTRAINT `fk_turma_subturma_turma_usuario` FOREIGN KEY (`id_turma_subturma`) REFERENCES `turma_subturma` (`id_turma_subturma`),
     CONSTRAINT `fk_usuario_turma_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -371,7 +407,10 @@ CREATE TABLE `usuario` (
   `senha_usuario` varbinary(128) NOT NULL,
   `tipo_usuario` enum('professor','aluno') NOT NULL,
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 13
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

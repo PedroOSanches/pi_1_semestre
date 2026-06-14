@@ -1,10 +1,11 @@
 package br.maua.domain;
 
-import br.maua.infrastructure.DAO.QuestaoAlternativaDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.maua.infrastructure.DAO.QuestaoAlternativaDAO;
 
 public class QuestaoAlternativa extends Questao {
 
@@ -17,6 +18,10 @@ public class QuestaoAlternativa extends Questao {
 
     public QuestaoAlternativa(String enunciado, Tarefa tarefa) {
         super(enunciado, tarefa);
+    }
+
+    public QuestaoAlternativa(int idQuestaoAlternativa, String enunciado, Tarefa tarefa){
+        super(idQuestaoAlternativa, enunciado, tarefa);
     }
 
     public List<Alternativa> getAlternativas() {

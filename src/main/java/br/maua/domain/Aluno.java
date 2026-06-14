@@ -10,7 +10,9 @@ public class Aluno extends Usuario {
     private Turma turma;
     private float media;
 
-    public Aluno(){}
+    public Aluno() {
+    }
+
     public Aluno(String nome, String sobrenome, String username, String senha) {
         super(nome, sobrenome, senha);
         setUsername(username);

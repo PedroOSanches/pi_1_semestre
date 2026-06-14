@@ -59,10 +59,10 @@ public class TurmaSubturmaDAO {
         try (
                 Connection cx = ConnectionFactory.obterConexao();
                 PreparedStatement ps = cx.prepareStatement(sql)
-        ){
+        ) {
             ps.setInt(1, professor.getId());
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int idTurma = rs.getInt("id_turma_subturma");
                 String codTurma = rs.getString("cod_turma");
                 Subturma subturma = new Subturma(rs.getString("cod_subturma"));
@@ -79,7 +79,7 @@ public class TurmaSubturmaDAO {
                 );
                 turmas.add(turma);
             }
-                return turmas;
+            return turmas;
         }
     }
 }

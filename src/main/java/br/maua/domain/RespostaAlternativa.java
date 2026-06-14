@@ -1,9 +1,20 @@
 package br.maua.domain;
 
+import br.maua.exception.UpdateException;
+import br.maua.infrastructure.DAO.RespostaAlternativaDAO;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class RespostaAlternativa extends Resposta {
 
     private int idAlternativaAssinalada;
-    private QuestaoAlternativa questao;
+
+
+    @Override
+    public QuestaoAlternativa getQuestao() {
+        return (QuestaoAlternativa) super.getQuestao();
+    }
 
     public int getIdAlternativaAssinalada() {
         return idAlternativaAssinalada;
@@ -13,17 +24,18 @@ public class RespostaAlternativa extends Resposta {
         this.idAlternativaAssinalada = idAlternativaAssinalada;
     }
 
-    public QuestaoAlternativa getQuestao() {
-        return questao;
+    public RespostaAlternativa() {
+    }
+    public RespostaAlternativa(
+            Tentativa tentativa, QuestaoAlternativa questao, int idAlternativa
+    ) {
+        super(tentativa, questao);
+        setIdAlternativaAssinalada(idAlternativa);
     }
 
-    public void setQuestao(QuestaoAlternativa questao) {
-        this.questao = questao;
-    }
 
-    public String gerarRespostaBanco(int idAlternativa){
-        String sql = String.format("(%d)", idAlternativa);
-        return sql;
+    @Override
+    public void commitResposta(Connection cx) throws SQLException, UpdateException {
+        RespostaAlternativaDAO.commitResposta(cx, this);
     }
-
 }

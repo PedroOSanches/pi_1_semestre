@@ -1,12 +1,12 @@
 package br.maua.domain;
 
-import br.maua.infrastructure.DAO.TarefaDAO;
-
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.regex.*;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import br.maua.infrastructure.DAO.TarefaDAO;
 
 public class Tarefa {
 
@@ -14,7 +14,7 @@ public class Tarefa {
     private String titulo;
     private Date prazo;
     private Casa casa;
-    private List<Questao> questoes = new ArrayList<>();
+    private final List<Questao> questoes = new ArrayList<>();
 
     public Tarefa(String prazo, Casa casa) {
         setPrazo(prazo);
@@ -68,16 +68,8 @@ public class Tarefa {
         return questoes;
     }
 
-    public void addQuestao(QuestaoAlternativa questaoAlternativa) {
-        this.questoes.add(questaoAlternativa);
-    }
-
-    public void addQuestao(QuestaoDissertativa questaoDissertativa) {
-        this.questoes.add(questaoDissertativa);
-    }
-
-    public void addQuestao(QuestaoUpload questaoUpload) {
-        this.questoes.add(questaoUpload);
+    public void addQuestao(Questao questao) {
+        this.questoes.add(questao);
     }
 
     public void commitTarefa() throws SQLException{

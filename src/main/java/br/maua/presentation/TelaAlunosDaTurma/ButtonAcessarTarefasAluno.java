@@ -18,7 +18,7 @@ public class ButtonAcessarTarefasAluno extends DefaultCellEditor {
 
             Aluno aluno = (Aluno) tabela.getValueAt(row, 0);
             java.awt.EventQueue.invokeLater(() -> {
-                        
+
                         new TelaTarefaAluno(telaBotao, aluno.getId(), null).setVisible(true);
                         if (telaBotao != null) {
                             telaBotao.setVisible(false);

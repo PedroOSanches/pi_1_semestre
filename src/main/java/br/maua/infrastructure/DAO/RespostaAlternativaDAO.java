@@ -1,28 +1,27 @@
 package br.maua.infrastructure.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 import br.maua.domain.RespostaAlternativa;
-import br.maua.infrastructure.ConnectionFactory;
+import org.jetbrains.annotations.NotNull;
 
-public class RespostaAlternativaDAO {
-    public void salvar(RespostaAlternativa respostaAlternativa) {
+public class RespostaAlternativaDAO extends RespostaDAO {
+
+    public static void commitResposta(@NotNull Connection cx, RespostaAlternativa resposta) throws SQLException {
+        RespostaDAO.gerarResposta(cx, resposta);
+
         String sql = "INSERT INTO resposta_alternativa (id_resposta, id_alternativa) VALUES (?, ?)";
 
         try (
-            Connection cx = ConnectionFactory.obterConexao();
-            PreparedStatement ps = cx.prepareStatement(sql)
+                PreparedStatement ps = cx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
-
-            ps.setInt(1, respostaAlternativa.getIdResposta());
-            ps.setInt(2, respostaAlternativa.getQuestao().getIdQuestao());
+            ps.setInt(1, resposta.getIdResposta());
+            ps.setInt(2, resposta.getIdAlternativaAssinalada());
 
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new SQLException("Erro ao inserir resposta alternativa!", e);
         }
     }
 }

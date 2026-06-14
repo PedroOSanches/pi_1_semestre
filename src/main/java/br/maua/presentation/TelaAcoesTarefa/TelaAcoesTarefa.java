@@ -5,10 +5,13 @@
 package br.maua.presentation.TelaAcoesTarefa;
 
 
-import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
+import javax.swing.JOptionPane;
+
 import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -78,6 +81,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         botaoVoltar.setText("Voltar");
         botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
         // botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+        //botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
 
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
@@ -129,6 +133,9 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void botaoVoltarActionPerformed(ActionEvent actionEvent) {
+    }
+
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
@@ -144,7 +151,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         }
 
 
-        
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
     
@@ -161,31 +167,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaAcoesTarefa().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAzul1;

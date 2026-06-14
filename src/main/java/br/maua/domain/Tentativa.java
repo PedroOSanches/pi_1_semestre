@@ -1,13 +1,13 @@
 package br.maua.domain;
 
-import br.maua.infrastructure.ConnectionFactory;
-import br.maua.infrastructure.DAO.TentativaDAO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.maua.infrastructure.ConnectionFactory;
 
 public class Tentativa {
 
@@ -15,8 +15,8 @@ public class Tentativa {
     private double nota;
     private Aluno aluno;
     private Tarefa tarefa;
-    private List <Resposta> respostas = new ArrayList<>();
-    private TentativaDAO tentativaDAO;
+    private boolean concluida = false;
+    private List<Resposta> respostas = new ArrayList<>();
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
         this.setNota(nota);
@@ -29,16 +29,15 @@ public class Tentativa {
         this.tarefa = tarefa;
     }
 
-    public Tentativa(int idTentativa){
+    public Tentativa(int idTentativa) {
         this.idTentativa = idTentativa;
-        this.tentativaDAO = new TentativaDAO();
     }
 
     public Double getNota() {
         return nota;
     }
 
-    public void setNota(Double nota) {
+    public void setNota(double nota) {
         this.nota = nota;
     }
 
@@ -58,6 +57,13 @@ public class Tentativa {
         this.tarefa = tarefa;
     }
 
+    public boolean isConcluida() {
+        return concluida;
+    }
+    public void setConcluida(boolean concluida) {
+        this.concluida = concluida;
+    }
+
     public int getIdTentativa() {
         return idTentativa;
     }
@@ -74,28 +80,7 @@ public class Tentativa {
         this.respostas = respostas;
     }
 
-    public void registraTentativa(){
-        String sql = "INSERT INTO tentativa (id_questionario, id_usuario, status)" +
-                "VALUES (?, ?, ?)";
-
-        try(
-                Connection cx = ConnectionFactory.obterConexao();
-        ) {
-            assert cx != null;
-            try(PreparedStatement ps = cx.prepareStatement(sql);
-
-                    ){
-                ps.setInt(1, tarefa.getIdTarefa());
-                ps.setInt(2, aluno.getId());
-                ps.setString(3, "concluida");
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean commitCorrecao(){
-        return tentativaDAO.atualizarNota(this);
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 }

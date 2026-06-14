@@ -24,7 +24,7 @@ public class JornadaService {
 
         if (sucessoSalvamento) {
             System.out.println("Nota " + notaAtingida + " registrada com sucesso para a Casa ID " + casa.getIdCasa());
-            
+
             if (notaAtingida >= 6.0) {
                 System.out.println("Parabéns! Casa concluída com sucesso. Próxima casa liberada.");
             } else {

@@ -2,30 +2,35 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package br.maua.presentation.TelaQuestionarioAluno;
+package br.maua.presentation.TelaQuestionarioAluno.Components;
 
-import br.maua.domain.Questao;
-import br.maua.domain.QuestaoAlternativa;
-import br.maua.domain.RespostaAlternativa;
-import br.maua.domain.Alternativa;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
-import java.util.HashMap;
-import java.util.Map;
+
+import br.maua.domain.Alternativa;
+import br.maua.domain.QuestaoAlternativa;
+import br.maua.domain.RespostaAlternativa;
+import br.maua.domain.Tentativa;
+
 /**
  *
  * @author Luiza
  */
-public class PainelQuestaoAlternativa extends javax.swing.JPanel {
+public class PainelQuestaoAlternativa extends PainelQuestao {
 
-    private ButtonGroup grupo = new ButtonGroup();
-    private Map<JRadioButton, Alternativa> alternativasMap =
+    private final QuestaoAlternativa questao;
+    private final ButtonGroup grupo = new ButtonGroup();
+    private final Map<JRadioButton, Alternativa> alternativasMap =
         new HashMap<>();
     /**
      * Creates new form PainelQuestaoAlternativa
      */
     public PainelQuestaoAlternativa(QuestaoAlternativa questao) {
+        this.questao = questao;
         initComponents();
         jTextPane2.setEditable(false);
         jTextPane2.setFocusable(false);
@@ -49,8 +54,9 @@ public class PainelQuestaoAlternativa extends javax.swing.JPanel {
         grupo.add(radio);
         PainelOpcoesAlternativas.add(radio);
         alternativasMap.put(radio, alt);
+        }
     }
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,26 +131,25 @@ public class PainelQuestaoAlternativa extends javax.swing.JPanel {
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
-    private JRadioButton criarRadioButton(
-        String texto) {
 
-    JRadioButton radio =
-            new JRadioButton(texto);
+    private JRadioButton criarRadioButton(String texto) {
+        JRadioButton radio =
+                new JRadioButton(texto);
 
-    radio.setBackground(
-            new java.awt.Color(240,147,32));
+        radio.setBackground(
+                new java.awt.Color(240, 147, 32));
 
-    radio.setForeground(
-            java.awt.Color.WHITE);
+        radio.setForeground(
+                java.awt.Color.WHITE);
 
-    radio.setFont(
-            new java.awt.Font(
-                    "Segoe UI",
-                    java.awt.Font.PLAIN,
-                    12));
+        radio.setFont(
+                new java.awt.Font(
+                        "Segoe UI",
+                        java.awt.Font.PLAIN,
+                        12));
 
-    return radio;
-}
+        return radio;
+    }
     public int getAlternativaSelecionada() {
 
     for (JRadioButton radio :
@@ -154,12 +159,22 @@ public class PainelQuestaoAlternativa extends javax.swing.JPanel {
 
             return alternativasMap
                     .get(radio)
-                    .getIdAlternativa();    
+                    .getIdAlternativa();
         }
     }
 
     return -1;
-}
+    }
+
+    @Override
+    public QuestaoAlternativa getQuestao() {
+        return questao;
+    }
+
+    @Override
+    public void salvar(Tentativa tentativa) {
+        tentativa.getRespostas().add(new RespostaAlternativa(tentativa, questao, this.getAlternativaSelecionada()));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAlternativa;

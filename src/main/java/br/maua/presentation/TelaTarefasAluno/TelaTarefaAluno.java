@@ -15,10 +15,11 @@ import javax.swing.*;
 
 /**
  * Tela unificada: Exibe dinamicamente as tarefas que o aluno selecionado realizou.
+ *
  * @author Luiza / Lenovo (Adaptado para visão do Professor)
  */
 public class TelaTarefaAluno extends JFrame {
-    
+
     private final Integer idAluno;
     private final Integer idCasa;
     private final String tituloTarefa;
@@ -69,18 +70,18 @@ public class TelaTarefaAluno extends JFrame {
         javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
         painelAzul1.setLayout(painelAzul1Layout);
         painelAzul1Layout.setHorizontalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(nomeTitulo)
-                .addContainerGap(420, Short.MAX_VALUE))
+                painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(painelAzul1Layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(nomeTitulo)
+                                .addContainerGap(420, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(nomeTitulo)
-                .addContainerGap(20, Short.MAX_VALUE))
+                painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(painelAzul1Layout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addComponent(nomeTitulo)
+                                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         painelCinza.add(painelAzul1);
@@ -96,29 +97,29 @@ public class TelaTarefaAluno extends JFrame {
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
         painelAzulLayout.setHorizontalGroup(
-            painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68))
+                painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
+                                .addContainerGap(78, Short.MAX_VALUE)
+                                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68))
         );
         painelAzulLayout.setVerticalGroup(
-            painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
+                painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(painelAzulLayout.createSequentialGroup()
+                                .addGap(78, 78, 78)
+                                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -147,7 +148,7 @@ public class TelaTarefaAluno extends JFrame {
         try {
             if (idAluno != null) {
                 List<TarefaTentadaDTO> tarefas = TentativaDAO.buscarTarefasTentadasPeloAluno(idAluno, idCasa);
-                
+
                 if (tarefas.isEmpty()) {
                     JLabel vazio = new JLabel("Nenhuma tarefa realizada por este aluno.");
                     vazio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -175,7 +176,7 @@ public class TelaTarefaAluno extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         painelCinza.add(scrollPane);
-        scrollPane.setBounds(94, 150, 720, 420); 
+        scrollPane.setBounds(94, 150, 720, 420);
 
         painelCinza.revalidate();
         painelCinza.repaint();
@@ -188,7 +189,7 @@ public class TelaTarefaAluno extends JFrame {
     private JPanel criarCardTarefaClicavel(TarefaTentadaDTO tarefa) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(new Color(217, 217, 217)); // Cor cinza idêntica ao print
-        card.setMaximumSize(new Dimension(720, 60));  
+        card.setMaximumSize(new Dimension(720, 60));
         card.setPreferredSize(new Dimension(720, 60));
         card.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         card.setAlignmentX(LEFT_ALIGNMENT);
@@ -196,7 +197,7 @@ public class TelaTarefaAluno extends JFrame {
         JLabel labelTitulo = new JLabel("Atividade: " + tarefa.tituloTarefa());
         labelTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         labelTitulo.setForeground(Color.BLACK);
-        
+
         card.add(labelTitulo, BorderLayout.WEST);
 
         // Ouvinte de eventos do Mouse para clique e efeito de foco (hover)
@@ -225,28 +226,28 @@ public class TelaTarefaAluno extends JFrame {
      * Executa a transição para a tela de Correção enviando os IDs de contexto obtidos
      */
     private void abrirCorrecaoProfessor(int idTarefa, String titulo) {
-    try {
-        int idTentativa = br.maua.infrastructure.DAO.TentativaDAO.buscarIdTentativaPorAlunoETarefa(this.idAluno, idTarefa);
-        
-        if (idTentativa != -1) {
-            br.maua.domain.Tentativa tentativaParaCorrigir = new br.maua.domain.Tentativa(idTentativa);
-            
-            br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa telaCorrecao = 
-                new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(tentativaParaCorrigir);
-            
-            telaCorrecao.setVisible(true);
-            this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, 
-                "Não foi possível localizar o registro da tentativa para este aluno.", 
-                "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+        try {
+            int idTentativa = br.maua.infrastructure.DAO.TentativaDAO.buscarIdTentativaPorAlunoETarefa(this.idAluno, idTarefa);
+
+            if (idTentativa != -1) {
+                br.maua.domain.Tentativa tentativaParaCorrigir = new br.maua.domain.Tentativa(idTentativa);
+
+                br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa telaCorrecao =
+                        new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(tentativaParaCorrigir);
+
+                telaCorrecao.setVisible(true);
+                this.dispose();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Não foi possível localizar o registro da tentativa para este aluno.",
+                        "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Erro ao mapear tentativa: " + e.getMessage(),
+                    "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Erro ao mapear tentativa: " + e.getMessage(), 
-            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
