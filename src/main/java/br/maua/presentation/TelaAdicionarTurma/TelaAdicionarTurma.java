@@ -61,6 +61,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         comboBoxSubturma = new javax.swing.JComboBox<>();
         botaoAddSubturma = new javax.swing.JButton();
         botaoSalvar = new javax.swing.JButton();
+        buttonVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,7 +88,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelAno.setForeground(new java.awt.Color(255, 255, 255));
         labelAno.setText("Ano");
 
-        comboBoxAno.setModel(new DefaultComboBoxModel<>(new Ano[]{new Ano(0)}));
+        comboBoxAno.setModel(new DefaultComboBoxModel(new Ano[]{new Ano(0)}));
 
         botaoAddAno.setText("+");
         botaoAddAno.addActionListener(this::botaoAddAnoActionPerformed);
@@ -96,7 +97,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelCurso.setForeground(new java.awt.Color(255, 255, 255));
         labelCurso.setText("Curso");
 
-        comboBoxCurso.setModel(new DefaultComboBoxModel<>(new Curso[]{new Curso("Carregando...")}));
+        comboBoxCurso.setModel(new DefaultComboBoxModel(new Curso[]{new Curso("Carregando...")}));
 
         botaoAddCurso.setText("+");
         botaoAddCurso.addActionListener(this::botaoAddCursoActionPerformed);
@@ -105,7 +106,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelTurma.setForeground(new java.awt.Color(255, 255, 255));
         labelTurma.setText("Turma");
 
-        comboBoxTurma.setModel(new DefaultComboBoxModel<>(new Turma[]{new Turma("Carregando...")}));
+        comboBoxTurma.setModel(new DefaultComboBoxModel(new Turma[]{new Turma("Carregando...")}));
 
         botaoAddTurma.setText("+");
         botaoAddTurma.addActionListener(this::botaoAddTurmaActionPerformed);
@@ -114,13 +115,19 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelSubturma.setForeground(new java.awt.Color(255, 255, 255));
         labelSubturma.setText("Subturma");
 
-        comboBoxSubturma.setModel(new DefaultComboBoxModel<>(new Subturma[]{new Subturma("Carregando...")}));
+        comboBoxSubturma.setModel(new DefaultComboBoxModel(new Subturma[]{new Subturma("Carregando...")}));
 
         botaoAddSubturma.setText("+");
         botaoAddSubturma.addActionListener(this::botaoAddSubturmaActionPerformed);
 
-        botaoSalvar.setText("Salvar");
+        botaoSalvar.setLabel("Salvar");
         botaoSalvar.addActionListener(this::botaoSalvarActionPerformed);
+
+        buttonVoltar.setBackground(new java.awt.Color(240, 147, 32));
+        buttonVoltar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        buttonVoltar.setText("Voltar");
+        buttonVoltar.addActionListener(this::buttonVoltarActionPerformed);
 
         javax.swing.GroupLayout gapAnoLayout = new javax.swing.GroupLayout(gapAno);
         gapAno.setLayout(gapAnoLayout);
@@ -162,16 +169,23 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
                             .addComponent(labelSemestre)
                             .addComponent(labelProfessor))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(gapAnoLayout.createSequentialGroup()
-                .addGap(356, 356, 356)
-                .addComponent(botaoSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(gapAnoLayout.createSequentialGroup()
+                            .addGroup(gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(gapAnoLayout.createSequentialGroup()
+                                            .addGap(356, 356, 356)
+                                            .addComponent(botaoSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(gapAnoLayout.createSequentialGroup()
+                                            .addGap(16, 16, 16)
+                                            .addComponent(buttonVoltar)))
                 .addContainerGap(419, Short.MAX_VALUE))
-            .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         gapAnoLayout.setVerticalGroup(
             gapAnoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gapAnoLayout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                    .addGap(16, 16, 16)
+                    .addComponent(buttonVoltar)
+                    .addGap(18, 18, 18)
                 .addComponent(titulo)
                 .addGap(18, 18, 18)
                 .addComponent(labelSemestre)
@@ -265,7 +279,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         }.execute();
     }
 
-    private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVoltarActionPerformed
         // TODO add your handling code here:
         try {
             TurmaSubturmaDAO.commit(
@@ -340,6 +354,11 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botaoAddTurmaActionPerformed
 
+    private void buttonVoltarActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+        anterior.setVisible(true);
+    }
+
     private void botaoAddSubturmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAddSubturmaActionPerformed
         // TODO add your handling code here:
         ModalAdicionarTurma modal = new ModalAdicionarTurma(
@@ -372,6 +391,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
     private javax.swing.JComboBox<Subturma> comboBoxSubturma;
     private javax.swing.JComboBox<Turma> comboBoxTurma;
     private javax.swing.JPanel gapAno;
+    private javax.swing.JButton buttonVoltar;
     private javax.swing.JLabel labelAno;
     private javax.swing.JLabel labelCurso;
     private javax.swing.JLabel labelProfessor;

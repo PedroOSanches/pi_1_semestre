@@ -33,7 +33,7 @@ public class SubturmaDAO {
     }
 
     public static void salvar(Subturma subturma) throws SQLException {
-        String sql = "INSERT INTO subturma(cod_subtuma) VALUES (?)";
+        String sql = "INSERT INTO subturma(cod_subturma) VALUES (?)";
         try (
                 Connection cx = ConnectionFactory.obterConexao();
                 PreparedStatement ps = cx.prepareStatement(sql)
