@@ -8,20 +8,22 @@ import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 
 import java.awt.event.WindowEvent;
 
+import javax.swing.*;
+
 /**
  *
  * @author Lenovo
  */
 public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
 
-    private TelaAlunosDaTurma telaAnterior;
+    private final TelaAlunosDaTurma telaAnterior;
     private int idTurma;
     private int idSubturma;
     private int idCurso;
     private int idSemestre;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdicionarAlunoNaTurma.class.getName());
-
+    private final JFrame telaAnterior;
     /**
      * Creates new form TelaAdicionarAlunoNaTurma
      */
@@ -34,7 +36,7 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
             @Override
             public void windowClosing(WindowEvent we) {
 
-                if (telaAnterior != null){
+                if (telaAnterior != null) {
                     telaAnterior.atualizarTabelaAlunosTurma();
                     telaAnterior.setVisible(true);
                 }
@@ -43,6 +45,8 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
     }
 
     public TelaAdicionarAlunoNaTurma() {
+    public TelaAdicionarAlunoNaTurma(JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         initComponents();
     }
 
@@ -59,8 +63,8 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        buttonAdicionar = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+            buttonAdicionar = new javax.swing.JButton();
+            jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,10 +82,10 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Username");
 
-        buttonAdicionar.setText("Adicionar");
-        buttonAdicionar.addActionListener(this::buttonAdicionarActionPerformed);
+            buttonAdicionar.setText("Adicionar");
+            buttonAdicionar.addActionListener(this::buttonAdicionarActionPerformed);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+            jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -97,7 +101,7 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
                     .addContainerGap(134, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonAdicionar)
+                    .addComponent(buttonAdicionar)
                 .addGap(46, 46, 46))
         );
         jPanel1Layout.setVerticalGroup(
@@ -112,7 +116,7 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
                     .addGap(89, 89, 89)
                 .addComponent(jLabel5)
                     .addGap(78, 78, 78)
-                .addComponent(buttonAdicionar)
+                    .addComponent(buttonAdicionar)
                 .addContainerGap(102, Short.MAX_VALUE))
         );
 
@@ -132,88 +136,87 @@ public class TelaAdicionarAlunoNaTurma extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdicionarActionPerformed
+        private void buttonAdicionarActionPerformed (java.awt.event.ActionEvent evt)
+        {//GEN-FIRST:event_buttonAdicionarActionPerformed
 
-        String nome = campoNome.getText().trim();
-        String sobrenome = campoSobrenome.getText().trim();
-        String username = campoUsername.getText().trim();
+            String nome = campoNome.getText().trim();
+            String sobrenome = campoSobrenome.getText().trim();
+            String username = campoUsername.getText().trim();
 
-        if (nome.isEmpty() || sobrenome.isEmpty() || username.isEmpty()) {
+            if (nome.isEmpty() || sobrenome.isEmpty() || username.isEmpty()) {
 
-            javax.swing.JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
-            return;
-
-        }
-
-        AlunoDAO alunoDAO = new AlunoDAO();
-        TurmaDAO turmaDAO = new TurmaDAO();
-
-        try {
-
-            String tipoUsuario = alunoDAO.determinarTipoUsuario(username);
-            if (tipoUsuario == null || tipoUsuario.trim().isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Username não encontrado!");
+                javax.swing.JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
                 return;
-            }
-            if (!"aluno".equalsIgnoreCase(tipoUsuario)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Tipo de usuário incompatível!");
-                return;
-            }
-
-            Aluno aluno = alunoDAO.obterAlunoPelaTelaAdicionarAlunoNaTurma(nome, sobrenome, username);
-
-            if (aluno == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Usuário não encontrado!");
-                return;
-            }
-
-            boolean sucesso = turmaDAO.vincularAluno(aluno.getIdAluno(), this.telaAnterior.getIdTurma(), this.telaAnterior.getIdSubturma(), this.telaAnterior.getIdCurso(), this.telaAnterior.getIdSemestre());
-
-            if (sucesso) {
-
-                javax.swing.JOptionPane.showMessageDialog(this, "Aluno adicionado com sucesso!");
-                this.dispose();
 
             }
 
-            else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Não foi possível adicionar o aluno na turma!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+            AlunoDAO alunoDAO = new AlunoDAO();
+            TurmaDAO turmaDAO = new TurmaDAO();
 
-    }//GEN-LAST:event_buttonAdicionarActionPerformed
+            try {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                String tipoUsuario = alunoDAO.determinarTipoUsuario(username);
+                if (tipoUsuario == null || tipoUsuario.trim().isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Username não encontrado!");
+                    return;
                 }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+                if (!"aluno".equalsIgnoreCase(tipoUsuario)) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Tipo de usuário incompatível!");
+                    return;
+                }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaAdicionarAlunoNaTurma().setVisible(true));
-    }
+                Aluno aluno = alunoDAO.obterAlunoPelaTelaAdicionarAlunoNaTurma(nome, sobrenome, username);
+
+                if (aluno == null) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Usuário não encontrado!");
+                    return;
+                }
+
+                boolean sucesso = turmaDAO.vincularAluno(aluno.getIdAluno(), this.telaAnterior.getIdTurma(), this.telaAnterior.getIdSubturma(), this.telaAnterior.getIdCurso(), this.telaAnterior.getIdSemestre());
+
+                if (sucesso) {
+
+                    javax.swing.JOptionPane.showMessageDialog(this, "Aluno adicionado com sucesso!");
+                    this.dispose();
+
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Não foi possível adicionar o aluno na turma!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+
+        }//GEN-LAST:event_buttonAdicionarActionPerformed
+
+        /**
+         * @param args the command line arguments
+         */
+        public static void main (String[]args){
+            /* Set the Nimbus look and feel */
+            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+            /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+             * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+             */
+            try {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
+                }
+            } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+                logger.log(java.util.logging.Level.SEVERE, null, ex);
+            }
+            //</editor-fold>
+
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(() -> new TelaAdicionarAlunoNaTurma().setVisible(true));
+        }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAdicionar;
-    private javax.swing.JComboBox<String> jComboBox1;
+        private javax.swing.JButton buttonAdicionar;
+        private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;

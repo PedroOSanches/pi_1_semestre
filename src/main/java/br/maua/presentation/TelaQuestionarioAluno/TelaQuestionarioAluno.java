@@ -4,28 +4,119 @@
  */
 package br.maua.presentation.TelaQuestionarioAluno;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.*;
+
+import br.maua.domain.Aluno;
+import br.maua.domain.Questao;
+import br.maua.domain.QuestaoAlternativa;
+import br.maua.domain.QuestaoDissertativa;
+import br.maua.domain.QuestaoUpload;
+import br.maua.domain.Tarefa;
+import br.maua.domain.Tentativa;
+import br.maua.exception.UploadException;
+import br.maua.infrastructure.DAO.*;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestao;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoAlternativa;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoDissertativa;
+import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoUpload;
+
 /**
  *
  * @author Luiza
  */
-public class TelaQuestionarioAluno extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaQuestionarioAluno.class.getName());
+public class TelaQuestionarioAluno extends JFrame {
+
+
+    private static final Logger logger = Logger.getLogger
+    (TelaQuestionarioAluno.class.getName());
+    private final Tarefa tarefa;
+    private final Aluno aluno;
+    private final Tentativa tentativa;
+    private final JFrame telaAnterior;
+    private final List<PainelQuestao> respostas = new ArrayList<>();
 
     /**
      * Creates new form TelaQuestionarioAluno
      */
-    public TelaQuestionarioAluno() {
+    public TelaQuestionarioAluno(Tarefa tarefa, Aluno aluno, JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
+        this.tarefa = tarefa;
+        this.tentativa = new Tentativa(aluno, tarefa);
+        this.aluno = aluno;
         initComponents();
-        jTextArea2.setText("Digite sua resposta...");
-        painelAzul1.setLayout(new java.awt.GridBagLayout());
+        try{
+            QuestaoDAO.buscarPorTarefa(tarefa);
+        }catch(SQLException e ){
+            JOptionPane.showMessageDialog(rootPane, "Erro ao se comunicar com o banco!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+        titulo3.setText(tarefa.getTitulo());
+
+        painelQuestao.setLayout(
+            new BoxLayout(
+                    painelQuestao,
+                BoxLayout.Y_AXIS
+            )
+        );
+
+        try {
+        carregarQuestoes(tarefa.getQuestoes());
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+
+        painelAzul1.setLayout(new GridBagLayout());
         painelAzul1.add(painelCinza1);
-        jTextPane1.setEditable(false);
-        jTextPane1.setFocusable(false);
-        jTextPane2.setEditable(false);
-        jTextPane2.setFocusable(false);
-        jTextPane3.setEditable(false);
-        jTextPane3.setFocusable(false);
+        jScrollPane6.getVerticalScrollBar().setUnitIncrement(25);
+        configurarScroll();
+        
+    }
+    
+    
+
+    private void carregarQuestoes(List<Questao>questoes){
+        for (Questao q : questoes){
+            PainelQuestao painel = null;
+            if (q instanceof QuestaoDissertativa qd){
+                painel = new PainelQuestaoDissertativa(qd);
+            }
+            else if (q instanceof QuestaoAlternativa qa){
+                painel = new PainelQuestaoAlternativa(qa);
+            }
+            else if (q instanceof QuestaoUpload qu){
+                painel = new PainelQuestaoUpload(qu);
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao carregar questões!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+
+            respostas.add(painel);
+            painelQuestao.add(painel);
+        }
+        painelQuestao.revalidate();
+        painelQuestao.repaint();
+    }
+    
+    private void configurarScroll() {
+
+        painelCinza1.setPreferredSize(null);
+        painelAzul1.setPreferredSize(null);
+
+        painelQuestao.revalidate();
+        painelCinza1.revalidate();
+        painelAzul1.revalidate();
+
+        jScrollPane6.setViewportView(painelAzul1);
+        jScrollPane6.revalidate();
+        jScrollPane6.repaint();
     }
 
     /**
@@ -37,283 +128,151 @@ public class TelaQuestionarioAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        painelAzul1 = new javax.swing.JPanel();
-        painelCinza1 = new javax.swing.JPanel();
-        titulo3 = new java.awt.Label();
-        prazo = new java.awt.Label();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
-        jPanel2 = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane3 = new javax.swing.JTextPane();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        btnEnviarTarefa2 = new javax.swing.JButton();
+        jScrollPane6 = new JScrollPane();
+        painelAzul1 = new JPanel();
+        painelCinza1 = new JPanel();
+        titulo3 = new Label();
+        prazo = new Label();
+        btnEnviarTarefa2 = new JButton();
+        painelQuestao = new PainelQuestao();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        painelAzul1.setBackground(new java.awt.Color(19, 112, 178));
+        jScrollPane6.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        painelCinza1.setBackground(new java.awt.Color(217, 217, 217));
-        painelCinza1.setPreferredSize(new java.awt.Dimension(956, 725));
+        painelAzul1.setBackground(new Color(19, 112, 178));
 
-        titulo3.setBackground(new java.awt.Color(19, 112, 178));
-        titulo3.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 60)); // NOI18N
-        titulo3.setForeground(new java.awt.Color(255, 255, 255));
-        titulo3.setText("      Questionário");
+        painelCinza1.setBackground(new Color(217, 217, 217));
 
-        prazo.setAlignment(java.awt.Label.CENTER);
-        prazo.setBackground(new java.awt.Color(19, 112, 178));
-        prazo.setForeground(new java.awt.Color(255, 255, 255));
+        titulo3.setAlignment(Label.CENTER);
+        titulo3.setBackground(new Color(19, 112, 178));
+        titulo3.setFont(new Font("Yu Gothic UI Semilight", 0, 60)); // NOI18N
+        titulo3.setForeground(new Color(255, 255, 255));
+        titulo3.setText("Questionário");
+
+        prazo.setAlignment(Label.CENTER);
+        prazo.setBackground(new Color(19, 112, 178));
+        prazo.setForeground(new Color(255, 255, 255));
         prazo.setText("Prazo: 01/01");
 
-        jTextPane1.setEditable(false);
-        jTextPane1.setBackground(new java.awt.Color(19, 112, 178));
-        jTextPane1.setForeground(new java.awt.Color(255, 255, 255));
-        jTextPane1.setText("Descrição da tarefa: \nQuestionário");
-        jScrollPane1.setViewportView(jTextPane1);
-
-        jTextPane2.setEditable(false);
-        jTextPane2.setBackground(new java.awt.Color(240, 147, 32));
-        jTextPane2.setForeground(new java.awt.Color(255, 255, 255));
-        jTextPane2.setText("Questão 1: \nLaboris veniam do excepteur officia. Culpa veniam cillum irure reprehenderit nisi veniam sit fugiat ipsum. Laborum. consequat proident magna id adipiscing cupidatat ut magna mollit labore. Culpa officia in incididunt ut ex et");
-        jTextPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane2.setViewportView(jTextPane2);
-
-        jPanel2.setBackground(new java.awt.Color(240, 147, 32));
-
-        jRadioButton1.setBackground(new java.awt.Color(240, 147, 32));
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton1.setText("Opção 1");
-        jRadioButton1.addActionListener(this::jRadioButton1ActionPerformed);
-
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton2.setText("Opção 2");
-        jRadioButton2.addActionListener(this::jRadioButton2ActionPerformed);
-
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton3.setText("Opção 3");
-        jRadioButton3.addActionListener(this::jRadioButton3ActionPerformed);
-
-        buttonGroup1.add(jRadioButton4);
-        jRadioButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton4.setText("Opção 4");
-        jRadioButton4.addActionListener(this::jRadioButton4ActionPerformed);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jTextPane3.setEditable(false);
-        jTextPane3.setBackground(new java.awt.Color(240, 147, 32));
-        jTextPane3.setForeground(new java.awt.Color(255, 255, 255));
-        jTextPane3.setText("Questão 2: \nLaboris veniam do excepteur officia. Culpa veniam cillum irure reprehenderit nisi veniam sit fugiat ipsum. Laborum. consequat proident magna id adipiscing cupidatat ut magna mollit labore. Culpa officia in incididunt ut ex et");
-        jTextPane3.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane3.setViewportView(jTextPane3);
-
-        jTextArea2.setBackground(new java.awt.Color(250, 240, 226));
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jTextArea2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextArea2FocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextArea2FocusLost(evt);
-            }
-        });
-        jScrollPane5.setViewportView(jTextArea2);
-
-        btnEnviarTarefa2.setBackground(new java.awt.Color(240, 147, 32));
-        btnEnviarTarefa2.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnviarTarefa2.setBackground(new Color(240, 147, 32));
+        btnEnviarTarefa2.setForeground(new Color(255, 255, 255));
         btnEnviarTarefa2.setText("Enviar Tarefa");
         btnEnviarTarefa2.addActionListener(this::btnEnviarTarefa2ActionPerformed);
 
-        javax.swing.GroupLayout painelCinza1Layout = new javax.swing.GroupLayout(painelCinza1);
-        painelCinza1.setLayout(painelCinza1Layout);
-        painelCinza1Layout.setHorizontalGroup(
-            painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinza1Layout.createSequentialGroup()
-                .addGap(202, 202, 202)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1)
-                    .addGroup(painelCinza1Layout.createSequentialGroup()
-                        .addComponent(prazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEnviarTarefa2))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5)
-                    .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
-                .addContainerGap(200, Short.MAX_VALUE))
+        painelQuestao.setBackground(new Color(217, 217, 217));
+        painelQuestao.setLayout(new BoxLayout(painelQuestao, BoxLayout.Y_AXIS));
+
+        GroupLayout PainelQuestoesLayout = new GroupLayout(painelQuestao);
+        painelQuestao.setLayout(PainelQuestoesLayout);
+        PainelQuestoesLayout.setHorizontalGroup(
+                PainelQuestoesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        painelCinza1Layout.setVerticalGroup(
-            painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinza1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(titulo3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(prazo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEnviarTarefa2, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(37, 37, 37))
+        PainelQuestoesLayout.setVerticalGroup(
+                PainelQuestoesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGap(0, 617, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
+        GroupLayout painelCinza1Layout = new GroupLayout(painelCinza1);
+        painelCinza1.setLayout(painelCinza1Layout);
+        painelCinza1Layout.setHorizontalGroup(
+                painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(painelCinza1Layout.createSequentialGroup()
+                .addContainerGap(138, Short.MAX_VALUE)
+                    .addGroup(painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(painelCinza1Layout.createSequentialGroup()
+                            .addComponent(prazo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addComponent(btnEnviarTarefa2))
+                            .addGroup(painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(titulo3, GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+                                    .addComponent(painelQuestao, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(0, 118, Short.MAX_VALUE))
+        );
+        painelCinza1Layout.setVerticalGroup(
+                painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(painelCinza1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                    .addComponent(titulo3, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                    .addComponent(painelQuestao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                    .addGroup(painelCinza1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(prazo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEnviarTarefa2))
+                .addGap(51, 51, 51))
+        );
+
+        GroupLayout painelAzul1Layout = new GroupLayout(painelAzul1);
         painelAzul1.setLayout(painelAzul1Layout);
         painelAzul1Layout.setHorizontalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                painelAzul1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(painelCinza1, GroupLayout.PREFERRED_SIZE, 930, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         painelAzul1Layout.setVerticalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                painelAzul1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(painelAzul1Layout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(painelCinza1, GroupLayout.PREFERRED_SIZE, 899, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        jScrollPane6.setViewportView(painelAzul1);
+
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane6, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
-
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
-
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton4ActionPerformed
-
-    private void jTextArea2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusGained
-        // TODO add your handling code here:
-        if (jTextArea2.getText().equals("Digite sua resposta...")) {
-            jTextArea2.setText("");
-            jTextArea2.setForeground(java.awt.Color.BLACK);
+    private void btnEnviarTarefa2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
+        for (PainelQuestao resposta : respostas) {
+            resposta.salvar(tentativa);
         }
-    }//GEN-LAST:event_jTextArea2FocusGained
-
-    private void jTextArea2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusLost
-        // TODO add your handling code here:
-        if (jTextArea2.getText().isEmpty()) {
-            jTextArea2.setText("Digite sua resposta...");
-            jTextArea2.setForeground(java.awt.Color.GRAY);
+        try {
+            TentativaDAO.salvarTentativa(tentativa);
+            JOptionPane.showMessageDialog(null, "Tentativa Salvo com sucesso!");
+            dispose();
+            telaAnterior.setVisible(true);
+        } catch (SQLException | UploadException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jTextArea2FocusLost
-
-    private void btnEnviarTarefa2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            Tarefa tarefa = new Tarefa();
+            tarefa.setIdTarefa(20);
+            tarefa.setTitulo("Titulo Tarefa");
+            Aluno aluno = new Aluno(14, "Pedro", "Sanches", "26.01461-3@maua.br");
+            new TelaQuestionarioAluno(tarefa, aluno, new JFrame()).setVisible(true);
+        });
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaQuestionarioAluno().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEnviarTarefa2;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
-    private javax.swing.JTextPane jTextPane3;
-    private javax.swing.JPanel painelAzul1;
-    private javax.swing.JPanel painelCinza1;
-    private java.awt.Label prazo;
-    private java.awt.Label titulo3;
+    private PainelQuestao painelQuestao;
+    private JButton btnEnviarTarefa2;
+    private JScrollPane jScrollPane6;
+    private JPanel painelAzul1;
+    private JPanel painelCinza1;
+    private Label prazo;
+    private Label titulo3;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,16 +1,24 @@
 package br.maua.domain;
 
-import br.maua.infrastructure.DAO.AlternativaDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import br.maua.infrastructure.DAO.AlternativaDAO;
 
 public class Alternativa {
     private QuestaoAlternativa questaoAlternativa;
     private String enunciado;
-    private boolean alternativaAssinalada;
     private boolean alternativaCorreta;
+    private int idAlternativa;
+    
+    public Alternativa (QuestaoAlternativa questaoAlternativa, int id ,String enunciado){
+        setQuestaoAlternativa(questaoAlternativa);
+        setEnunciado(enunciado);
+        setIdAlternativa(idAlternativa);
+    }
 
+    public Alternativa() {
+    }
     public Alternativa(QuestaoAlternativa questaoAlternativa, String enunciado, boolean alternativaCorreta) {
         setQuestaoAlternativa(questaoAlternativa);
         setEnunciado(enunciado);
@@ -41,4 +49,12 @@ public class Alternativa {
     public void alternativaCommit(Connection cx)throws SQLException {
         AlternativaDAO.commit(this, cx);
     }
+    public int getIdAlternativa() {
+        return idAlternativa;
+    }
+
+    public void setIdAlternativa(int idAlternativa) {
+        this.idAlternativa = idAlternativa;
+    }
+
 }

@@ -1,17 +1,22 @@
 package br.maua.domain;
 
-import br.maua.infrastructure.ConnectionFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import br.maua.infrastructure.ConnectionFactory;
 
 public class Tentativa {
 
-    private Double nota;
+    private int idTentativa;
+    private double nota;
     private Aluno aluno;
     private Tarefa tarefa;
     private boolean concluida = false;
+    private List<Resposta> respostas = new ArrayList<>();
 
     public Tentativa(Double nota, Aluno aluno, Tarefa tarefa){
         this.setNota(nota);
@@ -22,6 +27,10 @@ public class Tentativa {
     public Tentativa(Aluno aluno, Tarefa tarefa){
         this.aluno = aluno;
         this.tarefa = tarefa;
+    }
+
+    public Tentativa(int idTentativa) {
+        this.idTentativa = idTentativa;
     }
 
     public Double getNota() {
@@ -54,23 +63,24 @@ public class Tentativa {
     public void setConcluida(boolean concluida) {
         this.concluida = concluida;
     }
-    public void registraTentativa(){
-        String sql = "INSERT INTO tentativa (id_questionario, id_usuario, concluido) VALUES (?, ?, ?)";
 
-        try(
-                Connection cx = ConnectionFactory.obterConexao();
-        ) {
-            assert cx != null;
-            try(PreparedStatement ps = cx.prepareStatement(sql);
+    public int getIdTentativa() {
+        return idTentativa;
+    }
 
-                    ){
-                ps.setInt(1, tarefa.getIdTarefa());
-                ps.setInt(2, aluno.getIdAluno());
-                ps.setBoolean(3, concluida);
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void setIdTentativa(int idTentativa) {
+        this.idTentativa = idTentativa;
+    }
+
+    public List<Resposta> getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(List<Resposta> respostas) {
+        this.respostas = respostas;
+    }
+
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 }

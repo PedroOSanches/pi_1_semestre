@@ -5,10 +5,13 @@
 package br.maua.presentation.TelaAcoesTarefa;
 
 
-import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
+import javax.swing.JOptionPane;
+
 import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
+import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -35,6 +38,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private void initComponents() {
 
         PainelAzul1 = new javax.swing.JPanel();
+        btnVoltar = new javax.swing.JButton();
         btnCriarTarefas = new javax.swing.JButton();
         btnTarefasCriadas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
@@ -43,6 +47,14 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         PainelAzul1.setBackground(new java.awt.Color(19, 112, 178));
+
+        btnVoltar.setBackground(new java.awt.Color(240, 147, 32));
+        btnVoltar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
+        btnVoltar.setForeground(new java.awt.Color(255, 255, 255));
+        btnVoltar.setText("Voltar");
+        btnVoltar.setBorder(null);
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
 
         btnCriarTarefas.setBackground(new java.awt.Color(240, 147, 32));
         btnCriarTarefas.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
@@ -68,7 +80,8 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
         botaoVoltar.setText("Voltar");
         botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+        // botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+        //botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
 
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
@@ -82,9 +95,10 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                             .addGap(122, 122, 122)
                             .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(PainelAzul1Layout.createSequentialGroup()
-                            .addGap(40, 40, 40)
-                            .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(301, 301, 301)
+
+                            .addGap(39, 39, 39)
+                            .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(319, 319, 319)
                             .addComponent(Titulo))))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
@@ -96,8 +110,8 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                         .addGap(47, 47, 47)
                         .addComponent(Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PainelAzul1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(botaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(31, 31, 31)
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(103, 103, 103)
                 .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(124, 124, 124)
@@ -119,6 +133,9 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void botaoVoltarActionPerformed(ActionEvent actionEvent) {
+    }
+
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
@@ -132,50 +149,24 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Erro ao criar Tarefa");
             e.printStackTrace();
         }
-        
+
+
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
 
     
     
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        TelaTarefasCriadas ttc = new TelaTarefasCriadas();
-        ttc.pack();
-        ttc.setLocationRelativeTo(null);
-        ttc.setVisible(true);
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas());
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
 
-    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
-        new br.maua.presentation.TelaPainelAdministrativo.TelaPainelAdministrativo1().setVisible(true);
+        new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_botaoVoltarActionPerformed
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaAcoesTarefa().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAzul1;
@@ -183,5 +174,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
     private javax.swing.JButton btnTarefasCriadas;
+    private javax.swing.JButton btnVoltar;
     // End of variables declaration//GEN-END:variables
 }

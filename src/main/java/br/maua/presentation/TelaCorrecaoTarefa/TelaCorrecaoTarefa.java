@@ -4,25 +4,41 @@
  */
 package br.maua.presentation.TelaCorrecaoTarefa;
 
+import br.maua.domain.*;
+import br.maua.infrastructure.DAO.TentativaDAO;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import static br.maua.config.AppConfig.BASE_ALUNO;
+
 /**
  *
  * @author Luiza
  */
 public class TelaCorrecaoTarefa extends javax.swing.JFrame {
-    
+
+    private Tentativa tentativa;
+    private final TentativaDAO tentativaDAO;
+    private final List<JFormattedTextField> campoNotaUI = new ArrayList<>();
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCorrecaoTarefa.class.getName());
 
     /**
      * Creates new form TelaCorrecaoTarefa
      */
-    public TelaCorrecaoTarefa() {
+    public TelaCorrecaoTarefa(Tentativa tentativa) {
+        this.tentativa = tentativa;
         initComponents();
+
+        this.tentativaDAO = new TentativaDAO();
+        carregarTentativa();
+
         jTextPane1.setEditable(false);
         jTextPane1.setFocusable(false);
-        jTextPane2.setEditable(false);
-        jTextPane2.setFocusable(false);
-        jTextPane3.setEditable(false);
-        jTextPane3.setFocusable(false);
     }
 
     /**
@@ -35,25 +51,15 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        jScrollPane6 = new javax.swing.JScrollPane();
         painelAzul1 = new javax.swing.JPanel();
         painelCinza1 = new javax.swing.JPanel();
         titulo3 = new java.awt.Label();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
-        jPanel2 = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane3 = new javax.swing.JTextPane();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        nota = new java.awt.Label();
-        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        painelQuestoes = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,94 +79,13 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         jTextPane1.setText("Descrição da tarefa: \nQuestionário");
         jScrollPane1.setViewportView(jTextPane1);
 
-        jTextPane2.setEditable(false);
-        jTextPane2.setBackground(new java.awt.Color(240, 147, 32));
-        jTextPane2.setForeground(new java.awt.Color(255, 255, 255));
-        jTextPane2.setText("Questão 1: \nLaboris veniam do excepteur officia. Culpa veniam cillum irure reprehenderit nisi veniam sit fugiat ipsum. Laborum. consequat proident magna id adipiscing cupidatat ut magna mollit labore. Culpa officia in incididunt ut ex et");
-        jTextPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane2.setViewportView(jTextPane2);
+        jButton1.setBackground(new java.awt.Color(19, 112, 178));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("SALVAR");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
-        jPanel2.setBackground(new java.awt.Color(240, 147, 32));
-
-        jRadioButton1.setBackground(new java.awt.Color(240, 147, 32));
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton1.setText("Opção 1");
-        jRadioButton1.addActionListener(this::jRadioButton1ActionPerformed);
-
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton2.setText("Opção 2");
-        jRadioButton2.addActionListener(this::jRadioButton2ActionPerformed);
-
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton3.setText("Opção 3");
-        jRadioButton3.addActionListener(this::jRadioButton3ActionPerformed);
-
-        buttonGroup1.add(jRadioButton4);
-        jRadioButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton4.setText("Opção 4");
-        jRadioButton4.addActionListener(this::jRadioButton4ActionPerformed);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jTextPane3.setEditable(false);
-        jTextPane3.setBackground(new java.awt.Color(240, 147, 32));
-        jTextPane3.setForeground(new java.awt.Color(255, 255, 255));
-        jTextPane3.setText("Questão 2: \nLaboris veniam do excepteur officia. Culpa veniam cillum irure reprehenderit nisi veniam sit fugiat ipsum. Laborum. consequat proident magna id adipiscing cupidatat ut magna mollit labore. Culpa officia in incididunt ut ex et");
-        jTextPane3.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane3.setViewportView(jTextPane3);
-
-        jTextArea2.setEditable(false);
-        jTextArea2.setBackground(new java.awt.Color(250, 240, 226));
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jTextArea2.setText("Resposta do aluno");
-        jTextArea2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextArea2FocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextArea2FocusLost(evt);
-            }
-        });
-        jScrollPane5.setViewportView(jTextArea2);
-
-        nota.setAlignment(java.awt.Label.CENTER);
-        nota.setBackground(new java.awt.Color(19, 112, 178));
-        nota.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
-        nota.setForeground(new java.awt.Color(255, 255, 255));
-        nota.setText("Nota:");
-
-        jTextField1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("xx/10");
+        painelQuestoes.setLayout(new javax.swing.BoxLayout(painelQuestoes, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane7.setViewportView(painelQuestoes);
 
         javax.swing.GroupLayout painelCinza1Layout = new javax.swing.GroupLayout(painelCinza1);
         painelCinza1.setLayout(painelCinza1Layout);
@@ -169,18 +94,12 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             .addGroup(painelCinza1Layout.createSequentialGroup()
                 .addGap(202, 202, 202)
                 .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelCinza1Layout.createSequentialGroup()
-                        .addComponent(nota, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane5)
                         .addComponent(titulo3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1)))
-                .addContainerGap(200, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane7))
+                    .addGap(18, 18, 18)
+                    .addComponent(jButton1)
+                    .addGap(136, 136, 136))
         );
         painelCinza1Layout.setVerticalGroup(
             painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,94 +108,225 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                 .addComponent(titulo3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nota, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
-                    .addComponent(jTextField1))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addGroup(painelCinza1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE))
+                    .addGap(91, 91, 91))
         );
 
-        javax.swing.GroupLayout painelAzul1Layout = new javax.swing.GroupLayout(painelAzul1);
-        painelAzul1.setLayout(painelAzul1Layout);
-        painelAzul1Layout.setHorizontalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
-        );
-        painelAzul1Layout.setVerticalGroup(
-            painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelAzul1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(painelCinza1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(55, Short.MAX_VALUE))
-        );
+        painelAzul1.add(painelCinza1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(462, 462, 462)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(462, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(painelAzul1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(334, 334, 334)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(334, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+        for (int i = 0; i < tentativa.getRespostas().size(); i++) {
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
+            Number numero = (Number) campoNotaUI.get(i).getValue();
+            float notaDigitada = (numero != null) ? numero.floatValue() : 0.0f;
+            tentativa.getRespostas().get(i).setNota(notaDigitada);
 
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton4ActionPerformed
+        }
 
-    private void jTextArea2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextArea2FocusGained
+        boolean confirmacaoCommit = tentativaDAO.atualizarNota(tentativa);
 
-    private void jTextArea2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextArea2FocusLost
+        if (confirmacaoCommit) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Notas salvas com sucesso!");
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar.");
+        }
+    }
+
+    private void carregarTentativa() {
+
+        this.tentativa = tentativaDAO.buscarTentativa(tentativa.getIdTentativa());
+        popularTela();
+
+    }
+
+    private void popularTela() {
+
+        painelQuestoes.removeAll();
+        campoNotaUI.clear();
+
+        int numeroQuestao = 1;
+
+        for (Resposta resposta : tentativa.getRespostas()) {
+
+            javax.swing.JPanel painelIndividual = new javax.swing.JPanel();
+            painelIndividual.setLayout(new javax.swing.BoxLayout(painelIndividual, javax.swing.BoxLayout.Y_AXIS));
+            painelIndividual.setBorder(javax.swing.BorderFactory.createTitledBorder("Questão " + numeroQuestao));
+            javax.swing.JLabel labelEnunciado = new javax.swing.JLabel("Enunciado: " + resposta.getEnunciado());
+            painelIndividual.add(labelEnunciado);
+            painelIndividual.add(javax.swing.Box.createVerticalStrut(5));
+
+            if (resposta instanceof RespostaDissertativa) {
+
+                String respostaAluno = ((RespostaDissertativa) resposta).getTextoResposta();
+                javax.swing.JTextArea txtArea = new javax.swing.JTextArea(3, 40);
+                txtArea.setText(respostaAluno != null ? respostaAluno : "O aluno não respondeu.");
+                txtArea.setEditable(false);
+                txtArea.setLineWrap(true);
+                txtArea.setWrapStyleWord(true);
+                painelIndividual.add(new javax.swing.JScrollPane(txtArea));
+
+            } else if (resposta instanceof RespostaAlternativa respostaAlternativa) {
+
+                int idAlternativaAssinalada = respostaAlternativa.getIdAlternativaAssinalada();
+
+                javax.swing.JPanel painelAlternativas = new javax.swing.JPanel();
+                painelAlternativas.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                painelAlternativas.setLayout(new javax.swing.BoxLayout(painelAlternativas, javax.swing.BoxLayout.Y_AXIS));
+                javax.swing.ButtonGroup alternativas = new javax.swing.ButtonGroup();
+
+                if (respostaAlternativa.getQuestao() != null && respostaAlternativa.getQuestao().getAlternativas() != null) {
+                    for (Alternativa alt : respostaAlternativa.getQuestao().getAlternativas()) {
+
+                        javax.swing.JRadioButton radioBtn = new javax.swing.JRadioButton(alt.getEnunciado());
+                        radioBtn.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+                        radioBtn.setEnabled(false);
+
+                        if (alt.getIdAlternativa() == idAlternativaAssinalada) {
+                            radioBtn.setSelected(true);
+                        }
+
+                        alternativas.add(radioBtn);
+                        painelAlternativas.add(radioBtn);
+                    }
+                }
+                painelIndividual.add(painelAlternativas);
+            } else if (resposta instanceof RespostaUpload respostaUpload) {
+
+                File arquivo = respostaUpload.getArquivo();
+
+                if (arquivo != null && !arquivo.getName().trim().isEmpty()) {
+
+                    javax.swing.JLabel labelUpload = new javax.swing.JLabel("Arquivo anexado: " + arquivo);
+                    painelIndividual.add(labelUpload);
+                    painelIndividual.add(javax.swing.Box.createVerticalStrut(5));
+
+                    javax.swing.JButton buttonDownload = new javax.swing.JButton("Baixar arquivo");
+                    buttonDownload.addActionListener(new java.awt.event.ActionListener() {
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent e) {
+
+                            try {
+
+                                if (!arquivo.exists()) {
+                                    javax.swing.JOptionPane.showMessageDialog(
+                                            TelaCorrecaoTarefa.this,
+                                            "O arquivo '" + arquivo.getAbsolutePath() + "' não foi encontrado na pasta do servidor.",
+                                            "Erro",
+                                            javax.swing.JOptionPane.ERROR_MESSAGE
+                                    );
+                                    return;
+                                }
+
+                                javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+                                fileChooser.setDialogTitle("Escolha onde salvar o arquivo");
+                                int userSelection = fileChooser.showSaveDialog(TelaCorrecaoTarefa.this);
+
+                                if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
+
+                                    java.io.File arquivoDestino = fileChooser.getSelectedFile();
+                                    java.io.File pastaDestino = arquivoDestino.getParentFile();
+
+                                    if (pastaDestino != null && !pastaDestino.exists()) {
+                                        pastaDestino.mkdirs();
+                                    }
+
+                                    br.maua.service.ArquivoService.salvarArquivo(arquivo, arquivoDestino);
+
+                                    if (arquivoDestino.exists()) {
+                                        java.awt.Desktop.getDesktop().open(arquivoDestino);
+                                    } else {
+
+                                        javax.swing.JOptionPane.showMessageDialog(
+                                                TelaCorrecaoTarefa.this,
+                                                "Arquivo não localizado em: " + arquivoDestino.getAbsolutePath(),
+                                                "Arquivo não encontrado",
+                                                javax.swing.JOptionPane.ERROR_MESSAGE
+                                        );
+                                    }
+                                }
+                            } catch (Exception ex) {
+
+                                javax.swing.JOptionPane.showMessageDialog(TelaCorrecaoTarefa.this,
+                                        "Erro ao tentar abrir o arquivo: " + ex.getMessage(),
+                                        "Erro do Sistema",
+                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                            }
+                        }
+                    });
+                    painelIndividual.add(buttonDownload);
+                } else {
+                    javax.swing.JLabel labelUpload = new javax.swing.JLabel("Nenhum arquivo foi anexado.");
+                    painelIndividual.add(labelUpload);
+                }
+            }
+
+            painelIndividual.add(javax.swing.Box.createVerticalStrut(8));
+            javax.swing.JPanel painelNota = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+            painelNota.add(new javax.swing.JLabel("Nota: "));
+            java.text.NumberFormat formatoDecimal = java.text.NumberFormat.getNumberInstance(java.util.Locale.US);
+            formatoDecimal.setGroupingUsed(false);
+
+            javax.swing.JFormattedTextField campoNotaQuestao = new javax.swing.JFormattedTextField(formatoDecimal);
+            campoNotaQuestao.setColumns(5);
+            campoNotaQuestao.setValue(resposta.getNota());
+
+            painelNota.add(campoNotaQuestao);
+            painelIndividual.add(painelNota);
+
+            campoNotaUI.add(campoNotaQuestao);
+            painelQuestoes.add(painelIndividual);
+            painelQuestoes.add(javax.swing.Box.createVerticalStrut(15));
+
+            numeroQuestao++;
+        }
+
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                painelQuestoes.setLayout(new javax.swing.BoxLayout(painelQuestoes, javax.swing.BoxLayout.Y_AXIS));
+                jScrollPane7.setViewportView(painelQuestoes);
+
+                painelQuestoes.revalidate();
+                painelQuestoes.repaint();
+                jScrollPane7.revalidate();
+                jScrollPane7.repaint();
+
+                TelaCorrecaoTarefa.this.revalidate();
+                TelaCorrecaoTarefa.this.repaint();
+            }
+        });
+    }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -289,31 +339,22 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa(new Tentativa(104));
+        tct.setVisible(true);
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaCorrecaoTarefa().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
-    private javax.swing.JTextPane jTextPane3;
-    private java.awt.Label nota;
     private javax.swing.JPanel painelAzul1;
     private javax.swing.JPanel painelCinza1;
+    private javax.swing.JPanel painelQuestoes;
     private java.awt.Label titulo3;
     // End of variables declaration//GEN-END:variables
 }
