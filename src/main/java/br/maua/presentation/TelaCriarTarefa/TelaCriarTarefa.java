@@ -333,7 +333,7 @@ public class TelaCriarTarefa extends JFrame{
 
 
     private void jPanel15MouseClicked(MouseEvent evt) {//GEN-FIRST:event_jPanel15MouseClicked
-    int numeroQuestao = 1;
+        int numeroQuestao = 0;
     for (Component c : painelConteudo.getComponents()) {
         if (c instanceof JPanel && c != jPanel1 && c != jPanel2 && c != jPanel3 && c != jPanel15) {
             numeroQuestao++;
