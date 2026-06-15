@@ -6,15 +6,12 @@
 package br.maua.presentation.TelaAlunosDaTurma;
 
 import br.maua.domain.Aluno;
-import br.maua.domain.Professor;
 import br.maua.domain.Turma;
 import br.maua.infrastructure.DAO.TurmaDAO;
-import br.maua.infrastructure.DAO.TurmaSubturmaDAO;
-import br.maua.presentation.TelaAdicionarAlunoNaTurma.TelaAdicionarAlunoNaTurma;
+import br.maua.presentation.TelaAdicionarAlunoNaTurma.ModalRegistrarAlunoTurma;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -177,8 +174,7 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
 
     private void buttonAddAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAlunoActionPerforme
         java.awt.EventQueue.invokeLater(() -> {
-            new TelaAdicionarAlunoNaTurma(this).setVisible(true);
-            setVisible(false);
+            new ModalRegistrarAlunoTurma(this, true, turma).setVisible(true);
         });
     }//GEN-LAST:event_buttonAddAlunoActionPerformed
 
