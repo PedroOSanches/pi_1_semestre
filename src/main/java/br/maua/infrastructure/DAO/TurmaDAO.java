@@ -45,7 +45,7 @@ public class TurmaDAO {
                 media 
                 FROM turma_usuario  
                 JOIN usuario USING(id_usuario)  
-                JOIN (
+                LEFT JOIN (
                     SELECT 
                         id_usuario, AVG(maiores_notas) as media  
                         FROM (

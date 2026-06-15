@@ -5,10 +5,14 @@
 package br.maua.presentation.TelaAdicionarAlunoNaTurma;
 
 import br.maua.domain.Aluno;
+import br.maua.domain.Turma;
+import br.maua.infrastructure.DAO.TurmaSubturmaDAO;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,13 +21,15 @@ import java.util.List;
 public class ModalRegistrarAlunoTurma extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ModalRegistrarAlunoTurma.class.getName());
-
+    private final Turma turma;
     /**
      * Creates new form ModalRegistrarAlunoTurma
      */
-    public ModalRegistrarAlunoTurma(java.awt.Frame parent, boolean modal) {
+    public ModalRegistrarAlunoTurma(java.awt.Frame parent, boolean modal, Turma turma) {
         super(parent, modal);
+        this.turma = turma;
         initComponents();
+        carregarComboBox();
     }
 
     /**
@@ -37,9 +43,9 @@ public class ModalRegistrarAlunoTurma extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        comboBoxAlunos = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        comboBoxAlunos = new JComboBox<Aluno>();
+        buttonSalvar = new javax.swing.JButton();
+        buttonCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -50,11 +56,11 @@ public class ModalRegistrarAlunoTurma extends javax.swing.JDialog {
         jLabel1.setText("Adicionar Aluno");
         jLabel1.setToolTipText("");
 
-        jButton1.setText("Salvar");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        buttonSalvar.setText("Salvar");
+        buttonSalvar.addActionListener(this::buttonSalvarActionPerformed);
 
-        jButton2.setText("Cancelar");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        buttonCancelar.setText("Cancelar");
+        buttonCancelar.addActionListener(this::buttonCancelarActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -71,9 +77,9 @@ public class ModalRegistrarAlunoTurma extends javax.swing.JDialog {
                                                 .addComponent(jLabel1))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGap(87, 87, 87)
-                                                .addComponent(jButton2)
+                                                .addComponent(buttonCancelar)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(buttonSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -85,8 +91,8 @@ public class ModalRegistrarAlunoTurma extends javax.swing.JDialog {
                                 .addComponent(comboBoxAlunos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(buttonSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(buttonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(46, 46, 46))
         );
 
@@ -104,68 +110,58 @@ public class ModalRegistrarAlunoTurma extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        Aluno aluno = (Aluno) comboBoxAlunos.getSelectedItem();
+        try {
+            TurmaSubturmaDAO.registrarAlunoTurma(aluno, turma);
+        } catch (SQLException e) {
+            Logger.getLogger(ModalRegistrarAlunoTurma.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(rootPane, "Erro ao tentar adicionar o aluno!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void buttonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void carregarComboBox() {
         DefaultComboBoxModel<Aluno> model = new DefaultComboBoxModel<>();
-        comboBoxAlunos.addItem("Carregando...");
+        comboBoxAlunos.setModel(model);
         comboBoxAlunos.setEnabled(false);
 
         new SwingWorker<List<Aluno>, Void>() {
             @Override
             protected List<Aluno> doInBackground() throws Exception {
-                List<Aluno> alunos = TurmaSubturmaDAO.buscaAlunosSemTurma();
+                return TurmaSubturmaDAO.buscaAlunoSemTurma();
             }
-        }
-    }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            @Override
+            protected void done() {
+                try {
+                    List<Aluno> alunos = get();
+                    if (!alunos.isEmpty()) {
+                        for (Aluno aluno : alunos) {
+                            model.addElement(aluno);
+                        }
+                        comboBoxAlunos.setSelectedItem(alunos.get(0));
+                        comboBoxAlunos.setEnabled(true);
+                    } else {
+                        model.addElement(new Aluno(0, "Não foi encontrado nenhum aluno sem turma", "", "00.00000-0@maua.br"));
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(ModalRegistrarAlunoTurma.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Erro ao carregar alunos do Turma", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ModalRegistrarAlunoTurma dialog = new ModalRegistrarAlunoTurma(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+        }.execute();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> comboBoxAlunos;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private JComboBox<Aluno> comboBoxAlunos;
+    private javax.swing.JButton buttonSalvar;
+    private javax.swing.JButton buttonCancelar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

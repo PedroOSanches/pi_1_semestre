@@ -82,4 +82,52 @@ public class TurmaSubturmaDAO {
             return turmas;
         }
     }
+
+    public static List<Aluno> buscaAlunoSemTurma() throws SQLException {
+        String sql = """
+                SELECT 
+                    id_usuario, 
+                        nome_usuario, 
+                        sobrenome_usuario, 
+                        username_usuario
+                FROM usuario 
+                LEFT JOIN turma_usuario 
+                USING(id_usuario) 
+                WHERE 
+                id_turma_subturma IS NULL 
+                        AND 
+                tipo_usuario = 'aluno' 
+                ORDER BY nome_usuario, sobrenome_usuario
+                ;""";
+        List<Aluno> alunos = new ArrayList<>();
+        try (
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql)
+        ) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idUsuario = rs.getInt("id_usuario");
+                String nomeUsuario = rs.getString("nome_usuario");
+                String sobrenomeUsuario = rs.getString("sobrenome_usuario");
+                String usernameUsuario = rs.getString("username_usuario");
+                alunos.add(new Aluno(idUsuario, nomeUsuario, sobrenomeUsuario, usernameUsuario));
+            }
+            return alunos;
+        }
+
+    }
+
+    public static void registrarAlunoTurma(Aluno aluno, Turma turma) throws SQLException {
+        String sql = """ 
+                INSERT INTO turma_usuario(id_usuario, id_turma_subturma) VALUES (?, ?)
+                """;
+        try (
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql)
+        ) {
+            ps.setInt(1, aluno.getId());
+            ps.setInt(2, turma.getIdTurma());
+            ps.executeUpdate();
+        }
+    }
 }
