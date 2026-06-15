@@ -26,12 +26,13 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
     private final List<JFormattedTextField> campoNotaUI = new ArrayList<>();
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCorrecaoTarefa.class.getName());
-
+    private final JFrame telaAnterior;
     /**
      * Creates new form TelaCorrecaoTarefa
      */
-    public TelaCorrecaoTarefa(Tentativa tentativa) {
+    public TelaCorrecaoTarefa(Tentativa tentativa, JFrame telaAnterior) {
         this.tentativa = tentativa;
+        this.telaAnterior = telaAnterior;
         initComponents();
 
         this.tentativaDAO = new TentativaDAO();
@@ -147,6 +148,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
         if (confirmacaoCommit) {
             javax.swing.JOptionPane.showMessageDialog(this, "Notas salvas com sucesso!");
             this.dispose();
+            telaAnterior.setVisible(true);
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar.");
         }
@@ -238,6 +240,8 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
                                 }
 
                                 javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+                                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                                fileChooser.setSelectedFile(new File(FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath() + arquivo.getName()));
                                 fileChooser.setDialogTitle("Escolha onde salvar o arquivo");
                                 int userSelection = fileChooser.showSaveDialog(TelaCorrecaoTarefa.this);
 
@@ -339,7 +343,7 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa(new Tentativa(104));
+        TelaCorrecaoTarefa tct = new TelaCorrecaoTarefa(new Tentativa(104), new JFrame());
         tct.setVisible(true);
 
         /* Create and display the form */

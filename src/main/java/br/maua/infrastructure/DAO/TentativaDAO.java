@@ -60,6 +60,8 @@ public class TentativaDAO {
                                 try (ResultSet rsAlternativa = psAlternativa.executeQuery()) {
                                     if (rsAlternativa.next()) {
                                         RespostaAlternativa respostaAlternativa = new RespostaAlternativa();
+                                        respostaAlternativa.setIdResposta(idResposta);
+                                        respostaAlternativa.setNota(notaResposta);
                                         respostaAlternativa.setEnunciado(enunciado);
                                         respostaAlternativa.setIdAlternativaAssinalada(rsAlternativa.getInt("id_alternativa"));
 
@@ -94,6 +96,8 @@ public class TentativaDAO {
                                 try (ResultSet rsDissertativa = psDissertativa.executeQuery()) {
                                     if (rsDissertativa.next()) {
                                         RespostaDissertativa respostaDissertativa = new RespostaDissertativa();
+                                        respostaDissertativa.setIdResposta(idResposta);
+                                        respostaDissertativa.setNota(notaResposta);
                                         respostaDissertativa.setEnunciado(enunciado);
                                         respostaDissertativa.setTextoResposta(rsDissertativa.getString("resposta"));
                                         resposta = respostaDissertativa;
@@ -107,6 +111,8 @@ public class TentativaDAO {
                                 try (ResultSet rsUpload = psUpload.executeQuery()) {
                                     if (rsUpload.next()) {
                                         RespostaUpload respostaUpload = new RespostaUpload();
+                                        respostaUpload.setIdResposta(idResposta);
+                                        respostaUpload.setNota(notaResposta);
                                         respostaUpload.setEnunciado(enunciado);
                                         respostaUpload.setArquivo(new File(BASE_ALUNO, rsUpload.getString("arquivo_resposta")));
                                         resposta = respostaUpload;

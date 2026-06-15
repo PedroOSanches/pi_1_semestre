@@ -2,6 +2,7 @@ package br.maua.presentation.TelaTarefasAluno;
 
 import br.maua.infrastructure.DAO.TentativaDAO;
 import br.maua.infrastructure.DAO.TentativaDAO.TarefaTentadaDTO;
+import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
 // import br.maua.presentation.TelaCorrecaoProfessor.TelaCorrecaoProfessor; // Descomente quando criar/ajustar a tela de correção
 
 import java.awt.BorderLayout;
@@ -127,8 +128,9 @@ public class TelaTarefaAluno extends JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
-        if (telaAnterior != null) {
-            telaAnterior.setVisible(true);
+        telaAnterior.setVisible(true);
+        if (telaAnterior instanceof TelaAlunosDaTurma) {
+            ((TelaAlunosDaTurma) telaAnterior).recarregarTabela();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -233,7 +235,7 @@ public class TelaTarefaAluno extends JFrame {
                 br.maua.domain.Tentativa tentativaParaCorrigir = new br.maua.domain.Tentativa(idTentativa);
 
                 br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa telaCorrecao =
-                        new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(tentativaParaCorrigir);
+                        new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(tentativaParaCorrigir, this);
 
                 telaCorrecao.setVisible(true);
                 this.dispose();

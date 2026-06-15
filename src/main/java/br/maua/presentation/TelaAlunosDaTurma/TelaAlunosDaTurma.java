@@ -224,6 +224,10 @@ public class TelaAlunosDaTurma extends javax.swing.JFrame {
             }
         }.execute();
     }
+
+    public void recarregarTabela() {
+        carregarAlunos(telaAnterior);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddAluno;
     private javax.swing.JButton buttonVoltar;
