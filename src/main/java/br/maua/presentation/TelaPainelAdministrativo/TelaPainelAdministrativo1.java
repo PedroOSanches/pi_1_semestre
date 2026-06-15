@@ -41,10 +41,11 @@ public class TelaPainelAdministrativo1 extends javax.swing.JFrame {
         jPanel3.setCursor(cursorMao);
         jLabel3.setCursor(cursorMao);
 
+        JFrame telaAtual = this;
         MouseAdapter abrirTarefas = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                br.maua.presentation.TelaNavegacao.abrir(TelaPainelAdministrativo1.this, new TelaAcoesTarefa());
+                br.maua.presentation.TelaNavegacao.abrir(TelaPainelAdministrativo1.this, new TelaAcoesTarefa(telaAtual));
             }
         };
 

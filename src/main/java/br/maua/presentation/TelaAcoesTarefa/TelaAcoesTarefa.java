@@ -20,11 +20,12 @@ import java.awt.event.ActionEvent;
 public class TelaAcoesTarefa extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAcoesTarefa.class.getName());
-
+    private final JFrame telaAnterior;
     /**
      * Creates new form AcoesTarefa
      */
-    public TelaAcoesTarefa() {
+    public TelaAcoesTarefa(JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         initComponents();
     }
 
@@ -157,13 +158,13 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     
     private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
         // TODO add your handling code here:
-        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas());
+        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas(this));
     }//GEN-LAST:event_btnTarefasCriadasActionPerformed
 
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
-        new br.maua.presentation.TelaAcoesTarefa.TelaAcoesTarefa().setVisible(true);
+        telaAnterior.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
