@@ -259,11 +259,7 @@ public class TelaCadastro extends javax.swing.JFrame {
 
     private void entrarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entrarBotaoActionPerformed
         // TODO add your handling code here:
-        boolean aceitouTermosDeUso = ModalTermosDeUso.modalTermosDeUso(this);
 
-        if (!aceitouTermosDeUso) {
-            return;
-        }
         
         String nome = campoNome.getText();
         String sobrenome = campoSobrenome.getText();
@@ -286,7 +282,11 @@ public class TelaCadastro extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+        boolean aceitouTermosDeUso = ModalTermosDeUso.modalTermosDeUso(this);
+
+        if (!aceitouTermosDeUso) {
+            return;
+        }
         try {
             if (Pattern.compile("^\\d{2}\\.\\d{5}-\\d@maua\\.br$").matcher(username).matches()) {
                 Aluno novoAluno = new Aluno(nome, sobrenome, username, senha);

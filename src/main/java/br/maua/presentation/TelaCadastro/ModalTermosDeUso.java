@@ -21,6 +21,9 @@ public class ModalTermosDeUso extends javax.swing.JDialog {
     public ModalTermosDeUso(JFrame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jTextArea1.setEditable(false);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setWrapStyleWord(true);
     }
 
     /**
