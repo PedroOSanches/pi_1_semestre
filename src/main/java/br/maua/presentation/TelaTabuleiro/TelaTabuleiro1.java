@@ -4,6 +4,7 @@ import br.maua.domain.Aluno;
 import br.maua.domain.Casa;
 import br.maua.domain.Professor;
 import br.maua.domain.Secao;
+import br.maua.domain.Usuario;
 import br.maua.service.JornadaService;
 import br.maua.infrastructure.ConnectionFactory;
 import br.maua.presentation.TelaAdicionarCasa.TelaAdicionarCasa;
@@ -739,21 +740,18 @@ public class TelaTabuleiro1 extends JFrame {
 
 
     private void abrirTelaEscolhaQuestionario(int idCasa, String tituloCasa) {
-        Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getId() : null;
+        Usuario usuarioLogado = null;
+        
+        if (this.alunoLogado != null) {
+            usuarioLogado = this.alunoLogado; 
+        } else if (this.professorLogado != null) {
+            usuarioLogado = this.professorLogado; 
+        }
 
-        TelaEscolhaDeQuestionario telaEscolha =
-            new TelaEscolhaDeQuestionario(idAluno, idCasa, tituloCasa);
-
-        telaEscolha.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                atualizarTabuleiro(alunoLogado);
-            }
-        });
-
-
+        TelaEscolhaDeQuestionario telaEscolha = 
+            new TelaEscolhaDeQuestionario(usuarioLogado, idCasa, tituloCasa);
+        
         br.maua.presentation.TelaNavegacao.abrir(this, telaEscolha);
-
     }
 
     private static final class RegistroCasaTabuleiro {

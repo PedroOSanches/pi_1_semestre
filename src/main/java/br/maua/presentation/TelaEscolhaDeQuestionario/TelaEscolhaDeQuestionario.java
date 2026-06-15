@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import br.maua.domain.Usuario;
 import br.maua.infrastructure.ConnectionFactory;
 
 /**
@@ -22,15 +23,15 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
     private int idCasa;
     private String tituloCasa;
-    private int idAluno;
+    private Usuario usuarioLogado;
 
     public TelaEscolhaDeQuestionario() {
         initComponents();
     }
 
-    public TelaEscolhaDeQuestionario(Integer idAluno, int idCasa, String tituloCasa) {
+    public TelaEscolhaDeQuestionario(Usuario usuario, int idCasa, String tituloCasa) {
         initComponents();
-        this.idAluno = idAluno;
+        this.usuarioLogado = usuario;
         this.idCasa = idCasa;
         this.tituloCasa = tituloCasa;
 
@@ -202,19 +203,14 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
                 btnTarefa.addActionListener(evt -> {
                     try {
                         
-                        br.maua.domain.Aluno alunoCompleto = new br.maua.domain.Aluno();
-                        alunoCompleto.setId(this.idAluno);
                         br.maua.domain.Tarefa tarefaCompleta = new br.maua.domain.Tarefa();
                         tarefaCompleta.setIdTarefa(idTarefa);
                         tarefaCompleta.setTitulo(titulo);
 
-                        
                         br.maua.infrastructure.DAO.QuestaoDAO.buscarPorTarefa(tarefaCompleta);
 
-                        br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno telaQuestionario = 
-                            new br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno(tarefaCompleta, alunoCompleto, this);
+                        br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno telaQuestionario= new br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno(tarefaCompleta, this.usuarioLogado, this);
                         
-                       
                         br.maua.presentation.TelaNavegacao.abrir(this, telaQuestionario);
 
                     } catch (Exception e) {
