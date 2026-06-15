@@ -66,11 +66,7 @@ public class TabuleiroDAO {
             System.err.println("Erro ao buscar prazos: " + e.getMessage());
         }
         return prazos;
-    }
-
-    /**
-     * Descobre qual ID de casa obrigatória está travando o progresso do aluno.
-     */
+    }   
     public Integer descobrirProximaCasaObrigatoria(int idAluno) {
         String sql = "SELECT c.id_casa FROM casa c " +
                 "LEFT JOIN nota_aluno n ON c.id_casa = n.id_casa AND n.id_aluno = ? " +

@@ -256,9 +256,21 @@ public class TelaQuestionarioAluno extends JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         EventQueue.invokeLater(() -> {
             Tarefa tarefa = new Tarefa();
-            tarefa.setIdTarefa(20);
+            tarefa.setIdTarefa(31);
             tarefa.setTitulo("Titulo Tarefa");
             Aluno aluno = new Aluno(14, "Pedro", "Sanches", "26.01461-3@maua.br");
             new TelaQuestionarioAluno(tarefa, aluno, new JFrame()).setVisible(true);
