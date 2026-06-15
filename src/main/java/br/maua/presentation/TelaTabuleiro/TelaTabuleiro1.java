@@ -12,6 +12,7 @@ import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
 import br.maua.presentation.TelaModalPerfilProfessor.ModalPerfilProfessor;
 import br.maua.presentation.TelaTarefasAluno.TelaTarefaAluno;
 
+import br.maua.presentation.TelaEscolhaDeQuestionario.TelaEscolhaDeQuestionario;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -221,8 +222,11 @@ public class TelaTabuleiro1 extends JFrame {
                 Integer secaoAtual = null;
                 int contadorSecoes = 0;
 
-                Integer idProximaCasaObrigatoria = descobrirProximaCasaObrigatoria();
-                boolean encontrouObrigatoria = (idProximaCasaObrigatoria != null);
+
+            Integer idProximaCasaObrigatoria = descobrirProximaCasaObrigatoria();
+            // boolean encontrouObrigatoria = (idProximaCasaObrigatoria != null);
+            boolean jaPassouDaObrigatoria = false;
+
 
                 for (RegistroCasaTabuleiro registro : registros) {
                     if (!Objects.equals(secaoAtual, registro.idSecao)) {
@@ -240,24 +244,27 @@ public class TelaTabuleiro1 extends JFrame {
                     registro.ordemSecao = contadorSecoes;
                     boolean casaBloqueada = false;
 
-                    if (this.alunoLogado != null && encontrouObrigatoria) {
-                        if (registro.idCasa > idProximaCasaObrigatoria) {
-                            boolean prazoAnteriorExpirou = false;
-                            if (registro.dataLimiteCasa != null) {
-                                LocalDateTime agora = LocalDateTime.now();
-                                LocalDateTime prazoCasa = registro.dataLimiteCasa.toLocalDateTime();
-                                prazoAnteriorExpirou = agora.isAfter(prazoCasa);
-                            }
 
+                if (this.alunoLogado != null && idProximaCasaObrigatoria != null) {
+                    if (jaPassouDaObrigatoria) {
+                        boolean prazoAnteriorExpirou = false;
+                        if (registro.dataLimiteCasa != null) { 
+                            LocalDateTime agora = LocalDateTime.now();
+                            LocalDateTime prazoCasa = registro.dataLimiteCasa.toLocalDateTime();
+                            prazoAnteriorExpirou = agora.isAfter(prazoCasa);
+                        }
                             if (!prazoAnteriorExpirou) {
                                 casaBloqueada = true;
                             }
                         }
-                    }
 
-                    if (this.alunoLogado == null) {
-                        casaBloqueada = false;
+                    if (registro.idCasa.equals(idProximaCasaObrigatoria)) {
+                        jaPassouDaObrigatoria = true;
                     }
+                }
+                if (this.alunoLogado == null) {
+                    casaBloqueada = false;
+                }
 
                     jPanel1.add(criarCartaoCasa(registro, casaBloqueada, numeroCasaExibida));
                     jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
@@ -595,7 +602,7 @@ public class TelaTabuleiro1 extends JFrame {
             linkPagina.setText("Tarefas");
             linkPagina.setBackground(COR_LARANJA);
             linkPagina.setForeground(Color.WHITE);
-            linkPagina.addActionListener(evt -> abrirTelaTarefasAluno(registro.idCasa, registro.tituloCasa));
+            linkPagina.addActionListener(evt -> abrirTelaEscolhaQuestionario(registro.idCasa, registro.tituloCasa));
         }
 
         JPanel textos = new JPanel();
@@ -731,18 +738,22 @@ public class TelaTabuleiro1 extends JFrame {
     }
 
 
-    private void abrirTelaTarefasAluno(int idCasa, String tituloCasa) {
+    private void abrirTelaEscolhaQuestionario(int idCasa, String tituloCasa) {
         Integer idAluno = this.alunoLogado != null ? this.alunoLogado.getId() : null;
-        TelaTarefaAluno telaTarefas = new TelaTarefaAluno(idAluno, idCasa, tituloCasa, this);
 
-        telaTarefas.addWindowListener(new java.awt.event.WindowAdapter() {
+        TelaEscolhaDeQuestionario telaEscolha =
+            new TelaEscolhaDeQuestionario(idAluno, idCasa, tituloCasa);
+
+        telaEscolha.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                 atualizarTabuleiro(alunoLogado);
             }
         });
 
-        br.maua.presentation.TelaNavegacao.abrir(this, telaTarefas);
+
+        br.maua.presentation.TelaNavegacao.abrir(this, telaEscolha);
+
     }
 
     private static final class RegistroCasaTabuleiro {

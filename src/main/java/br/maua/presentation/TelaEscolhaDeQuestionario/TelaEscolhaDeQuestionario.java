@@ -5,6 +5,13 @@
 
 package br.maua.presentation.TelaEscolhaDeQuestionario;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import br.maua.infrastructure.ConnectionFactory;
+
 /**
  *
  * @author Luiza
@@ -13,11 +20,24 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEscolhaDeQuestionario.class.getName());
 
-    /** Creates new form TelaPerfilAluno */
+    private int idCasa;
+    private String tituloCasa;
+    private int idAluno;
+
     public TelaEscolhaDeQuestionario() {
         initComponents();
     }
 
+    public TelaEscolhaDeQuestionario(Integer idAluno, int idCasa, String tituloCasa) {
+        initComponents();
+        this.idAluno = idAluno;
+        this.idCasa = idCasa;
+        this.tituloCasa = tituloCasa;
+
+        nomeTitulo.setText(this.tituloCasa);
+
+        carregarTarefas();
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -114,7 +134,7 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
-        this.dispose();
+        br.maua.presentation.TelaNavegacao.voltar(this);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -140,6 +160,30 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new TelaEscolhaDeQuestionario().setVisible(true));
+    }
+    private void carregarTarefas() {
+        String sql =
+            "SELECT titulo_tarefa " +
+            "FROM tarefa " +
+            "WHERE id_casa = ?";
+
+        try (Connection con = ConnectionFactory.obterConexao();
+            PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idCasa);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String titulo = rs.getString("titulo_tarefa");
+
+                System.out.println(titulo);
+                // adicionar botão, label ou painel na tela
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
