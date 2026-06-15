@@ -163,7 +163,7 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
     }
     private void carregarTarefas() {
         String sql =
-            "SELECT titulo_tarefa " +
+            "SELECT id_tarefa, titulo_tarefa " +
             "FROM tarefa " +
             "WHERE id_casa = ?";
 
@@ -171,18 +171,68 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, idCasa);
-
             ResultSet rs = ps.executeQuery();
 
+            int xInicial = 94;       
+            int yInicial = 150;      
+            int larguraCard = 720;   
+            int alturaCard = 50;     
+            int espacamento = 15;    
+            int contador = 0;
+
             while (rs.next()) {
+                int idTarefa = rs.getInt("id_tarefa");
                 String titulo = rs.getString("titulo_tarefa");
 
-                System.out.println(titulo);
-                // adicionar botão, label ou painel na tela
+                
+                javax.swing.JButton btnTarefa = new javax.swing.JButton(titulo);
+                btnTarefa.setBackground(new java.awt.Color(255, 255, 255));
+                btnTarefa.setForeground(new java.awt.Color(19, 112, 178)); 
+                btnTarefa.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+                btnTarefa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                btnTarefa.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                    javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 1),
+                    javax.swing.BorderFactory.createEmptyBorder(0, 20, 0, 0)
+                ));
+
+                int posicaoY = yInicial + (contador * (alturaCard + espacamento));
+                btnTarefa.setBounds(xInicial, posicaoY, larguraCard, alturaCard);
+
+
+                btnTarefa.addActionListener(evt -> {
+                    try {
+                        
+                        br.maua.domain.Aluno alunoCompleto = new br.maua.domain.Aluno();
+                        alunoCompleto.setId(this.idAluno);
+                        br.maua.domain.Tarefa tarefaCompleta = new br.maua.domain.Tarefa();
+                        tarefaCompleta.setIdTarefa(idTarefa);
+                        tarefaCompleta.setTitulo(titulo);
+
+                        
+                        br.maua.infrastructure.DAO.QuestaoDAO.buscarPorTarefa(tarefaCompleta);
+
+                        br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno telaQuestionario = 
+                            new br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno(tarefaCompleta, alunoCompleto, this);
+                        
+                       
+                        br.maua.presentation.TelaNavegacao.abrir(this, telaQuestionario);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        javax.swing.JOptionPane.showMessageDialog(this, 
+                            "Erro ao abrir o questionário: " + e.getMessage(), 
+                            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                painelCinza.add(btnTarefa);
+                contador++;
             }
 
+            painelCinza.revalidate();
+            painelCinza.repaint();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(java.util.logging.Level.SEVERE, "Erro ao carregar tarefas", e);
         }
     }
 
