@@ -67,6 +67,24 @@ public class TelaQuestionarioAluno extends JFrame {
 
         titulo3.setText(tarefa.getTitulo());
 
+        try {
+
+            java.util.Date prazoData = tarefa.getPrazo();
+
+            if (prazoData != null) {
+
+                java.text.SimpleDateFormat formatador = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                String prazoFormatado = formatador.format(prazoData);
+                prazo.setText("Prazo: " + prazoFormatado);
+            }
+
+            else {
+                prazo.setText("Prazo: Sem data");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         painelQuestao.setLayout(new BoxLayout(painelQuestao,BoxLayout.Y_AXIS));
 
         try {
