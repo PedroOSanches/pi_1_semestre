@@ -264,9 +264,9 @@ public class TelaTabuleiro1 extends JFrame {
                             jaPassouDaObrigatoria = true;
                         }
                     }
-                if (this.alunoLogado == null) {
-                    casaBloqueada = false;
-                }
+                    if (this.alunoLogado == null) {
+                        casaBloqueada = false;
+                    }
 
                     jPanel1.add(criarCartaoCasa(casa, casaBloqueada, numeroCasaExibida));
                     jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
@@ -582,37 +582,6 @@ public class TelaTabuleiro1 extends JFrame {
         LocalDateTime dataHora = dataLimite.toLocalDateTime();
         return dataHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
-//     private boolean alunoPodeAvancar(Integer idCasa) {
-//     if (this.alunoLogado == null) {
-//         return true; 
-//     }
-//     String sql = "SELECT COUNT(*) AS pendentes " +
-//                  "FROM tarefa t " +
-//                  "LEFT JOIN tentativa ten ON t.id_tarefa = ten.id_tarefa " +
-//                  "    AND ten.id_usuario = ? " +
-//                  "    AND ten.status_tentativa = 'corrigida' " +
-//                  "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
-//                  "WHERE t.id_casa = ? " +
-//                  "  AND (ten.id_tentativa IS NULL OR r.nota_resposta IS NULL OR r.nota_resposta < 6.0)";
-
-//     try (Connection conexao = ConnectionFactory.obterConexao();
-//          PreparedStatement comando = conexao.prepareStatement(sql)) {
-//         comando.setInt(1, this.alunoLogado.getIdAluno()); 
-//         comando.setInt(2, idCasa);
-
-//         try (ResultSet resultado = comando.executeQuery()) {
-//             if (resultado.next()) {
-//                 int pendentes = resultado.getInt("pendentes");
-//                 return pendentes == 0;
-//             }
-//         }
-//     } catch (SQLException e) {
-//         logger.log(java.util.logging.Level.SEVERE, "Erro ao validar requisitos da casa", e);
-//         JOptionPane.showMessageDialog(this, "Erro ao verificar progresso no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-//         return false;
-//     }
-//     return false;
-// }
 
 
     private void abrirTelaEscolhaQuestionario(int idCasa, String tituloCasa) {
@@ -629,32 +598,6 @@ public class TelaTabuleiro1 extends JFrame {
         telaEscolha.setVisible(true);
         dispose();
     }
-
-    // private static final class RegistroCasaTabuleiro {
-    //     private final Integer idCasa;
-    //     private final int idSecao;
-
-    //     private final String tituloCasa;
-    //     private final Timestamp dataLimiteCasa;
-    //     private final String tituloSecao;
-    //     private final String descricaoSecao;
-    //     private final List<String> titulosQuestionario;
-
-    //     public int ordemSecao;
-
-    //     private RegistroCasaTabuleiro(Integer idCasa, int idSecao, String tituloCasa,
-    //                                 Timestamp dataLimiteCasa, String tituloSecao,
-    //                                 String descricaoSecao, List<String> titulosQuestionario) {
-    //         this.idCasa = idCasa;
-    //         this.idSecao = idSecao;
-
-    //         this.tituloCasa = tituloCasa;
-    //         this.dataLimiteCasa = dataLimiteCasa;
-    //         this.tituloSecao = tituloSecao;
-    //         this.descricaoSecao = descricaoSecao;
-    //         this.titulosQuestionario = titulosQuestionario;
-    //     }
-    // }
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> new TelaTabuleiro1().setVisible(true));

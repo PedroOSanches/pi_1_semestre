@@ -42,10 +42,10 @@ public class CasaDAO {
 
     public static List<Casa> carregarCasasTabuleiro() throws SQLException {
         String sql = "SELECT c.id_casa, c.titulo_casa, c.data_limite_casa, " +
-                     "s.id_secao, s.titulo_secao, s.descricao_secao " +
-                     "FROM casa c " +
-                     "INNER JOIN secao s USING(id_secao) " +
-                     "ORDER BY s.id_secao, c.id_casa";
+                    "s.id_secao, s.titulo_secao, s.descricao_secao " +
+                    "FROM casa c " +
+                    "INNER JOIN secao s USING(id_secao) " +
+                    "ORDER BY s.id_secao, c.id_casa";
 
         try (
                 Connection cx = ConnectionFactory.obterConexao();
@@ -70,20 +70,26 @@ public class CasaDAO {
     }
 
     public static Integer descobrirProximaCasaObrigatoria(int idAluno) throws SQLException {
-        String sql = "SELECT c.id_casa, " +
-                "  (SELECT COUNT(*) FROM tarefa t2 WHERE t2.id_casa = c.id_casa) AS total_tarefas, " +
-                "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
-                "FROM secao s " +
-                "JOIN casa c ON c.id_secao = s.id_secao " +
-                "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
-                "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa " +
-                "    AND ten.id_usuario = ? " +
-                "    AND ten.status_tentativa = 'corrigida' " +
-                "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
-                "GROUP BY s.id_secao, c.id_casa " +
-                "HAVING total_tarefas > tarefas_completas " +
-                "ORDER BY s.id_secao, c.id_casa " +
-                "LIMIT 1";
+        String sql =
+            "SELECT c.id_casa, " +
+            "       COUNT(DISTINCT t.id_tarefa) AS total_tarefas, " +
+            "       COUNT(DISTINCT nt.id_tarefa) AS tarefas_completas " +
+            "FROM casa c " +
+            "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+            "LEFT JOIN ( " +
+            "    SELECT ten.id_tarefa, " +
+            "           SUM(r.nota_resposta) AS nota_total " +
+            "    FROM tentativa ten " +
+            "    JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+            "    WHERE ten.id_usuario = ? " +
+            "      AND ten.status_tentativa = 'corrigida' " +
+            "    GROUP BY ten.id_tarefa " +
+            "    HAVING SUM(r.nota_resposta) >= 6 " +
+            ") nt ON nt.id_tarefa = t.id_tarefa " +
+            "GROUP BY c.id_casa " +
+            "HAVING total_tarefas > tarefas_completas " +
+            "ORDER BY c.id_casa " +
+            "LIMIT 1";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
             PreparedStatement comando = conexao.prepareStatement(sql)) {
@@ -92,23 +98,35 @@ public class CasaDAO {
 
             try (ResultSet resultado = comando.executeQuery()) {
                 if (resultado.next()) {
-                    return resultado.getInt("id_casa");
+                    Integer idCasa = resultado.getInt("id_casa");
+
+                    System.out.println("Aluno: " + idAluno);
+                    System.out.println("Próxima casa obrigatória: " + idCasa);
+
+                    return idCasa;
                 }
             }
         }
         return null;
     }
     public static boolean isSecaoConcluidaComSucesso(int idAluno, int idSecao) throws SQLException {
-        String sql = "SELECT " +
-                "  (SELECT COUNT(*) FROM tarefa t2 JOIN casa c2 ON t2.id_casa = c2.id_casa WHERE c2.id_secao = s.id_secao) AS total_tarefas, " +
-                "  COUNT(DISTINCT CASE WHEN r.nota_resposta >= 6.0 THEN t.id_tarefa END) AS tarefas_completas " +
-                "FROM secao s " +
-                "JOIN casa c ON c.id_secao = s.id_secao " +
-                "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
-                "LEFT JOIN tentativa ten ON ten.id_tarefa = t.id_tarefa AND ten.id_usuario = ? AND ten.status_tentativa = 'corrigida' " +
-                "LEFT JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
-                "WHERE s.id_secao = ? " +
-                "GROUP BY s.id_secao";
+        String sql =
+            "SELECT " +
+            "    COUNT(DISTINCT t.id_tarefa) AS total_tarefas, " +
+            "    COUNT(DISTINCT nt.id_tarefa) AS tarefas_completas " +
+            "FROM casa c " +
+            "LEFT JOIN tarefa t ON t.id_casa = c.id_casa " +
+            "LEFT JOIN ( " +
+            "    SELECT ten.id_tarefa, " +
+            "           SUM(r.nota_resposta) AS nota_total " +
+            "    FROM tentativa ten " +
+            "    JOIN resposta r ON r.id_tentativa = ten.id_tentativa " +
+            "    WHERE ten.id_usuario = ? " +
+            "      AND ten.status_tentativa = 'corrigida' " +
+            "    GROUP BY ten.id_tarefa " +
+            "    HAVING SUM(r.nota_resposta) >= 6 " +
+            ") nt ON nt.id_tarefa = t.id_tarefa " +
+            "WHERE c.id_secao = ? ";
 
         try (Connection conexao = ConnectionFactory.obterConexao();
             PreparedStatement comando = conexao.prepareStatement(sql)) {
