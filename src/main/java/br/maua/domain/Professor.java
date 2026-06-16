@@ -41,7 +41,7 @@ public class Professor extends Usuario {
 
     @Override
     public void setUsername(String username) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9._%+-]+@maua\\.br$");
+        Pattern pattern = Pattern.compile("^[a-zA-Z._%+-]+@maua\\.br$");
         if (!pattern.matcher(username).matches()) {
             throw new IllegalArgumentException("Username Inválido!");
         }

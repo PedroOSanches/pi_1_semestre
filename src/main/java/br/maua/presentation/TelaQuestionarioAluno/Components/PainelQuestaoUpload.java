@@ -144,6 +144,11 @@ public class PainelQuestaoUpload extends PainelQuestao {
         if (result == JFileChooser.APPROVE_OPTION) {
             uploadAluno = fileChooser.getSelectedFile();
             System.out.println("Arquivo selecionado: " + uploadAluno.getAbsolutePath());
+
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Arquivo '" + uploadAluno.getName() + "' anexado com sucesso!",
+                    "Upload Concluído",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnUploadActionPerformed
 
