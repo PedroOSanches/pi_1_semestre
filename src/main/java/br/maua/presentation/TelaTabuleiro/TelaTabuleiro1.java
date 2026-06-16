@@ -195,7 +195,7 @@ public class TelaTabuleiro1 extends JFrame {
         }
 
         if (this.alunoLogado != null) {
-            ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado);
+            ModalPerfilAluno modal = new ModalPerfilAluno(this.alunoLogado, this);
             br.maua.presentation.TelaNavegacao.abrir(this, modal);
             return;
         }
@@ -759,10 +759,10 @@ public class TelaTabuleiro1 extends JFrame {
             usuarioLogado = this.professorLogado; 
         }
 
-        TelaEscolhaDeQuestionario telaEscolha = 
-            new TelaEscolhaDeQuestionario(usuarioLogado, idCasa, tituloCasa);
-        
-        br.maua.presentation.TelaNavegacao.abrir(this, telaEscolha);
+        TelaEscolhaDeQuestionario telaEscolha =
+                new TelaEscolhaDeQuestionario(usuarioLogado, idCasa, tituloCasa, this);
+        telaEscolha.setVisible(true);
+        dispose();
     }
 
     private static final class RegistroCasaTabuleiro {

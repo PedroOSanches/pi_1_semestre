@@ -19,7 +19,7 @@ public class TarefaDAO {
         String sql = "INSERT INTO tarefa(titulo_tarefa, id_casa, prazo_tarefa) VALUES(?, ?, ?);";
         try (
                 Connection cx = ConnectionFactory.obterConexao();
-                PreparedStatement ps = cx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = cx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
             cx.setAutoCommit(false);
             try {
@@ -28,7 +28,7 @@ public class TarefaDAO {
                 ps.setDate(3, tarefa.getPrazo());
 
                 ps.executeUpdate();
-                try (ResultSet rs = ps.getGeneratedKeys();) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (!rs.next()) {
                         cx.rollback();
                         throw new SQLException("Erro ao gerar tarefa");
@@ -77,6 +77,18 @@ public class TarefaDAO {
 
         }
 
+    public static void updatePrazo(Tarefa tarefa) throws SQLException {
+        String sql = """
+                UPDATE tarefa SET prazo_tarefa = ? WHERE id_tarefa = ?;
+                """;
+        try (
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql)) {
+            ps.setDate(1, tarefa.getPrazo());
+            ps.setInt(2, tarefa.getIdTarefa());
+            ps.executeUpdate();
+        }
+    }
     public Date buscarPrazoPorId(int idTarefa) throws SQLException {
 
         String sql = "SELECT prazo_tarefa FROM tarefa WHERE id_tarefa = ?";

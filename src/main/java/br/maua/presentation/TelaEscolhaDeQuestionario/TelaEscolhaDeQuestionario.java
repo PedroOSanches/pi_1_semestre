@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import br.maua.domain.Usuario;
 import br.maua.infrastructure.ConnectionFactory;
 
+import javax.swing.*;
+
 /**
  *
  * @author Luiza
@@ -20,20 +22,22 @@ import br.maua.infrastructure.ConnectionFactory;
 public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEscolhaDeQuestionario.class.getName());
-
+    private final JFrame telaAnterior;
     private int idCasa;
     private String tituloCasa;
     private Usuario usuarioLogado;
 
-    public TelaEscolhaDeQuestionario() {
+    public TelaEscolhaDeQuestionario(JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         initComponents();
     }
 
-    public TelaEscolhaDeQuestionario(Usuario usuario, int idCasa, String tituloCasa) {
-        initComponents();
+    public TelaEscolhaDeQuestionario(Usuario usuario, int idCasa, String tituloCasa, JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         this.usuarioLogado = usuario;
         this.idCasa = idCasa;
         this.tituloCasa = tituloCasa;
+        initComponents();
 
         nomeTitulo.setText(this.tituloCasa);
 
@@ -134,34 +138,10 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
-        br.maua.presentation.TelaNavegacao.voltar(this);
+        telaAnterior.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaEscolhaDeQuestionario().setVisible(true));
-    }
     private void carregarTarefas() {
         String sql =
             "SELECT id_tarefa, titulo_tarefa " +
@@ -208,7 +188,7 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
                         tarefaCompleta.setTitulo(titulo);
 
                         br.maua.infrastructure.DAO.QuestaoDAO.buscarPorTarefa(tarefaCompleta);
-
+                        
                         br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno telaQuestionario= new br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno(tarefaCompleta, this.usuarioLogado, this);
                         
                         br.maua.presentation.TelaNavegacao.abrir(this, telaQuestionario);

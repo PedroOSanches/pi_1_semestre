@@ -5,7 +5,14 @@
 package br.maua.presentation.TelaNotaAluno;
 
 import br.maua.domain.Aluno;
+import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,14 +30,9 @@ public class TelaNotaAluno extends javax.swing.JFrame {
         this.aluno = aluno;
         this.modalOrigem = modalOrigem;
         initComponents();
+         carregarNotas();
         this.setVisible(true);
     }
-
-    private int fecharJanela(){
-        modalOrigem.setVisible(true);
-        return javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,43 +45,14 @@ public class TelaNotaAluno extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jScrollPane1 = new javax.swing.JScrollPane();
         painelAzul = new javax.swing.JPanel();
-        painelCinza = new javax.swing.JPanel();
-        Atividade = new javax.swing.JLabel();
-        Nota = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabelaNotas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         painelAzul.setBackground(new java.awt.Color(19, 112, 178));
-
-        painelCinza.setBackground(new java.awt.Color(217, 217, 217));
-
-        Atividade.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
-        Atividade.setText("Atividade:");
-
-        Nota.setFont(new java.awt.Font("Yu Gothic UI", 0, 16)); // NOI18N
-        Nota.setText("Nota: ");
-
-        javax.swing.GroupLayout painelCinzaLayout = new javax.swing.GroupLayout(painelCinza);
-        painelCinza.setLayout(painelCinzaLayout);
-        painelCinzaLayout.setHorizontalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Atividade, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 655, Short.MAX_VALUE)
-                .addComponent(Nota, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-        painelCinzaLayout.setVerticalGroup(
-            painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelCinzaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(painelCinzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Atividade)
-                    .addComponent(Nota)))
-        );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 60)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -90,21 +63,37 @@ public class TelaNotaAluno extends javax.swing.JFrame {
         jButton1.setText("Voltar");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
+        tabelaNotas.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                        "Atividade", "Nota"
+                }
+        ) {
+            final Class[] types = new Class[]{
+                    java.lang.Object.class, java.lang.Float.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tabelaNotas);
+
         javax.swing.GroupLayout painelAzulLayout = new javax.swing.GroupLayout(painelAzul);
         painelAzul.setLayout(painelAzulLayout);
         painelAzulLayout.setHorizontalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAzulLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
                 .addGroup(painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelAzulLayout.createSequentialGroup()
+                            .addGap(16, 16, 16)
                         .addComponent(jButton1)
                         .addGap(266, 266, 266)
-                        .addComponent(jLabel1)
-                        .addContainerGap(360, Short.MAX_VALUE))
+                            .addComponent(jLabel1))
                     .addGroup(painelAzulLayout.createSequentialGroup()
-                        .addComponent(painelCinza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(26, 26, 26))))
+                            .addGap(130, 130, 130)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(134, Short.MAX_VALUE))
         );
         painelAzulLayout.setVerticalGroup(
             painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,9 +104,9 @@ public class TelaNotaAluno extends javax.swing.JFrame {
                     .addGroup(painelAzulLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jButton1)))
-                .addGap(61, 61, 61)
-                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(620, Short.MAX_VALUE))
+                    .addGap(55, 55, 55)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(170, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(painelAzul);
@@ -137,19 +126,44 @@ public class TelaNotaAluno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1(aluno).setVisible(true);
-        this.dispose();
+        modalOrigem.getTelaAnterior().setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void carregarNotas() {
+        DefaultTableModel modelo = (DefaultTableModel) tabelaNotas.getModel();
+        tabelaNotas.setEnabled(false);
+
+        new SwingWorker<Map<String, Float>, Void>() {
+            @Override
+            protected Map<String, Float> doInBackground() throws Exception {
+                return AlunoDAO.obterNotas(aluno);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    Map<String, Float> notas = get();
+
+                    for (Map.Entry<String, Float> tarefa_nota : notas.entrySet()) {
+                        modelo.addRow(new Object[]{tarefa_nota.getKey(), tarefa_nota.getValue()});
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(TelaNotaAluno.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Erro ao buscar notas", "Erro!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }.execute();
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Atividade;
-    private javax.swing.JLabel Nota;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel painelAzul;
-    private javax.swing.JPanel painelCinza;
+    private javax.swing.JTable tabelaNotas;
     // End of variables declaration//GEN-END:variables
 }
