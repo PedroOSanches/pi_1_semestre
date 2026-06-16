@@ -41,7 +41,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         btnVoltar = new javax.swing.JButton();
         btnCriarTarefas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
-        botaoVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,21 +67,15 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         Titulo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         Titulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        botaoVoltar.setBackground(new java.awt.Color(240, 147, 23));
-        botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
-        botaoVoltar.setText("Voltar");
-        botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
-
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
         PainelAzul1Layout.setHorizontalGroup(
             PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PainelAzul1Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PainelAzul1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
                         .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(319, 319, 319)
                         .addComponent(Titulo)
@@ -118,9 +111,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botaoVoltarActionPerformed(ActionEvent actionEvent) {
-    }
-
     private void btnCriarTarefasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarTarefasActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
@@ -134,12 +124,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Erro ao criar Tarefa");
             e.printStackTrace();
         }
-
-
     }//GEN-LAST:event_btnCriarTarefasActionPerformed
-
-    
-    
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
@@ -147,11 +132,9 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PainelAzul1;
     private javax.swing.JLabel Titulo;
-    private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
     private javax.swing.JButton btnVoltar;
     // End of variables declaration//GEN-END:variables
