@@ -213,7 +213,7 @@ public class TelaLogin extends javax.swing.JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao se comunicar com o Banco", "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (InvalidParameterException e) {
-            JOptionPane.showMessageDialog(this, e, "Campos Inválidos", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Campos Inválidos",JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_entrarBotao10ActionPerformed
 
