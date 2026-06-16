@@ -28,6 +28,8 @@ public class TelaCadastro extends javax.swing.JFrame {
     /** Creates new form TelaPerfilAluno */
     public TelaCadastro() {
         initComponents();
+        campoNome.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        campoSobrenome.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         campoUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         campoSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         campoConfirmarSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));

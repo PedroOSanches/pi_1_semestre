@@ -32,6 +32,9 @@ public class TelaLogin extends javax.swing.JFrame {
      */
     public TelaLogin() {
         initComponents();
+      
+        campoUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        campoSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
 
     /**
@@ -77,12 +80,13 @@ public class TelaLogin extends javax.swing.JFrame {
         campoUsername.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         campoUsername.setToolTipText("");
         campoUsername.setBorder(null);
-        campoUsername.setMargin(new java.awt.Insets(8, 5, 2, 6));
+        campoUsername.setMargin(new java.awt.Insets(2, 10, 2, 10));
         campoUsername.setName("campoNome"); // NOI18N
         campoUsername.addActionListener(this::campoUsernameActionPerformed);
 
         campoSenha.setBackground(new java.awt.Color(204, 204, 204));
         campoSenha.setBorder(null);
+        campoSenha.setMargin(new java.awt.Insets(2, 10, 2, 10));
         campoSenha.setName("campoSenha"); // NOI18N
         campoSenha.addActionListener(this::campoSenhaActionPerformed);
 
