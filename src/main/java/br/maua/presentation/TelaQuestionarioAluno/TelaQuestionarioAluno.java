@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,19 +70,22 @@ public class TelaQuestionarioAluno extends JFrame {
 
         try {
 
-            java.util.Date prazoData = tarefa.getPrazo();
+            TarefaDAO tarefaDAO = new TarefaDAO();
 
-            if (prazoData != null) {
+            Date prazoBanco = tarefaDAO.buscarPrazoPorId(tarefa.getIdTarefa());
+
+            if (prazoBanco != null) {
 
                 java.text.SimpleDateFormat formatador = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                String prazoFormatado = formatador.format(prazoData);
-                prazo.setText("Prazo: " + prazoFormatado);
+                prazo.setText("Prazo: " + formatador.format(prazoBanco));
             }
 
             else {
                 prazo.setText("Prazo: Sem data");
             }
-        } catch (Exception e) {
+
+        } catch (java.sql.SQLException e) {
+            prazo.setText("Prazo: Erro ao carregar");
             e.printStackTrace();
         }
 
@@ -291,28 +295,6 @@ public class TelaQuestionarioAluno extends JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        EventQueue.invokeLater(() -> {
-            Tarefa tarefa = new Tarefa();
-            tarefa.setIdTarefa(31);
-            tarefa.setTitulo("Titulo Tarefa");
-            Aluno aluno = new Aluno(14, "Pedro", "Sanches", "26.01461-3@maua.br");
-            new TelaQuestionarioAluno(tarefa, aluno, new JFrame()).setVisible(true);
-        });
-
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private PainelQuestao painelQuestao;

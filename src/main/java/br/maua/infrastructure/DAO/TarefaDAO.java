@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.maua.domain.Questao;
@@ -76,4 +77,21 @@ public class TarefaDAO {
 
         }
 
+    public Date buscarPrazoPorId(int idTarefa) throws SQLException {
+
+        String sql = "SELECT prazo_tarefa FROM tarefa WHERE id_tarefa = ?";
+
+        try (Connection conn = ConnectionFactory.obterConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTarefa);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDate("prazo_tarefa");
+                }
+            }
+        }
+        return null;
     }
+}
