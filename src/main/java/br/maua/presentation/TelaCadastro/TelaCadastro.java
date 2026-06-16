@@ -294,7 +294,7 @@ public class TelaCadastro extends javax.swing.JFrame {
             if (Pattern.compile("^\\d{2}\\.\\d{5}-\\d@maua\\.br$").matcher(username).matches()) {
                 Aluno novoAluno = new Aluno(nome, sobrenome, username, senha);
                 AlunoDAO.salvarNoBanco(novoAluno);
-            } else if (Pattern.compile("^[a-zA-Z0-9._%+-]+@maua\\.br$").matcher(username).matches()) {
+            } else if (Pattern.compile("^[a-zA-Z._%+-]+@maua\\.br$").matcher(username).matches()) {
                 Professor novoProfessor = new Professor(nome, sobrenome, username, senha);
                 ProfessorDAO.salvarNoBanco(novoProfessor);
             } else {
