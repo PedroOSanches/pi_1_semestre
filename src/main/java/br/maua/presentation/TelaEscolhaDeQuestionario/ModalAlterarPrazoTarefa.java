@@ -29,10 +29,32 @@ public class ModalAlterarPrazoTarefa extends javax.swing.JDialog {
     /**
      * Creates new form ModalAlterarPrazoTarefa
      */
-    public ModalAlterarPrazoTarefa(java.awt.Frame parent, boolean modal, Tarefa tarefa) {
+    public ModalAlterarPrazoTarefa(java.awt.Frame parent, boolean modal, Tarefa tarefa, String prazoAtual) {
         super(parent, modal);
         this.tarefa = tarefa;
         initComponents();
+
+        jTextField1.setText("dd/mm/aaaa");
+        String textoPrazo = "Prazo atual: Não definido";
+        if (prazoAtual != null && !prazoAtual.isEmpty()) {
+            try {
+                java.time.LocalDate dataAntiga = java.time.LocalDate.parse(prazoAtual);
+                java.time.format.DateTimeFormatter formatoBr = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                textoPrazo = "Prazo atual: " + dataAntiga.format(formatoBr);
+            } catch (Exception e) {
+                textoPrazo = "Prazo atual: " + prazoAtual;
+            }
+        }
+        javax.swing.JLabel lblPrazoAtual = new javax.swing.JLabel(textoPrazo);
+        lblPrazoAtual.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+        lblPrazoAtual.setForeground(new java.awt.Color(230, 230, 230)); 
+        lblPrazoAtual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        
+        lblPrazoAtual.setBounds(jLabel1.getX() - 50, jLabel1.getY() + 25, 300, 20);
+        jPanel1.add(lblPrazoAtual);
+        
+        jPanel1.revalidate();
+        jPanel1.repaint();
     }
 
     /**
@@ -56,7 +78,7 @@ public class ModalAlterarPrazoTarefa extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Alterar Prazo: nomeTarefa");
+        jLabel1.setText("Alterar Prazo: " + tarefa.getTitulo());
 
         jTextField1.setText("dd/mm/aaaa");
 
@@ -139,6 +161,7 @@ public class ModalAlterarPrazoTarefa extends javax.swing.JDialog {
             tarefa.setPrazo(data.format(saida));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(rootPane, "Data inválida! Use dd/mm/yyyy");
+            return;
         }
 
         int i = JOptionPane.showConfirmDialog(rootPane, "Confirma que deseja salvar?");
@@ -169,7 +192,7 @@ public class ModalAlterarPrazoTarefa extends javax.swing.JDialog {
         }
 
         EventQueue.invokeLater(() -> {
-            new ModalAlterarPrazoTarefa(new JFrame(), true, new Tarefa(20)).setVisible(true);
+            new ModalAlterarPrazoTarefa(new JFrame(), true, new Tarefa(20), "").setVisible(true);
         });
     }
 

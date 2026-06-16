@@ -6,6 +6,7 @@ import java.util.List;
 public class Secao {
     private int idSecao;
     private String titulo;
+    private String descricaoSecao;
     private List<Casa> casas = new ArrayList<>();
 
 
@@ -41,5 +42,13 @@ public class Secao {
 
     public void setCasas(List<Casa> casas) {
         this.casas = casas;
+    }
+
+    public void setDescricaoSecao(String descricaoSecao){
+        this.descricaoSecao = descricaoSecao;
+    }
+
+    public String getDescricaoSecao(){
+        return descricaoSecao;
     }
 }

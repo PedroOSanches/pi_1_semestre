@@ -1,10 +1,15 @@
 package br.maua.domain;
 
+//import java.security.Timestamp;
+
+import java.sql.Timestamp;
+
 public class Casa {
     private int idCasa;
     private String titulo;
     private int ordemCasa;
     private Secao secao;
+    private Timestamp dataLimiteCasa;
 
     public Casa(String titulo) {
         setTitulo(titulo);
@@ -52,6 +57,14 @@ public class Casa {
 
     public void setSecao(Secao secao) {
         this.secao = secao;
+    }
+
+    public Timestamp getDataLimiteCasa() {
+        return dataLimiteCasa;
+    }
+
+    public void setDataLimiteCasa(Timestamp dataLimiteCasa) {
+        this.dataLimiteCasa = dataLimiteCasa;
     }
 }
 
