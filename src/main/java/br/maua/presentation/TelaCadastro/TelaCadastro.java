@@ -13,6 +13,7 @@ import br.maua.domain.Aluno;
 import br.maua.domain.Professor;
 import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.infrastructure.DAO.ProfessorDAO;
+import br.maua.presentation.TelaLogin.TelaLogin;
 
 /**
  *
@@ -57,7 +58,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         nomeTitulo2 = new javax.swing.JLabel();
         imagemFundo = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         painelPrincipal.setBackground(new java.awt.Color(19, 112, 178));
         painelPrincipal.setOpaque(false);
@@ -305,7 +306,9 @@ public class TelaCadastro extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
-            br.maua.presentation.TelaNavegacao.voltar(this);
+            this.dispose();
+            TelaLogin telaLogin = new TelaLogin();
+            telaLogin.setVisible(true);
             
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
