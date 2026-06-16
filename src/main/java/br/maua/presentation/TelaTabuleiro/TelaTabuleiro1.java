@@ -43,6 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class TelaTabuleiro1 extends JFrame {
 
@@ -104,16 +105,12 @@ public class TelaTabuleiro1 extends JFrame {
         initComponents();
         montarTabuleiroDinamico();
 
-        this.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-        @Override
-        public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-            montarTabuleiroDinamico(); 
-        }
+    }
 
-        @Override
-        public void windowLostFocus(java.awt.event.WindowEvent evt) {
-        }
-    });
+    public void atualizarTabuleiro() {
+        SwingUtilities.invokeLater(() -> {
+            montarTabuleiroDinamico();
+        });
     }
 
     private void initComponents() {
