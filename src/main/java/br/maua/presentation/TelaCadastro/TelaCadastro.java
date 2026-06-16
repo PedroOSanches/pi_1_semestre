@@ -5,14 +5,14 @@
 
 package br.maua.presentation.TelaCadastro;
 
+import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+
 import br.maua.domain.Aluno;
 import br.maua.domain.Professor;
 import br.maua.infrastructure.DAO.AlunoDAO;
 import br.maua.infrastructure.DAO.ProfessorDAO;
-
-import javax.swing.JOptionPane;
-import java.security.InvalidParameterException;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -295,7 +295,13 @@ public class TelaCadastro extends javax.swing.JFrame {
                 Professor novoProfessor = new Professor(nome, sobrenome, username, senha);
                 ProfessorDAO.salvarNoBanco(novoProfessor);
             } else {
-                throw new InvalidParameterException("O campo de username não corresponde a nenhum padrão");
+                JOptionPane.showMessageDialog(
+                    this,
+                    "O campo de username não corresponde a nenhum padrão",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
             }
 
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
