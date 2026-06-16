@@ -135,6 +135,28 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
 
+        int numeroQuestoes = tentativa.getRespostas().size();
+        float notaMaxima = 10.0f / numeroQuestoes;
+
+        for (int i = 0; i < numeroQuestoes; i++) {
+            Number numero = (Number) campoNotaUI.get(i).getValue();
+            float notaDigitada = (numero != null) ? numero.floatValue() : 0.0f;
+
+            if (notaDigitada > notaMaxima || notaDigitada < 0) {
+
+                int numeroQuestaoAtual = i + 1;
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Erro na Questão " + numeroQuestaoAtual + "!\n" +
+                                "A nota máxima permitida por questão é: " + String.format("%.2f", notaMaxima) + "\n" +
+                                "Você digitou: " + notaDigitada,
+                        "Nota Inválida",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+        }
+
         for (int i = 0; i < tentativa.getRespostas().size(); i++) {
 
             Number numero = (Number) campoNotaUI.get(i).getValue();
