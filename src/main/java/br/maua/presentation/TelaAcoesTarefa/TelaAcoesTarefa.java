@@ -8,7 +8,6 @@ package br.maua.presentation.TelaAcoesTarefa;
 import javax.swing.JOptionPane;
 
 import br.maua.presentation.TelaCriarTarefa.TelaCriarTarefa;
-import br.maua.presentation.TelaTarefasCriadas.TelaTarefasCriadas;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +40,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         PainelAzul1 = new javax.swing.JPanel();
         btnVoltar = new javax.swing.JButton();
         btnCriarTarefas = new javax.swing.JButton();
-        btnTarefasCriadas = new javax.swing.JButton();
         Titulo = new javax.swing.JLabel();
         botaoVoltar = new javax.swing.JButton();
 
@@ -64,13 +62,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         btnCriarTarefas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCriarTarefas.addActionListener(this::btnCriarTarefasActionPerformed);
 
-        btnTarefasCriadas.setBackground(new java.awt.Color(240, 147, 32));
-        btnTarefasCriadas.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
-        btnTarefasCriadas.setForeground(new java.awt.Color(255, 255, 255));
-        btnTarefasCriadas.setText("Tarefas Criadas");
-        btnTarefasCriadas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnTarefasCriadas.addActionListener(this::btnTarefasCriadasActionPerformed);
-
         Titulo.setFont(new java.awt.Font("Yu Gothic Medium", 1, 40)); // NOI18N
         Titulo.setForeground(new java.awt.Color(255, 255, 255));
         Titulo.setText("Tarefas");
@@ -81,8 +72,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
         botaoVoltar.setForeground(new java.awt.Color(255, 255, 255));
         botaoVoltar.setText("Voltar");
         botaoVoltar.setMaximumSize(new java.awt.Dimension(92, 33));
-        // botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
-        //botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
+        botaoVoltar.addActionListener(this::botaoVoltarActionPerformed);
 
         javax.swing.GroupLayout PainelAzul1Layout = new javax.swing.GroupLayout(PainelAzul1);
         PainelAzul1.setLayout(PainelAzul1Layout);
@@ -91,16 +81,12 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
             .addGroup(PainelAzul1Layout.createSequentialGroup()
                 .addGroup(PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(PainelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(PainelAzul1Layout.createSequentialGroup()
-                            .addGap(122, 122, 122)
-                            .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(PainelAzul1Layout.createSequentialGroup()
-
-                            .addGap(39, 39, 39)
-                            .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(319, 319, 319)
-                            .addComponent(Titulo))))
+                    .addGroup(PainelAzul1Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(319, 319, 319)
+                        .addComponent(Titulo)
+                        .addGap(332, 332, 332)))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
         PainelAzul1Layout.setVerticalGroup(
@@ -115,9 +101,7 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
                         .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(103, 103, 103)
                 .addComponent(btnCriarTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(124, 124, 124)
-                .addComponent(btnTarefasCriadas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addContainerGap(437, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -156,11 +140,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
 
     
     
-    private void btnTarefasCriadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarefasCriadasActionPerformed
-        // TODO add your handling code here:
-        br.maua.presentation.TelaNavegacao.abrir(this, new TelaTarefasCriadas(this));
-    }//GEN-LAST:event_btnTarefasCriadasActionPerformed
-
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         // TODO add your handling code here:
@@ -174,7 +153,6 @@ public class TelaAcoesTarefa extends javax.swing.JFrame {
     private javax.swing.JLabel Titulo;
     private javax.swing.JButton botaoVoltar;
     private javax.swing.JButton btnCriarTarefas;
-    private javax.swing.JButton btnTarefasCriadas;
     private javax.swing.JButton btnVoltar;
     // End of variables declaration//GEN-END:variables
 }
