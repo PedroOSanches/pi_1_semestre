@@ -28,6 +28,7 @@ import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestao;
 import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoAlternativa;
 import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoDissertativa;
 import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestaoUpload;
+import br.maua.service.JornadaService;
 
 /**
  *
@@ -245,25 +246,28 @@ public class TelaQuestionarioAluno extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarTarefa2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
-        if (btnEnviarTarefa2.getText().equals("Fechar Visualização")) {
-            dispose();
-            if (telaAnterior != null) {
-                telaAnterior.setVisible(true);
+            if (btnEnviarTarefa2.getText().equals("Fechar Visualização")) {
+                if (telaAnterior != null) {
+                    br.maua.presentation.TelaNavegacao.abrir(this, telaAnterior);
+                } else {
+                    dispose(); 
+        }
+        return;
             }
-            return; 
-        }
-        for (PainelQuestao resposta : respostas) {
-            resposta.salvar(tentativa);
-        }
-        try {
-            TentativaDAO.salvarTentativa(tentativa);
-            JOptionPane.showMessageDialog(null, "Tentativa Salvo com sucesso!");
-            dispose();
-            telaAnterior.setVisible(true);
-        } catch (SQLException | UploadException e) {
-            logger.log(Level.SEVERE, e.getMessage());
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+            for (PainelQuestao resposta : respostas) {
+                resposta.salvar(tentativa);
+            }
+            try {
+                TentativaDAO.salvarTentativa(tentativa);
+                JornadaService jornadaService = new JornadaService();
+                jornadaService.avancarCasa(tentativa, this.tarefa.getCasa());
+                JOptionPane.showMessageDialog(null, "Tentativa Salvo com sucesso!");
+                dispose();
+                telaAnterior.setVisible(true);
+            } catch (SQLException | UploadException e) {
+                logger.log(Level.SEVERE, e.getMessage());
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
     }//GEN-LAST:event_btnEnviarTarefa2ActionPerformed
 
     /**

@@ -108,6 +108,17 @@ public class TelaTabuleiro1 extends JFrame {
         this.secoesInformadas = secoes;
         initComponents();
         montarTabuleiroDinamico();
+
+        this.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+        @Override
+        public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+            montarTabuleiroDinamico(); 
+        }
+
+        @Override
+        public void windowLostFocus(java.awt.event.WindowEvent evt) {
+        }
+    });
     }
 
     private void initComponents() {
