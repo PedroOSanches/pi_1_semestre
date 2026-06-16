@@ -75,5 +75,7 @@ public abstract class Usuario {
     public String toString() {
         return nome + " " + sobrenome;
     }
-
+    public boolean ehProfessor() {
+        return this instanceof Professor;
+    }
 }

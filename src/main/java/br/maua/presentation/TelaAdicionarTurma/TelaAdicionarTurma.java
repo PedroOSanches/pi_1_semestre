@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package br.maua.presentation.TelaAdicionarTurma;
 
 import br.maua.domain.*;
@@ -89,7 +85,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelAno.setForeground(new java.awt.Color(255, 255, 255));
         labelAno.setText("Ano");
 
-        comboBoxAno.setModel(new DefaultComboBoxModel(new Ano[]{new Ano(0)}));
+        comboBoxAno.setModel(new DefaultComboBoxModel<Ano>(new Ano[]{new Ano(0)}));
 
         botaoAddAno.setText("+");
         botaoAddAno.addActionListener(this::botaoAddAnoActionPerformed);
@@ -98,7 +94,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelCurso.setForeground(new java.awt.Color(255, 255, 255));
         labelCurso.setText("Curso");
 
-        comboBoxCurso.setModel(new DefaultComboBoxModel(new Curso[]{new Curso("Carregando...")}));
+        comboBoxCurso.setModel(new DefaultComboBoxModel<Curso>(new Curso[]{new Curso("Carregando...")}));
 
         botaoAddCurso.setText("+");
         botaoAddCurso.addActionListener(this::botaoAddCursoActionPerformed);
@@ -107,7 +103,7 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelTurma.setForeground(new java.awt.Color(255, 255, 255));
         labelTurma.setText("Turma");
 
-        comboBoxTurma.setModel(new DefaultComboBoxModel(new Turma[]{new Turma("Carregando...")}));
+        comboBoxTurma.setModel(new DefaultComboBoxModel<Turma>(new Turma[]{new Turma("Carregando...")}));
 
         botaoAddTurma.setText("+");
         botaoAddTurma.addActionListener(this::botaoAddTurmaActionPerformed);
@@ -116,12 +112,12 @@ public class TelaAdicionarTurma extends javax.swing.JFrame {
         labelSubturma.setForeground(new java.awt.Color(255, 255, 255));
         labelSubturma.setText("Subturma");
 
-        comboBoxSubturma.setModel(new DefaultComboBoxModel(new Subturma[]{new Subturma("Carregando...")}));
+        comboBoxSubturma.setModel(new DefaultComboBoxModel<Subturma>(new Subturma[]{new Subturma("Carregando...")}));
 
         botaoAddSubturma.setText("+");
         botaoAddSubturma.addActionListener(this::botaoAddSubturmaActionPerformed);
 
-        botaoSalvar.setLabel("Salvar");
+        botaoSalvar.setText("Salvar");
         botaoSalvar.addActionListener(this::botaoSalvarActionPerformed);
 
         buttonVoltar.setBackground(new java.awt.Color(240, 147, 32));

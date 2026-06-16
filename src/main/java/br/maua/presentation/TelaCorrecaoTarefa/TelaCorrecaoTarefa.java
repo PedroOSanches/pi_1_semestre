@@ -10,6 +10,7 @@ import br.maua.infrastructure.DAO.TentativaDAO;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,10 +165,14 @@ public class TelaCorrecaoTarefa extends javax.swing.JFrame {
             tentativa.getRespostas().get(i).setNota(notaDigitada);
 
         }
-
         boolean confirmacaoCommit = tentativaDAO.atualizarNota(tentativa);
 
         if (confirmacaoCommit) {
+            try {
+                TentativaDAO.updateStatusTentativa(tentativa, "corrigida");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro ao mudar status tentativa");
+            }
             javax.swing.JOptionPane.showMessageDialog(this, "Notas salvas com sucesso!");
             this.dispose();
             telaAnterior.setVisible(true);

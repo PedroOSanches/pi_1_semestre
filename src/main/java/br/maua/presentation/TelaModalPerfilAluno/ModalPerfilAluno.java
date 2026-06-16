@@ -8,7 +8,7 @@ package br.maua.presentation.TelaModalPerfilAluno;
 import java.sql.SQLException;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import br.maua.domain.Aluno;
 import br.maua.infrastructure.DAO.AlunoDAO;
@@ -22,9 +22,11 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ModalPerfilAluno.class.getName());
     private final Aluno aluno;
+    private final JFrame telaAnterior;
 
     /** Creates new form TelaPerfilAluno */
-    public ModalPerfilAluno(Aluno aluno) {
+    public ModalPerfilAluno(Aluno aluno, JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         this.aluno = aluno;
         initComponents();
         obterProgresso();
@@ -33,7 +35,10 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         if (this.aluno != null) {
             nomeAluno.setText(aluno.getNome());
             raAluno.setText(aluno.getUsername());
-            cursoAluno.setText(aluno.getTurma().getCurso().toString());
+            try {
+                cursoAluno.setText(aluno.getTurma().getCurso().toString());
+            } catch (NullPointerException ignored) {
+            }
         }
     }
 
@@ -72,7 +77,7 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
 
         cursoAluno.setFont(new java.awt.Font("STXihei", 1, 18)); // NOI18N
         cursoAluno.setForeground(new java.awt.Color(255, 255, 255));
-        cursoAluno.setText("Curso do Aluno");
+        cursoAluno.setText("");
 
         raAluno.setFont(new java.awt.Font("STXihei", 1, 18)); // NOI18N
         raAluno.setForeground(new java.awt.Color(255, 255, 255));
@@ -219,6 +224,10 @@ public class ModalPerfilAluno extends javax.swing.JFrame {
         new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
         br.maua.presentation.TelaNavegacao.voltar(this);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    public JFrame getTelaAnterior() {
+        return telaAnterior;
+    }
 
     /**
      * @param args the command line arguments

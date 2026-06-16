@@ -147,7 +147,7 @@
                   <Border info="null"/>
                 </Property>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                  <Insets value="[8, 5, 2, 6]"/>
+                  <Insets value="[2, 10, 2, 10]"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="campoNome" noResource="true"/>
               </Properties>
@@ -162,6 +162,9 @@
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
+                </Property>
+                <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+                  <Insets value="[2, 10, 2, 10]"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="campoSenha" noResource="true"/>
               </Properties>

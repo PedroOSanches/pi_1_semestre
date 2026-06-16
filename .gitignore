@@ -11,6 +11,7 @@
 .mtj.tmp/
 # env
 .env
+*.properties
 # Package Files #
 *.jar
 *.war

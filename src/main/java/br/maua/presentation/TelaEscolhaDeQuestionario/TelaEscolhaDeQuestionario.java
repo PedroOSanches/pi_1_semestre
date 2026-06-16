@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import br.maua.domain.Usuario;
 import br.maua.infrastructure.ConnectionFactory;
 
+import javax.swing.*;
+
 /**
  *
  * @author Luiza
@@ -20,20 +22,22 @@ import br.maua.infrastructure.ConnectionFactory;
 public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEscolhaDeQuestionario.class.getName());
-
+    private final JFrame telaAnterior;
     private int idCasa;
     private String tituloCasa;
     private Usuario usuarioLogado;
 
-    public TelaEscolhaDeQuestionario() {
+    public TelaEscolhaDeQuestionario(JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         initComponents();
     }
 
-    public TelaEscolhaDeQuestionario(Usuario usuario, int idCasa, String tituloCasa) {
-        initComponents();
+    public TelaEscolhaDeQuestionario(Usuario usuario, int idCasa, String tituloCasa, JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         this.usuarioLogado = usuario;
         this.idCasa = idCasa;
         this.tituloCasa = tituloCasa;
+        initComponents();
 
         nomeTitulo.setText(this.tituloCasa);
 
@@ -134,37 +138,13 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new br.maua.presentation.TelaTabuleiro.TelaTabuleiro1().setVisible(true);
-        br.maua.presentation.TelaNavegacao.voltar(this);
+        telaAnterior.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaEscolhaDeQuestionario().setVisible(true));
-    }
     private void carregarTarefas() {
         String sql =
-            "SELECT id_tarefa, titulo_tarefa " +
+            "SELECT id_tarefa, titulo_tarefa, prazo_tarefa " +
             "FROM tarefa " +
             "WHERE id_casa = ?";
 
@@ -176,62 +156,94 @@ public class TelaEscolhaDeQuestionario extends javax.swing.JFrame {
 
             int xInicial = 94;       
             int yInicial = 150;      
-            int larguraCard = 720;   
+            int larguraCard = 720;    
             int alturaCard = 50;     
             int espacamento = 15;    
             int contador = 0;
 
+            boolean ehProfessor = usuarioLogado != null && usuarioLogado.ehProfessor();
+
             while (rs.next()) {
                 int idTarefa = rs.getInt("id_tarefa");
                 String titulo = rs.getString("titulo_tarefa");
-
-                
-                javax.swing.JButton btnTarefa = new javax.swing.JButton(titulo);
-                btnTarefa.setBackground(new java.awt.Color(255, 255, 255));
-                btnTarefa.setForeground(new java.awt.Color(19, 112, 178)); 
-                btnTarefa.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
-                btnTarefa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-                btnTarefa.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                    javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 1),
-                    javax.swing.BorderFactory.createEmptyBorder(0, 20, 0, 0)
-                ));
+                String prazoAtual = rs.getString("prazo_tarefa");
 
                 int posicaoY = yInicial + (contador * (alturaCard + espacamento));
-                btnTarefa.setBounds(xInicial, posicaoY, larguraCard, alturaCard);
 
+                javax.swing.JPanel cardTarefa = new javax.swing.JPanel();
+                cardTarefa.setBackground(new java.awt.Color(255, 255, 255));
+                cardTarefa.setLayout(null); 
+                cardTarefa.setBounds(xInicial, posicaoY, larguraCard, alturaCard);
+                cardTarefa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(19, 112, 178), 1));
+                cardTarefa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)); 
 
-                btnTarefa.addActionListener(evt -> {
-                    try {
-                        
-                        br.maua.domain.Tarefa tarefaCompleta = new br.maua.domain.Tarefa();
-                        tarefaCompleta.setIdTarefa(idTarefa);
-                        tarefaCompleta.setTitulo(titulo);
+                // Se for professor, reduzimos um pouco a largura do texto para não colidir com o botão laranja
+                int larguraLabelTexto = ehProfessor ? 530 : 660;
 
-                        br.maua.infrastructure.DAO.QuestaoDAO.buscarPorTarefa(tarefaCompleta);
+                javax.swing.JLabel lblTitulo = new javax.swing.JLabel(titulo);
+                lblTitulo.setForeground(new java.awt.Color(19, 112, 178)); 
+                lblTitulo.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+                lblTitulo.setBounds(20, 0, larguraLabelTexto, alturaCard); 
+                cardTarefa.add(lblTitulo);
 
-                        br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno telaQuestionario= new br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno(tarefaCompleta, this.usuarioLogado, this);
-                        
-                        br.maua.presentation.TelaNavegacao.abrir(this, telaQuestionario);
+                // CONTROLE DE ACESSO: O botão só é construído e inserido se for o professor
+                if (ehProfessor) {
+                    javax.swing.JButton btnAlterarData = new javax.swing.JButton("Alterar Data");
+                    btnAlterarData.setBackground(new java.awt.Color(240, 147, 32));
+                    btnAlterarData.setForeground(new java.awt.Color(255, 255, 255));
+                    btnAlterarData.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+                    btnAlterarData.setBounds(larguraCard - 130 - 10, 8, 130, 34); 
+                    cardTarefa.add(btnAlterarData);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        javax.swing.JOptionPane.showMessageDialog(this, 
-                            "Erro ao abrir o questionário: " + e.getMessage(), 
-                            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    btnAlterarData.addActionListener(evt -> {
+                        try {
+                            br.maua.domain.Tarefa tarefaParaModal = new br.maua.domain.Tarefa();
+                            tarefaParaModal.setIdTarefa(idTarefa);
+                            tarefaParaModal.setTitulo(titulo);
+                            
+                            // Corrigido para passar "TelaEscolhaDeQuestionario.this" explicitamente no escopo da Runnable
+                            br.maua.presentation.TelaEscolhaDeQuestionario.ModalAlterarPrazoTarefa modal = 
+                                new br.maua.presentation.TelaEscolhaDeQuestionario.ModalAlterarPrazoTarefa(TelaEscolhaDeQuestionario.this, true, tarefaParaModal, prazoAtual);
+                            
+                            modal.setLocationRelativeTo(TelaEscolhaDeQuestionario.this);
+                            modal.setVisible(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            javax.swing.JOptionPane.showMessageDialog(TelaEscolhaDeQuestionario.this, "Erro ao abrir o alterador de prazo.");
+                        }
+                    });
+                }
+
+                cardTarefa.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        try {
+                            br.maua.domain.Tarefa tarefaCompleta = new br.maua.domain.Tarefa();
+                            tarefaCompleta.setIdTarefa(idTarefa);
+                            tarefaCompleta.setTitulo(titulo);
+
+                            br.maua.infrastructure.DAO.QuestaoDAO.buscarPorTarefa(tarefaCompleta);
+                            br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno telaQuestionario = 
+                                new br.maua.presentation.TelaQuestionarioAluno.TelaQuestionarioAluno(tarefaCompleta, usuarioLogado, TelaEscolhaDeQuestionario.this);
+                            br.maua.presentation.TelaNavegacao.abrir(TelaEscolhaDeQuestionario.this, telaQuestionario);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            javax.swing.JOptionPane.showMessageDialog(TelaEscolhaDeQuestionario.this, 
+                                "Erro ao abrir o questionário: " + e.getMessage(), 
+                                "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 });
-                painelCinza.add(btnTarefa);
+                
+                painelCinza.add(cardTarefa);
                 contador++;
             }
-
             painelCinza.revalidate();
             painelCinza.repaint();
-
         } catch (SQLException e) {
             logger.log(java.util.logging.Level.SEVERE, "Erro ao carregar tarefas", e);
         }
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel nomeTitulo;

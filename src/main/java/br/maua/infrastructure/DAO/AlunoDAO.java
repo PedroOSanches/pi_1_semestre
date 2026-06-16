@@ -78,4 +78,33 @@ public class AlunoDAO {
             }
         }
     }
+
+    public static Map<String, Float> obterNotas(Aluno aluno) throws SQLException {
+        String sql = """
+                SELECT
+                	titulo_tarefa,\s
+                	SUM(nota_resposta) as nota_tentativa\s
+                FROM usuario\s
+                	JOIN tentativa using(id_usuario)\s
+                	JOIN tarefa USING(id_tarefa)\s
+                	JOIN resposta USING(id_tentativa)\s
+                WHERE id_usuario = ?\s
+                	GROUP BY titulo_tarefa
+                	ORDER BY titulo_tarefa;
+                """;
+
+        try (
+                Connection conexao = ConnectionFactory.obterConexao();
+                PreparedStatement ps = conexao.prepareStatement(sql)
+        ) {
+            ps.setInt(1, aluno.getId());
+            ResultSet rs = ps.executeQuery();
+            Map<String, Float> notas = new HashMap<>();
+            while (rs.next()) {
+                String titulo = rs.getString("titulo_tarefa");
+                notas.put(titulo, rs.getFloat("nota_tentativa"));
+            }
+            return notas;
+        }
+    }
 }

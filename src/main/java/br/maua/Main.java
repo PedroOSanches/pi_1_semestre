@@ -1,25 +1,19 @@
 package br.maua;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import br.maua.infrastructure.ConnectionFactory;
 import br.maua.presentation.TelaLogin.TelaLogin;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
+import java.util.Locale;
+
+
 public class Main {
-    public static void
-    main(String[] args) {
-        System.out.println("Projeto Inicializado com Sucesso!");
+    public static void main(String[] args) {
+        Locale.setDefault(new Locale("pt", "BR"));
 
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             e.printStackTrace();
         }

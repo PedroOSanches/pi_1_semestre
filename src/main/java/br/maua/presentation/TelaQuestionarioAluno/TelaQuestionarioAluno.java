@@ -60,11 +60,6 @@ public class TelaQuestionarioAluno extends JFrame {
             this.tentativa = new Tentativa(new Aluno(), tarefa);
         }
         initComponents();
-        try{
-            QuestaoDAO.buscarPorTarefa(tarefa);
-        }catch(SQLException e ){
-            JOptionPane.showMessageDialog(rootPane, "Erro ao se comunicar com o banco!", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
 
         titulo3.setText(tarefa.getTitulo());
 

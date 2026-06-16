@@ -59,7 +59,7 @@ public class ProfessorDAO {
 	}
 
     public static List<Professor> listarProfessores() throws SQLException {
-        String sql = "SELECT id_usuario, nome_usuario, sobrenome_usuario FROM usuario WHERE tipo_usuario ='professor'";
+        String sql = "SELECT id_usuario, nome_usuario, sobrenome_usuario FROM usuario WHERE tipo_usuario ='professor' ORDER BY nome_usuario, sobrenome_usuario";
         try (
                 Connection conexao = ConnectionFactory.obterConexao();
                 PreparedStatement ps = conexao.prepareStatement(sql);

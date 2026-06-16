@@ -146,7 +146,6 @@ public class TelaTarefaAluno extends JFrame {
         containerCards.setBackground(new java.awt.Color(217, 217, 217));
         containerCards.setLayout(new BoxLayout(containerCards, BoxLayout.Y_AXIS));
 
-        // Busca os dados delegando a ação para o TentativaDAO
         try {
             if (idAluno != null) {
                 List<TarefaTentadaDTO> tarefas = TentativaDAO.buscarTarefasTentadasPeloAluno(idAluno, idCasa);
@@ -159,7 +158,6 @@ public class TelaTarefaAluno extends JFrame {
                     containerCards.add(vazio);
                 } else {
                     for (TarefaTentadaDTO tarefa : tarefas) {
-                        // Adiciona o card cinza retangular e o espaçamento vertical
                         containerCards.add(criarCardTarefaClicavel(tarefa));
                         containerCards.add(Box.createRigidArea(new Dimension(0, 12)));
                     }
@@ -206,7 +204,7 @@ public class TelaTarefaAluno extends JFrame {
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                abrirCorrecaoProfessor(tarefa.idTarefa(), tarefa.tituloTarefa());
+                abrirCorrecaoProfessor(tarefa.idTentativa(), tarefa.tituloTarefa());
             }
 
             @Override
@@ -227,10 +225,8 @@ public class TelaTarefaAluno extends JFrame {
     /**
      * Executa a transição para a tela de Correção enviando os IDs de contexto obtidos
      */
-    private void abrirCorrecaoProfessor(int idTarefa, String titulo) {
+    private void abrirCorrecaoProfessor(int idTentativa, String titulo) {
         try {
-            int idTentativa = br.maua.infrastructure.DAO.TentativaDAO.buscarIdTentativaPorAlunoETarefa(this.idAluno, idTarefa);
-
             if (idTentativa != -1) {
                 br.maua.domain.Tentativa tentativaParaCorrigir = new br.maua.domain.Tentativa(idTentativa);
 
