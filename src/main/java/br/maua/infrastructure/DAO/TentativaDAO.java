@@ -3,6 +3,7 @@ package br.maua.infrastructure.DAO;
 import br.maua.domain.*;
 import br.maua.exception.UploadException;
 import br.maua.infrastructure.ConnectionFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.*;
@@ -189,14 +190,14 @@ public class TentativaDAO {
         }
     }
 
-    public record TarefaTentadaDTO(int idTarefa, String tituloTarefa) {
+    public record TarefaTentadaDTO(int idTentativa, String tituloTarefa) {
     }
 
     public static List<TarefaTentadaDTO> buscarTarefasTentadasPeloAluno(int idAluno, Integer idCasa) throws SQLException {
         List<TarefaTentadaDTO> lista = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT t.id_tarefa, t.titulo_tarefa ");
+        sql.append("SELECT id_tentativa, t.titulo_tarefa ");
         sql.append("FROM tarefa t ");
         sql.append("INNER JOIN tentativa te ON te.id_tarefa = t.id_tarefa ");
         sql.append("WHERE te.id_usuario = ? ");
@@ -205,7 +206,7 @@ public class TentativaDAO {
             sql.append("AND t.id_casa = ? ");
         }
 
-        sql.append("GROUP BY t.id_tarefa, t.titulo_tarefa ORDER BY t.id_tarefa");
+        sql.append("GROUP BY id_tentativa, t.titulo_tarefa ORDER BY id_tentativa");
 
         try (Connection conexao = ConnectionFactory.obterConexao();
              PreparedStatement comando = conexao.prepareStatement(sql.toString())) {
@@ -218,7 +219,7 @@ public class TentativaDAO {
             try (ResultSet resultado = comando.executeQuery()) {
                 while (resultado.next()) {
                     lista.add(new TarefaTentadaDTO(
-                            resultado.getInt("id_tarefa"),
+                            resultado.getInt("id_tentativa"),
                             resultado.getString("titulo_tarefa")
                     ));
                 }
@@ -281,5 +282,20 @@ public class TentativaDAO {
             cx.commit();
         }
 
+    }
+
+    public static void updateStatusTentativa(@NotNull Tentativa tentativa, String status) throws SQLException {
+        String sql = """
+                        UPDATE tentativa SET status_tentativa = ? WHERE id_tentativa = ?;
+                """;
+
+        try (
+                Connection cx = ConnectionFactory.obterConexao();
+                PreparedStatement ps = cx.prepareStatement(sql)
+        ) {
+            ps.setString(1, status);
+            ps.setInt(2, tentativa.getIdTentativa());
+            ps.executeUpdate();
+        }
     }
 }
