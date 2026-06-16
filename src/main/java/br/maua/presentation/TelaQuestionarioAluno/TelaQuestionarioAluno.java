@@ -21,6 +21,7 @@ import br.maua.domain.QuestaoDissertativa;
 import br.maua.domain.QuestaoUpload;
 import br.maua.domain.Tarefa;
 import br.maua.domain.Tentativa;
+import br.maua.domain.Usuario;
 import br.maua.exception.UploadException;
 import br.maua.infrastructure.DAO.*;
 import br.maua.presentation.TelaQuestionarioAluno.Components.PainelQuestao;
@@ -38,7 +39,7 @@ public class TelaQuestionarioAluno extends JFrame {
     private static final Logger logger = Logger.getLogger
     (TelaQuestionarioAluno.class.getName());
     private final Tarefa tarefa;
-    private final Aluno aluno;
+    private final Usuario aluno;
     private final Tentativa tentativa;
     private final JFrame telaAnterior;
     private final List<PainelQuestao> respostas = new ArrayList<>();
@@ -46,11 +47,16 @@ public class TelaQuestionarioAluno extends JFrame {
     /**
      * Creates new form TelaQuestionarioAluno
      */
-    public TelaQuestionarioAluno(Tarefa tarefa, Aluno aluno, JFrame telaAnterior) {
+    public TelaQuestionarioAluno(Tarefa tarefa, Usuario usuario, JFrame telaAnterior) {
         this.telaAnterior = telaAnterior;
         this.tarefa = tarefa;
-        this.tentativa = new Tentativa(aluno, tarefa);
-        this.aluno = aluno;
+        this.aluno = usuario;
+
+        if (usuario instanceof Aluno) {
+            this.tentativa = new Tentativa((Aluno) usuario, tarefa);
+        } else {
+            this.tentativa = new Tentativa(new Aluno(), tarefa);
+        }
         initComponents();
         try{
             QuestaoDAO.buscarPorTarefa(tarefa);
@@ -60,24 +66,25 @@ public class TelaQuestionarioAluno extends JFrame {
 
         titulo3.setText(tarefa.getTitulo());
 
-        painelQuestao.setLayout(
-            new BoxLayout(
-                    painelQuestao,
-                BoxLayout.Y_AXIS
-            )
-        );
+        painelQuestao.setLayout(new BoxLayout(painelQuestao,BoxLayout.Y_AXIS));
 
         try {
-        carregarQuestoes(tarefa.getQuestoes());
-
+            carregarQuestoes(tarefa.getQuestoes());
         } catch (Exception e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
 
         painelAzul1.setLayout(new GridBagLayout());
         painelAzul1.add(painelCinza1);
         jScrollPane6.getVerticalScrollBar().setUnitIncrement(25);
         configurarScroll();
+
+        boolean isProfessor = !(usuario instanceof Aluno) || usuario.getUsername().contains("professor"); 
+        
+        if (isProfessor) {
+            btnEnviarTarefa2.setText("Fechar Visualização");
+            btnEnviarTarefa2.setBackground(new Color(120, 120, 120));
+        }
         
     }
     
@@ -238,6 +245,13 @@ public class TelaQuestionarioAluno extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarTarefa2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEnviarTarefa2ActionPerformed
+        if (btnEnviarTarefa2.getText().equals("Fechar Visualização")) {
+            dispose();
+            if (telaAnterior != null) {
+                telaAnterior.setVisible(true);
+            }
+            return; 
+        }
         for (PainelQuestao resposta : respostas) {
             resposta.salvar(tentativa);
         }
