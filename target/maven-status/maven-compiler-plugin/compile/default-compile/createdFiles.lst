@@ -19,7 +19,6 @@ br\maua\presentation\TelaTabuleiro\TelaTabuleiro1$1.class
 br\maua\domain\Questao.class
 br\maua\infrastructure\DAO\QuestaoUploadDAO.class
 br\maua\infrastructure\DAO\CasaDAO.class
-br\maua\presentation\TelaTabueiro.class
 br\maua\infrastructure\DAO\TurmaSubturmaDAO.class
 br\maua\presentation\TelaCadastro\TelaCadastro.class
 br\maua\presentation\TelaCriarTarefa\Components\QuestaoDissertativaUI.class
@@ -63,7 +62,6 @@ br\maua\infrastructure\ConnectionFactory.class
 br\maua\presentation\TelaAcoesTarefa\TelaAcoesTarefa.class
 br\maua\infrastructure\DAO\UsuarioDAO.class
 br\maua\infrastructure\DAO\CursoDAO.class
-br\maua\presentation\TelaTarefasCriadas\TelaTarefasCriadas.class
 br\maua\domain\Alternativa.class
 br\maua\domain\Tentativa.class
 br\maua\domain\Ano.class

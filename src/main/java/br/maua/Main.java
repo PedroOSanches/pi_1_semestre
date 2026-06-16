@@ -12,7 +12,6 @@ public class Main {
     public static void main(String[] args) {
         Locale.setDefault(new Locale("pt", "BR"));
 
-
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {

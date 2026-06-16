@@ -6,19 +6,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.maua.config.AppConfig;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConnectionFactory {
 
-    // Acessar .env
-    static Dotenv dotenv = Dotenv.configure().load();
 
-    private static final String user = dotenv.get("DB_USER");
-    private static final String pass = dotenv.get("DB_PASS");
-    private static final String host = dotenv.get("DB_HOST");
-    private static final String port = dotenv.get("DB_PORT");
-    private static final String database = dotenv.get("DB_NAME") != null ? dotenv.get("DB_NAME") : "jornadamauadb";
-    private static final String params = dotenv.get("DB_PARAMS");
+    private static final String user = AppConfig.get("DB_USER");
+    private static final String pass = AppConfig.get("DB_PASS");
+    private static final String host = AppConfig.get("DB_HOST");
+    private static final String port = AppConfig.get("DB_PORT");
+    private static final String database = AppConfig.get("DB_NAME") != null ? AppConfig.get("DB_NAME") : "jornadamauadb";
+    private static final String params = AppConfig.get("DB_PARAMS");
 
     public static Connection obterConexao() throws java.sql.SQLException{
         List<String> missing = new ArrayList<>();
@@ -35,7 +34,6 @@ public class ConnectionFactory {
         if (params != null && !params.isEmpty()) {
             url = url + "?" + params;
         }
-
         return DriverManager.getConnection(url, user, pass);
     }
 }

@@ -6,7 +6,6 @@ import br.maua.domain.Professor;
 import br.maua.domain.Secao;
 import br.maua.domain.Usuario;
 import br.maua.service.JornadaService;
-//import br.maua.infrastructure.ConnectionFactory;
 import br.maua.presentation.TelaAdicionarCasa.TelaAdicionarCasa;
 import br.maua.presentation.TelaAdicionarSecao.TelaAdicionarSecao;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
@@ -20,21 +19,17 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-//import java.util.HashSet;
-//import java.util.LinkedHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-//import java.util.Map;
+import java.util.Map;
 import java.util.Objects;
-//import java.util.Set;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -244,7 +239,7 @@ public class TelaTabuleiro1 extends JFrame {
                             jPanel1.add(Box.createRigidArea(new Dimension(0, 20)));
                         }
                         contadorSecoes++;
-                        
+
                         jPanel1.add(criarCabecalhoSecao(casa.getSecao(), contadorSecoes));
                         jPanel1.add(Box.createRigidArea(new Dimension(0, 12)));
                         secaoAtual = idSecaoDaCasa;
@@ -255,7 +250,7 @@ public class TelaTabuleiro1 extends JFrame {
                     if (this.alunoLogado != null && idProximaCasaObrigatoria != null) {
                         if (jaPassouDaObrigatoria) {
                             boolean prazoAnteriorExpirou = false;
-                            if (casa.getDataLimiteCasa() != null) { 
+                            if (casa.getDataLimiteCasa() != null) {
                                 LocalDateTime agora = LocalDateTime.now();
                                 java.time.LocalDateTime prazoCasa = casa.getDataLimiteCasa().toLocalDateTime();
                                 prazoAnteriorExpirou = agora.isAfter(prazoCasa);
@@ -297,7 +292,7 @@ public class TelaTabuleiro1 extends JFrame {
         List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas) : new ArrayList<>();
 
         secoesBase.sort((s1, s2) -> Integer.compare(s1.getidSecao(), s2.getidSecao()));
-                    
+
         if (!secoesBase.isEmpty()) {
             for (Secao secao : secoesBase) {
                 for (Casa casa : casasBase) {
@@ -619,8 +614,6 @@ public class TelaTabuleiro1 extends JFrame {
 //     return false;
 // }
 
-
-    
 
     private void abrirTelaEscolhaQuestionario(int idCasa, String tituloCasa) {
         Usuario usuarioLogado = null;
