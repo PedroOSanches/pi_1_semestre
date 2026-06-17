@@ -78,16 +78,22 @@ public class ArquivoService {
         try {
             File arquivoOrigem = resposta.getArquivo();
 
-            int i = arquivoOrigem.getName().lastIndexOf(".");
-            String extensao = (i > 0) ? arquivoOrigem.getName().substring(i) : "";
+            String nomeOriginal = arquivoOrigem.getName();
+            int i = nomeOriginal.lastIndexOf(".");
+
+            String nomeSemExtensao = (i > 0) ? nomeOriginal.substring(0, i) : nomeOriginal;
+            nomeSemExtensao = nomeSemExtensao.replaceAll("[\\\\/:*?\"<>|]", "_");
+            String extensao = (i > 0) ? nomeOriginal.substring(i) : "";
+
             String prefix = resposta.getTentativa().getAluno().getUsername().substring(0, 10);
-            String nomeBase = prefix + "_" + arquivoOrigem.getName() + extensao;
+
+            String nomeBase = prefix + "_" + nomeSemExtensao + extensao;
 
             File arquivoDestino = new File(BASE_ALUNO, nomeBase);
             int contador = 1;
 
             while (arquivoDestino.exists()) {
-                String nomeComContador = nomeBase + "_" + contador + extensao;
+                String nomeComContador = prefix + "_" + nomeSemExtensao + "_" + contador + extensao;
                 arquivoDestino = new File(BASE_ALUNO, nomeComContador);
                 contador++;
             }
