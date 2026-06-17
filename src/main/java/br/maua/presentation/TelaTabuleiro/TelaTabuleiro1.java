@@ -1,5 +1,6 @@
 package br.maua.presentation.TelaTabuleiro;
 
+import br.maua.config.IconUtil;
 import br.maua.domain.Aluno;
 import br.maua.domain.Casa;
 import br.maua.domain.Professor;
@@ -10,7 +11,6 @@ import br.maua.presentation.TelaAdicionarCasa.TelaAdicionarCasa;
 import br.maua.presentation.TelaAdicionarSecao.TelaAdicionarSecao;
 import br.maua.presentation.TelaModalPerfilAluno.ModalPerfilAluno;
 import br.maua.presentation.TelaModalPerfilProfessor.ModalPerfilProfessor;
-
 
 import br.maua.presentation.TelaEscolhaDeQuestionario.TelaEscolhaDeQuestionario;
 import java.awt.BorderLayout;
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -47,7 +46,8 @@ import javax.swing.SwingUtilities;
 
 public class TelaTabuleiro1 extends JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTabuleiro1.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(TelaTabuleiro1.class.getName());
 
     private Aluno alunoLogado;
     private final Professor professorLogado;
@@ -74,29 +74,24 @@ public class TelaTabuleiro1 extends JFrame {
 
     public TelaTabuleiro1(Aluno aluno) {
         this(aluno, null, false, null, null);
-    }
-
-    public TelaTabuleiro1(Aluno aluno, List<Casa> casas, List<Secao> secoes) {
-        this(aluno, null, false, casas, secoes);
-    }
-
-    public TelaTabuleiro1(boolean mostrarVoltarParaAdmin) {
-        this(null, null, mostrarVoltarParaAdmin, null, null);
+        this.setTitle("Jornada Mauá");
+        this.setIconImages(IconUtil.ICONS);
     }
 
     public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin) {
         this(null, professor, mostrarVoltarParaAdmin, null, null);
-    }
-
-    public TelaTabuleiro1(Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
-        this(null, professor, mostrarVoltarParaAdmin, casas, secoes);
+        this.setIconImages(IconUtil.ICONS);
+        this.setTitle("Jornada Mauá");
     }
 
     public TelaTabuleiro1() {
         this(null);
+        this.setIconImages(IconUtil.ICONS);
+        this.setTitle("Jornada Mauá");
     }
 
-    private TelaTabuleiro1(Aluno aluno, Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas, List<Secao> secoes) {
+    private TelaTabuleiro1(Aluno aluno, Professor professor, boolean mostrarVoltarParaAdmin, List<Casa> casas,
+                           List<Secao> secoes) {
         this.alunoLogado = aluno;
         this.professorLogado = professor;
         this.mostrarVoltarParaAdmin = mostrarVoltarParaAdmin;
@@ -105,12 +100,6 @@ public class TelaTabuleiro1 extends JFrame {
         initComponents();
         montarTabuleiroDinamico();
 
-    }
-
-    public void atualizarTabuleiro() {
-        SwingUtilities.invokeLater(() -> {
-            montarTabuleiroDinamico();
-        });
     }
 
     private void initComponents() {
@@ -213,7 +202,8 @@ public class TelaTabuleiro1 extends JFrame {
             registros.sort((c1, c2) -> {
                 int secao1 = c1.getSecao() != null ? c1.getSecao().getidSecao() : Integer.MAX_VALUE;
                 int secao2 = c2.getSecao() != null ? c2.getSecao().getidSecao() : Integer.MAX_VALUE;
-                if (secao1 != secao2) return Integer.compare(secao1, secao2);
+                if (secao1 != secao2)
+                    return Integer.compare(secao1, secao2);
                 return Integer.compare(c1.getIdCasa(), c2.getIdCasa());
             });
 
@@ -224,10 +214,8 @@ public class TelaTabuleiro1 extends JFrame {
                 Integer secaoAtual = null;
                 int contadorSecoes = 0;
 
-
-            Integer idProximaCasaObrigatoria = descobrirProximaCasaObrigatoria();
-            boolean jaPassouDaObrigatoria = false;
-
+                Integer idProximaCasaObrigatoria = descobrirProximaCasaObrigatoria();
+                boolean jaPassouDaObrigatoria = false;
 
                 for (Casa casa : registros) {
                     int idSecaoDaCasa = casa.getSecao() != null ? casa.getSecao().getidSecao() : 0;
@@ -252,10 +240,10 @@ public class TelaTabuleiro1 extends JFrame {
                                 java.time.LocalDateTime prazoCasa = casa.getDataLimiteCasa().toLocalDateTime();
                                 prazoAnteriorExpirou = agora.isAfter(prazoCasa);
                             }
-                                if (!prazoAnteriorExpirou) {
-                                    casaBloqueada = true;
-                                }
+                            if (!prazoAnteriorExpirou) {
+                                casaBloqueada = true;
                             }
+                        }
 
                         if (casa.getIdCasa() == idProximaCasaObrigatoria.intValue()) {
                             jaPassouDaObrigatoria = true;
@@ -286,7 +274,8 @@ public class TelaTabuleiro1 extends JFrame {
     private List<Casa> carregarCasasDasListas() {
         List<Casa> registros = new ArrayList<>();
         List<Casa> casasBase = this.casasInformadas != null ? new ArrayList<>(this.casasInformadas) : new ArrayList<>();
-        List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas) : new ArrayList<>();
+        List<Secao> secoesBase = this.secoesInformadas != null ? new ArrayList<>(this.secoesInformadas)
+                : new ArrayList<>();
 
         secoesBase.sort((s1, s2) -> Integer.compare(s1.getidSecao(), s2.getidSecao()));
 
@@ -371,7 +360,8 @@ public class TelaTabuleiro1 extends JFrame {
             icone.setIcon(carregarIconeSecao(ordemSecao, corPrincipal));
         }
         icone.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JLabel descricao = criarLabelFormatado(secao.getDescricaoSecao(), new Font("Segoe UI", Font.PLAIN, 13), corTexto, 280);
+        JLabel descricao = criarLabelFormatado(secao.getDescricaoSecao(), new Font("Segoe UI", Font.PLAIN, 13),
+                corTexto, 280);
         descricao.setHorizontalAlignment(SwingConstants.LEFT);
 
         JPanel textos = new JPanel();
@@ -396,7 +386,9 @@ public class TelaTabuleiro1 extends JFrame {
     private JLabel criarLabelFormatado(String texto, Font fonte, Color cor, int largura) {
         String safe = texto == null ? "" : texto.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
         int fs = fonte.getSize();
-        String html = "<html><div style='width:" + largura + "px; text-align:left; word-wrap: break-word; line-height:1.2; font-family: Segoe UI, Arial; font-size: " + fs + "px;'>" + safe + "</div></html>";
+        String html = "<html><div style='width:" + largura
+                + "px; text-align:left; word-wrap: break-word; line-height:1.2; font-family: Segoe UI, Arial; font-size: "
+                + fs + "px;'>" + safe + "</div></html>";
         JLabel label = new JLabel(html);
         label.setFont(fonte);
         label.setForeground(cor);
@@ -422,7 +414,8 @@ public class TelaTabuleiro1 extends JFrame {
     }
 
     private ImageIcon criarIconeFallback(int ordemSecao, Color corPrincipal, int tamanho) {
-        java.awt.image.BufferedImage imagem = new java.awt.image.BufferedImage(tamanho, tamanho, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        java.awt.image.BufferedImage imagem = new java.awt.image.BufferedImage(tamanho, tamanho,
+                java.awt.image.BufferedImage.TYPE_INT_ARGB);
         java.awt.Graphics2D g2 = imagem.createGraphics();
         try {
             g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
@@ -443,7 +436,6 @@ public class TelaTabuleiro1 extends JFrame {
         return new ImageIcon(imagem);
     }
 
-
     private boolean isSecaoConcluidaComSucesso(int idSecao) {
         if (this.alunoLogado == null) {
             return true;
@@ -455,6 +447,7 @@ public class TelaTabuleiro1 extends JFrame {
             return false;
         }
     }
+
     private Integer descobrirProximaCasaObrigatoria() {
         if (this.alunoLogado == null) {
             return null;
@@ -493,7 +486,8 @@ public class TelaTabuleiro1 extends JFrame {
         JLabel tituloCasa = criarLabelFormatado(casa.getTitulo(), new Font("Segoe UI", Font.BOLD, 22), corBorda, 310);
         tituloCasa.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // MUDANÇA: Como Casa não possui data limite, simplificamos o texto informativo de apoio
+        // MUDANÇA: Como Casa não possui data limite, simplificamos o texto informativo
+        // de apoio
         JLabel info = criarLabelFormatado(
                 "Casa " + numeroCasaExibida + " | Data limite: " + formatoData(casa.getDataLimiteCasa()),
                 new Font("Segoe UI", Font.PLAIN, 15),
@@ -514,8 +508,7 @@ public class TelaTabuleiro1 extends JFrame {
                         "Acesso Bloqueado!\nPara liberar esta casa você precisa:\n" +
                                 "1. Concluir as tarefas da casa anterior com nota igual ou maior que 6.0",
                         "Conteúdo Bloqueado",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                        JOptionPane.WARNING_MESSAGE);
             });
         } else {
             linkPagina.setText("Tarefas");
@@ -580,23 +573,17 @@ public class TelaTabuleiro1 extends JFrame {
         return dataHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
-
     private void abrirTelaEscolhaQuestionario(int idCasa, String tituloCasa) {
         Usuario usuarioLogado = null;
-        
+
         if (this.alunoLogado != null) {
-            usuarioLogado = this.alunoLogado; 
+            usuarioLogado = this.alunoLogado;
         } else if (this.professorLogado != null) {
-            usuarioLogado = this.professorLogado; 
+            usuarioLogado = this.professorLogado;
         }
 
-        TelaEscolhaDeQuestionario telaEscolha =
-                new TelaEscolhaDeQuestionario(usuarioLogado, idCasa, tituloCasa, this);
+        TelaEscolhaDeQuestionario telaEscolha = new TelaEscolhaDeQuestionario(usuarioLogado, idCasa, tituloCasa, this);
         telaEscolha.setVisible(true);
         dispose();
-    }
-
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new TelaTabuleiro1().setVisible(true));
     }
 }

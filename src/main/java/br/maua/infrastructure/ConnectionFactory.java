@@ -12,12 +12,12 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class ConnectionFactory {
 
 
-    private static final String user = AppConfig.get("DB_USER");
-    private static final String pass = AppConfig.get("DB_PASS");
-    private static final String host = AppConfig.get("DB_HOST");
-    private static final String port = AppConfig.get("DB_PORT");
-    private static final String database = AppConfig.get("DB_NAME") != null ? AppConfig.get("DB_NAME") : "jornadamauadb";
-    private static final String params = AppConfig.get("DB_PARAMS");
+    private static final String user = System.getenv("DB_USER");
+    private static final String pass = System.getenv("DB_PASS");
+    private static final String host = System.getenv("DB_HOST");
+    private static final String port = System.getenv("DB_PORT");
+    private static final String database = System.getenv("DB_NAME") != null ? System.getenv("DB_NAME") : "jornadamauadb";
+    private static final String params = System.getenv("DB_PARAMS");
 
     public static Connection obterConexao() throws java.sql.SQLException{
         List<String> missing = new ArrayList<>();

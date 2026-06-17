@@ -1,5 +1,6 @@
 package br.maua.presentation.TelaTarefasAluno;
 
+import br.maua.config.IconUtil;
 import br.maua.infrastructure.DAO.TentativaDAO;
 import br.maua.infrastructure.DAO.TentativaDAO.TarefaTentadaDTO;
 import br.maua.presentation.TelaAlunosDaTurma.TelaAlunosDaTurma;
@@ -15,7 +16,8 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- * Tela unificada: Exibe dinamicamente as tarefas que o aluno selecionado realizou.
+ * Tela unificada: Exibe dinamicamente as tarefas que o aluno selecionado
+ * realizou.
  *
  * @author Luiza / Lenovo (Adaptado para visão do Professor)
  */
@@ -31,6 +33,8 @@ public class TelaTarefaAluno extends JFrame {
      */
     public TelaTarefaAluno(JFrame telaAnterior, Integer idAluno, Integer idCasa) {
         this(idAluno, idCasa, "Tarefas Realizadas", telaAnterior);
+        this.setIconImages(IconUtil.ICONS);
+        this.setTitle("Jornada Mauá");
     }
 
     public TelaTarefaAluno(Integer idAluno, Integer idCasa, String tituloTarefa, JFrame telaAnterior) {
@@ -38,12 +42,15 @@ public class TelaTarefaAluno extends JFrame {
         this.idCasa = idCasa;
         this.tituloTarefa = tituloTarefa != null && !tituloTarefa.isBlank() ? tituloTarefa : "Atividade";
         this.telaAnterior = telaAnterior;
+        this.setIconImages(IconUtil.ICONS);
+        this.setTitle("Jornada Mauá");
         initComponents();
         configurarConteudo();
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         painelAzul = new javax.swing.JPanel();
@@ -75,15 +82,13 @@ public class TelaTarefaAluno extends JFrame {
                         .addGroup(painelAzul1Layout.createSequentialGroup()
                                 .addGap(40, 40, 40)
                                 .addComponent(nomeTitulo)
-                                .addContainerGap(420, Short.MAX_VALUE))
-        );
+                                .addContainerGap(420, Short.MAX_VALUE)));
         painelAzul1Layout.setVerticalGroup(
                 painelAzul1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(painelAzul1Layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addComponent(nomeTitulo)
-                                .addContainerGap(20, Short.MAX_VALUE))
-        );
+                                .addContainerGap(20, Short.MAX_VALUE)));
 
         painelCinza.add(painelAzul1);
         painelAzul1.setBounds(94, 37, 720, 90);
@@ -101,38 +106,38 @@ public class TelaTarefaAluno extends JFrame {
                 painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAzulLayout.createSequentialGroup()
                                 .addContainerGap(78, Short.MAX_VALUE)
-                                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(68, 68, 68))
-        );
+                                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 900,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68)));
         painelAzulLayout.setVerticalGroup(
                 painelAzulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(painelAzulLayout.createSequentialGroup()
                                 .addGap(78, 78, 78)
-                                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(90, Short.MAX_VALUE))
-        );
+                                .addComponent(painelCinza, javax.swing.GroupLayout.PREFERRED_SIZE, 600,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(90, Short.MAX_VALUE)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+                        .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+                        .addComponent(painelAzul, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
         telaAnterior.setVisible(true);
         if (telaAnterior instanceof TelaAlunosDaTurma) {
             ((TelaAlunosDaTurma) telaAnterior).recarregarTabela();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }// GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * Limpa, gerencia o scroll e renderiza os cards dinâmicos na tela.
@@ -164,7 +169,8 @@ public class TelaTarefaAluno extends JFrame {
                 }
             }
         } catch (java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar dados do banco: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao carregar dados do banco: " + e.getMessage(), "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         // Configuração do ScrollPane para encaixar perfeitamente no painelCinza
@@ -223,15 +229,16 @@ public class TelaTarefaAluno extends JFrame {
     }
 
     /**
-     * Executa a transição para a tela de Correção enviando os IDs de contexto obtidos
+     * Executa a transição para a tela de Correção enviando os IDs de contexto
+     * obtidos
      */
     private void abrirCorrecaoProfessor(int idTentativa, String titulo) {
         try {
             if (idTentativa != -1) {
                 br.maua.domain.Tentativa tentativaParaCorrigir = new br.maua.domain.Tentativa(idTentativa);
 
-                br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa telaCorrecao =
-                        new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(tentativaParaCorrigir, this);
+                br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa telaCorrecao = new br.maua.presentation.TelaCorrecaoTarefa.TelaCorrecaoTarefa(
+                        tentativaParaCorrigir, this);
 
                 telaCorrecao.setVisible(true);
                 this.dispose();

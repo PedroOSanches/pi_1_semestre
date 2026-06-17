@@ -180,20 +180,6 @@ public class ModalAlterarPrazoTarefa extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(rootPane, "Erro ao salvar");
         }
 
-    }//GEN-LAST:event_buttonSalvarActionPerformed
-
-    public static void main(String[] args) {
-        Locale.setDefault(new Locale("pt", "BR"));
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            }
-        } catch (Exception e) {
-            Logger.getLogger(ModalAlterarPrazoTarefa.class.getName()).log(Level.SEVERE, null, e);
-        }
-
-        EventQueue.invokeLater(() -> {
-            new ModalAlterarPrazoTarefa(new JFrame(), true, new Tarefa(20), "").setVisible(true);
-        });
     }
 
 

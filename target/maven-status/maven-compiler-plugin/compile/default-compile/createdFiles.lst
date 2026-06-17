@@ -15,7 +15,6 @@ br\maua\presentation\TelaPainelAdministrativo\TelaPainelAdministrativo1$1.class
 br\maua\presentation\TelaNavegacao.class
 br\maua\domain\Subturma.class
 br\maua\domain\Professor.class
-br\maua\presentation\TelaTabuleiro\TelaTabuleiro1$1.class
 br\maua\domain\Questao.class
 br\maua\infrastructure\DAO\QuestaoUploadDAO.class
 br\maua\infrastructure\DAO\CasaDAO.class
@@ -57,7 +56,6 @@ br\maua\controller\ControladorCredenciais.class
 br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa$1.class
 br\maua\presentation\TelaPainelDeControle\TelaPainelDeControle.class
 br\maua\domain\Usuario.class
-br\maua\presentation\TelaUploadAluno\TelaUploadAluno.class
 br\maua\infrastructure\ConnectionFactory.class
 br\maua\presentation\TelaAcoesTarefa\TelaAcoesTarefa.class
 br\maua\infrastructure\DAO\UsuarioDAO.class
@@ -69,8 +67,6 @@ br\maua\infrastructure\DAO\SecaoDAO.class
 br\maua\presentation\TelaCriarTarefa\TelaCriarTarefa$4.class
 br\maua\enums\SemestreEnum.class
 br\maua\presentation\TelaCriarTarefa\Components\QuestaoUI.class
-br\maua\presentation\TelaTabuleiro\TelaTabuleiro1$RegistroCasaTabuleiro.class
-br\maua\presentation\ModeloAtividade\Atividade.class
 br\maua\Main.class
 br\maua\presentation\TelaNavegacao$1.class
 br\maua\domain\Secao.class
