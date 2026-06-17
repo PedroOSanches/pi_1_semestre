@@ -86,6 +86,8 @@ Responsável pelo armazenamento de usuários, questionários, respostas, progres
 * GitHub
 * Figma
 * MySQL Workbench
+* Launch4j
+* Inno Setup Compiler
 
 ---
 
